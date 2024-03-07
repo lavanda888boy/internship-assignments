@@ -1,3 +1,3 @@
 Hello world! It's me.
 
-This is the local change.
+This is the remote change.
