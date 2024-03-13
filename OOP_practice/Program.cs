@@ -6,9 +6,8 @@ namespace OOP_practice
     {
         static void Main(string[] args)
         {
-            Vehicle v = new Vehicle("Volvo", "XC-90", 300);
-            v.Drive();
-            Console.WriteLine(v.Model);
+            Car c = new Car("Volvo", "XC-90", 300, 5);
+            c.Power = -20;
         }
     }
 }
