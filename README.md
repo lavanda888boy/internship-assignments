@@ -1,1 +1,1 @@
-# git-assignment
+# Internship assignments
