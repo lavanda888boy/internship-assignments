@@ -1,3 +1,0 @@
-This is another test file.
-
-Some changes.
