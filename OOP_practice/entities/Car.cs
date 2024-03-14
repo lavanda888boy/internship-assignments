@@ -20,5 +20,11 @@
         {
             Console.WriteLine("The car drives at speed " + speed);
         }
+
+        public void Drive(int speed, string drivingMode = "2WD")
+        {
+            Console.WriteLine("The car drives at speed " + speed);
+            Console.WriteLine("The driving mode is " + drivingMode);
+        }
     }
 }

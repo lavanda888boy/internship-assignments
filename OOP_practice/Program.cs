@@ -7,10 +7,19 @@ namespace OOP_practice
         static void Main(string[] args)
         {
             Vehicle v1 = new Vehicle("Scania", "R-90", 500);
-            Vehicle v2 = (Vehicle) v1.Clone();
+            v1.Drive(speed: 80);
 
-            v2.Power = 550;
-            Console.WriteLine(v1.Power);
+            Vehicle? v2 = v1.Clone() as Vehicle;
+            if (v2 is not null)
+            {
+                Console.WriteLine(v2.Power);
+            } else
+            {
+                Console.WriteLine("Cloned object is null");
+            }
+
+            Car c = new Car("Volvo", "XC-90", 300, 5);
+            c.Drive(110, "4WD");
         }
     }
 }
