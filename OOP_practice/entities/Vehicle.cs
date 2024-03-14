@@ -1,6 +1,6 @@
 ﻿namespace OOP_practice.entities
 {
-    public class Vehicle
+    public class Vehicle : ICloneable
     {
         private string manufacturer;
         public string Manufacturer { get { return manufacturer; } }
@@ -43,6 +43,11 @@
         public virtual void Drive(int speed)
         {
             Console.WriteLine("The vehicle drives at speed " + speed);
+        }
+
+        public object Clone()
+        {
+            return MemberwiseClone();
         }
     }
 }
