@@ -2,18 +2,18 @@
 {
     public class Vehicle : ICloneable
     {
-        private string manufacturer;
-        public string Manufacturer { get { return manufacturer; } }
+        private string _manufacturer;
+        public string Manufacturer { get { return _manufacturer; } }
 
-        private string model;
-        public string Model { get { return model; } }
+        private string _model;
+        public string Model { get { return _model; } }
 
-        private int power;
+        private int _power;
         public int Power
         {
             get
             {
-                return power;
+                return _power;
             }
 
             set
@@ -23,15 +23,15 @@
                     Console.WriteLine("Power cannot be negative or zero");
                 } else
                 {
-                    power = value;
+                    _power = value;
                 }
             }
         }
 
         public Vehicle(string manufacturer, string model, int power)
         {
-            this.manufacturer = manufacturer;
-            this.model = model;
+            _manufacturer = manufacturer;
+            _model = model;
             Power = power;
         }
 

@@ -2,13 +2,13 @@
 {
     public class Car : Vehicle
     {
-        private int numberOfDoors;
-        public int NumberOfDoors { get { return numberOfDoors; } }
+        private int _numberOfDoors;
+        public int NumberOfDoors { get { return _numberOfDoors; } }
 
         public Car(string manufacturer, string model, int power, int numberOfDoors)
             : base(manufacturer, model, power)
         {
-            this.numberOfDoors = numberOfDoors;
+            _numberOfDoors = numberOfDoors;
         }
 
         public override void Drive()

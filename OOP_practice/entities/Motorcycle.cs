@@ -2,13 +2,13 @@
 {
     public class Motorcycle : Vehicle
     {
-        private bool hasFairing;
-        public bool HasFairing { get { return hasFairing; } set { hasFairing = value; } }
+        private bool _hasFairing;
+        public bool HasFairing { get { return _hasFairing; } set { _hasFairing = value; } }
 
         public Motorcycle(string manufacturer, string model, int power, bool hasFairing)
             : base(manufacturer, model, power)
         {
-            this.hasFairing = hasFairing;
+            _hasFairing = hasFairing;
         }
 
         public override void Drive()
