@@ -5,8 +5,8 @@
         private int _numberOfDoors;
         public int NumberOfDoors { get { return _numberOfDoors; } }
 
-        public Car(string manufacturer, string model, int power, int numberOfDoors)
-            : base(manufacturer, model, power)
+        public Car(string manufacturer, string model, int power, string[] details, int numberOfDoors)
+            : base(manufacturer, model, power, details)
         {
             _numberOfDoors = numberOfDoors;
         }

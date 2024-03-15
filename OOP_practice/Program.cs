@@ -6,7 +6,8 @@ namespace OOP_practice
     {
         static void Main(string[] args)
         {
-            Vehicle v1 = new Vehicle("Scania", "R-90", 500);
+            string[] vehicleDetails = { "engine", "wheel" };
+            Vehicle v1 = new Vehicle("Scania", "R-90", 500, vehicleDetails);
             v1.Drive(speed: 80);
 
             Vehicle? v2 = v1.Clone() as Vehicle;
@@ -18,8 +19,10 @@ namespace OOP_practice
                 Console.WriteLine("Cloned object is null");
             }
 
-            Car c = new Car("Volvo", "XC-90", 300, 5);
-            c.Drive(110, "4WD");
+            foreach (var detail in v1)
+            {
+                Console.WriteLine(detail);
+            }
         }
     }
 }
