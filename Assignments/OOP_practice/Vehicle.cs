@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 
-namespace OOP_practice.entities
+namespace OOP_practice
 {
     public class Vehicle : IEnumerable, ICloneable
     {

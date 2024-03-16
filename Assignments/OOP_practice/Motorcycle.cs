@@ -1,4 +1,4 @@
-﻿namespace OOP_practice.entities
+﻿namespace OOP_practice
 {
     public class Motorcycle : Vehicle
     {
