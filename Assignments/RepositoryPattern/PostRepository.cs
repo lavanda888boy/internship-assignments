@@ -1,5 +1,4 @@
-﻿
-namespace RepositoryPattern
+﻿namespace RepositoryPattern
 {
     internal class PostRepository : IRepository<Post>
     {
@@ -34,7 +33,7 @@ namespace RepositoryPattern
             }
             else
             {
-                Console.WriteLine("Post does not exist");
+                Console.WriteLine("Post does not exist and cannot be updated");
             }
         }
     }

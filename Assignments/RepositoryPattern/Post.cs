@@ -6,6 +6,6 @@
 
         public string Content { get; set; }
 
-        public User Author { get; set; }
+        public User? Author { get; set; }
     }
 }

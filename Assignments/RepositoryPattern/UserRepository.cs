@@ -1,5 +1,4 @@
-﻿
-namespace RepositoryPattern
+﻿namespace RepositoryPattern
 {
     internal class UserRepository : IRepository<User>
     {
@@ -33,7 +32,7 @@ namespace RepositoryPattern
                 _users[index] = user;
             } else
             {
-                Console.WriteLine("User does not exist");
+                Console.WriteLine("User does not exist and cannot be updated");
             }
         }
     }
