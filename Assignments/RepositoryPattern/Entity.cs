@@ -1,6 +1,7 @@
 ﻿namespace RepositoryPattern
 {
-    internal class Entity
+    internal abstract class Entity
     {
+        public int Id { get; set; }
     }
 }
