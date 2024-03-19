@@ -4,7 +4,9 @@
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello, World!");
+            ATM atm = new ATM(100000);
+            Money m = new Money(30000, "usd");
+            atm.Replenish(m);
         }
     }
 }

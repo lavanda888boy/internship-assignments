@@ -3,6 +3,10 @@
     internal class InsufficientCashException : Exception
     {
         private int _cashDifference;
+        public int CashDifference 
+        { 
+            get => _cashDifference; 
+        }
 
         public InsufficientCashException() { }
 

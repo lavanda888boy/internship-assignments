@@ -7,7 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OOP_practice", "OOP_practic
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Strings", "Strings\Strings.csproj", "{FCF078B3-5FBA-44DA-B3EC-4F1E416A8FF6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepositoryPattern", "RepositoryPattern\RepositoryPattern.csproj", "{E215BA15-3594-474C-B97C-6FB5DB4681BB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepositoryPattern", "RepositoryPattern\RepositoryPattern.csproj", "{E215BA15-3594-474C-B97C-6FB5DB4681BB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Exceptions", "Exceptions\Exceptions.csproj", "{154F1B66-B82B-4FB1-B83E-7EC359F42C7B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{E215BA15-3594-474C-B97C-6FB5DB4681BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E215BA15-3594-474C-B97C-6FB5DB4681BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E215BA15-3594-474C-B97C-6FB5DB4681BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{154F1B66-B82B-4FB1-B83E-7EC359F42C7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{154F1B66-B82B-4FB1-B83E-7EC359F42C7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{154F1B66-B82B-4FB1-B83E-7EC359F42C7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{154F1B66-B82B-4FB1-B83E-7EC359F42C7B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
