@@ -6,6 +6,7 @@ namespace DelegatesAndLINQ
     {
         private readonly int _initCollectionSize = 16;
         private List<Employee> _employees;
+        public List<Employee> Employees { get => _employees; }
 
         public EmployeeCollection()
         {
