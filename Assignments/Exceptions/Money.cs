@@ -1,6 +1,4 @@
-﻿using System.Reflection.Metadata.Ecma335;
-
-namespace Exceptions
+﻿namespace Exceptions
 {
     internal class Money
     {
