@@ -14,18 +14,19 @@
             _posts.Remove(post);
         }
 
-        public IEnumerable<Post> FindAll()
+        public IEnumerable<Post> FindAll(Func<Post, bool> pred)
         {
-            return _posts;
+            return _posts.Where(pred);
         }
 
-        public Post GetById(int id)
+        public Post? GetById(int id)
         {
-            return _posts.Find(post => post.Id == id) ?? new Post();
+            return _posts.Find(post => post.Id == id);
         }
 
         public void Update(Post post)
         {
+            ArgumentNullException.ThrowIfNull(post, nameof(post));
             int index = _posts.FindIndex(p => p.Id == post.Id);
             if (index != -1)
             {

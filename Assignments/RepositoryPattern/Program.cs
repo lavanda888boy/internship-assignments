@@ -14,13 +14,16 @@
             Post newPost = new Post { Id = 1, Author = null, Topic = "Greeting", Content = "Hello world!" };
 
             int id = 1;
-            if (sm.publishPost(id, newPost))
+            try
             {
+                sm.PublishPost(id, newPost);
                 Post publishedPost = postRepository.GetById(newPost.Id);
                 Console.WriteLine("Post was succesfully created");
                 Console.WriteLine($"Topic: {publishedPost.Topic}\nContent: {publishedPost.Content}\nAuthor: {publishedPost.Author.Nickname}");
-            } else
+            }
+            catch (UserNotFoundException ex)
             {
+                Console.WriteLine(ex.Message);
                 Console.WriteLine("Post was not created");
             }
         }

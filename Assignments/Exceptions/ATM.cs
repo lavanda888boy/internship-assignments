@@ -13,7 +13,29 @@
             _replenishLimit = 20000;
         }
 
-        public void WithDraw(int cashAmount)
+        public void ProcessWithdrawal(int cashAmount)
+        {
+            try
+            {
+                Console.WriteLine("Withdrawal process started");
+                WithDraw(cashAmount);
+                Console.WriteLine($"Withdrawal of {cashAmount:C} successful. Available cash in ATM: {_availableCash:C}");
+            }
+            catch (InvalidTransactionSumException ex) 
+            { 
+                Console.WriteLine(ex.Message);
+            }
+            catch (InsufficientCashException ex) 
+            {
+                Console.WriteLine(ex.Message);
+            }
+            finally
+            {
+                Console.WriteLine("Withdrawal process ended");
+            }
+        }
+
+        private void WithDraw(int cashAmount)
         {
             if (cashAmount > _withdrawLimit)
             {
@@ -25,15 +47,14 @@
                 throw new InsufficientCashException("There is not enough cash for the customer's request", cashAmount - _availableCash);
             }
 
-            _availableCash -= cashAmount;
-            Console.WriteLine($"Withdrawal of {cashAmount:C} successful. Available cash in ATM: {_availableCash:C}");
+            _availableCash -= cashAmount; 
         }
 
-        public void Replenish(Money m)
+        public void ProcessReplenishment(Money m)
         {
             try
             {
-                ProcessReplenishment(m);
+                Replenish(m);
                 Console.WriteLine("Replenishment was succesfully processed");
             }
             catch (ArgumentNullException ex)
@@ -45,18 +66,13 @@
                 Console.WriteLine(ex.Message);
                 Console.WriteLine($"Transaction sum: {ex.TransactionSum}");
             }
-            catch (Exception ex)
-            {
-                Console.WriteLine("An unexpected error occurred");
-                throw;
-            }
             finally
             {
                 Console.WriteLine("The customer returns into the main menu");
             }
         }
 
-        private void ProcessReplenishment(Money m)
+        private void Replenish(Money m)
         {
             if (m is null)
             {

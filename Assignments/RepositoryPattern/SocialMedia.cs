@@ -11,22 +11,20 @@
             _postRepository = postRepository;
         }
 
-        public bool publishPost(int userId, Post post)
+        public void PublishPost(int userId, Post post)
         {
             User user = _userRepository.GetById(userId);
-
-            if (user.Nickname is null)
+            if (user is null)
             {
-                Console.WriteLine("User does not exist");
-                return false;
+                throw new UserNotFoundException("User was not found by id");
             }
-
-            post.Author = user;
-            _postRepository.Add(post);
-            user.Posts.Add(post);
-            _userRepository.Update(user);
-
-            return true;
+            else
+            {
+                post.Author = user;
+                _postRepository.Add(post);
+                user.Posts.Add(post);
+                _userRepository.Update(user);
+            }
         }
     }
 }

@@ -14,18 +14,27 @@
             _users.Remove(user);
         }
 
-        public IEnumerable<User> FindAll()
+        public IEnumerable<User> FindAll(Func<User, bool> pred)
         {
-            return _users;
+            List<User> users = new List<User>();
+            foreach (var u in users)
+            {
+                if (pred(u))
+                {
+                    users.Add(u);
+                }
+            }
+            return users;
         }
 
-        public User GetById(int id)
+        public User? GetById(int id)
         {
-            return _users.Find(user => user.Id == id) ?? new User();
+            return _users.Find(user => user.Id == id);
         }
 
         public void Update(User user)
         {
+            ArgumentNullException.ThrowIfNull(user, nameof(user));
             int index = _users.FindIndex(u => u.Id == user.Id);
             if (index != -1)
             {
