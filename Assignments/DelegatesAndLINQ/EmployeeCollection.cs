@@ -13,5 +13,24 @@ namespace DelegatesAndLINQ
         }
 
         public IEnumerator GetEnumerator() => _employees.GetEnumerator();
+
+        public void Add(Employee employee)
+        {
+            _employees.Add(employee);
+        }
+
+        public List<Employee> Find(Func<Employee, bool> compare)
+        {
+            List<Employee> filteredEmployees = new List<Employee>();
+
+            foreach (var employee in _employees)
+            {
+                if (compare(employee))
+                {
+                    filteredEmployees.Add(employee);
+                }
+            }
+            return filteredEmployees;
+        }
     }
 }

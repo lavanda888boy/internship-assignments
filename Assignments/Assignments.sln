@@ -9,7 +9,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Strings", "Strings\Strings.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepositoryPattern", "RepositoryPattern\RepositoryPattern.csproj", "{E215BA15-3594-474C-B97C-6FB5DB4681BB}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Exceptions", "Exceptions\Exceptions.csproj", "{154F1B66-B82B-4FB1-B83E-7EC359F42C7B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Exceptions", "Exceptions\Exceptions.csproj", "{154F1B66-B82B-4FB1-B83E-7EC359F42C7B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DelegatesAndLINQ", "DelegatesAndLINQ\DelegatesAndLINQ.csproj", "{DA7F1D2D-BABD-4BFB-943C-1082C4E08D21}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{154F1B66-B82B-4FB1-B83E-7EC359F42C7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{154F1B66-B82B-4FB1-B83E-7EC359F42C7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{154F1B66-B82B-4FB1-B83E-7EC359F42C7B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA7F1D2D-BABD-4BFB-943C-1082C4E08D21}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA7F1D2D-BABD-4BFB-943C-1082C4E08D21}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA7F1D2D-BABD-4BFB-943C-1082C4E08D21}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA7F1D2D-BABD-4BFB-943C-1082C4E08D21}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
