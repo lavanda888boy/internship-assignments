@@ -18,6 +18,7 @@
             if (user.Nickname is null)
             {
                 Console.WriteLine("User does not exist");
+                return false;
             }
 
             post.Author = user;

@@ -12,12 +12,16 @@
 
             SocialMedia sm = new SocialMedia(userRepository, postRepository);
             Post newPost = new Post { Id = 1, Author = null, Topic = "Greeting", Content = "Hello world!" };
-            
-            if (sm.publishPost(user.Id, newPost))
+
+            int id = 1;
+            if (sm.publishPost(id, newPost))
             {
                 Post publishedPost = postRepository.GetById(newPost.Id);
                 Console.WriteLine("Post was succesfully created");
                 Console.WriteLine($"Topic: {publishedPost.Topic}\nContent: {publishedPost.Content}\nAuthor: {publishedPost.Author.Nickname}");
+            } else
+            {
+                Console.WriteLine("Post was not created");
             }
         }
     }
