@@ -20,12 +20,24 @@
                 new Laptop("Dell", "Vostro", agatha),
                 new Laptop("Lenovo", "Thinkpad", harvey),
                 new Laptop("Lenovo", "Thinkbook", jim),
-                new Laptop("Macbook", "Pro", dwight)
+                new Laptop("Macbook", "Pro", dwight),
+                new Laptop("Macbook", "Air", agatha),
+                new Laptop("Acer", "Aspire", mike),
             ];
+
+            Action<Employee> action = (employee) => employee.WorkingDayLength += 1;
+            ec.CollectiveAction(action);
+
+            foreach (Employee employee in ec)
+            {
+                employee.PrintEmployeeInfo();
+            }
+
+            AdvancedLINQ(ec.Employees, devices);
 
             /*var e = ec.Find(employee => !employee.IsOnVacation);*/
 
-            Func<Employee, bool> SearchDelegate = delegate (Employee employee)
+            /*Func<Employee, bool> SearchDelegate = delegate (Employee employee)
             {
                 if (employee.WorkingDayLength < 10)
                 {
@@ -36,7 +48,7 @@
                     return false;
                 }
             };
-            var e = ec.Find(SearchDelegate);
+            var e = ec.Find(SearchDelegate);*/
 
             /*Func<Employee, bool> SearchDelegate = (employee) => employee.Phone.StartsWith("2");
             var e = ec.Find(SearchDelegate);*/
@@ -52,12 +64,86 @@
                                     Surname = e.Surname,
                                     Name = e.Name,
                                     WorkingDayLength = e.WorkingDayLength
-                                });*/
-
-            foreach (var em in e)
+                                });
+*/
+            /*foreach (var em in e)
             {
                 //Console.WriteLine(em);
                 em.PrintEmployeeInfo();
+            }*/
+        }
+
+        static void AdvancedLINQ(List<Employee> emps, List<Laptop> dvs)
+        {
+            var employeeDevice = emps.Join(dvs,
+                                     emp => emp,
+                                     dvs => dvs.Owner,
+                                     (emp, dvs) => new { Owner = emp.Surname, DeviceName = $"{dvs.Manufacturer} {dvs.Model}" });
+
+            Console.WriteLine("Join method:\n");
+            foreach (var item in employeeDevice)
+            {
+                Console.WriteLine(item);
+            }
+            Console.WriteLine();
+
+            var groupedEmployeeDevice = emps.GroupJoin(dvs,
+                                 emp => emp,
+                                 dvs => dvs.Owner,
+                                 (emp, dvs) => new { Owner = emp.Surname, Devices = dvs });
+
+            Console.WriteLine("GroupJoin method:\n");
+            foreach (var item in groupedEmployeeDevice)
+            {
+                Console.Write($"{item.Owner} => ");
+                foreach (var newItem in item.Devices)
+                {
+                    Console.Write($"{newItem.Model} ");
+                }
+                Console.WriteLine();
+            }
+            Console.WriteLine();
+
+            var groupedLaptops = dvs.GroupBy(d => d.Manufacturer)
+                                    .Select(el => new { Manufacturer = el.Key, Count = el.Count() });
+
+            Console.WriteLine("GroupBy method:\n");
+            foreach (var item in groupedLaptops)
+            {
+                Console.WriteLine(item);
+            }
+            Console.WriteLine();
+
+            var averageWorkingTime = emps.Average(emp => emp.WorkingDayLength);
+            Console.WriteLine($"Average working time: {double.Round(averageWorkingTime, 2)}\n");
+
+            var laptopUsersCount = dvs.Select(d => new { d.Manufacturer })
+                                      .Count(el => el.Manufacturer == "Dell");
+            Console.WriteLine($"There are {laptopUsersCount} people with Dell laptops\n");
+
+            var workingEmployeesPresent = emps.Any(e => !e.IsOnVacation);
+            Console.WriteLine($"{workingEmployeesPresent}\n");
+
+            try
+            {
+                Console.WriteLine("Single method:");
+                var singleManufacturerLaptop = dvs.Single(l => l.Manufacturer == "Lenovo");
+                Console.WriteLine(singleManufacturerLaptop.Owner.Name);
+            }
+            catch (InvalidOperationException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }  
+
+            Console.WriteLine("\nSet operation:");
+            var empty = Enumerable.Empty<Employee>().ToList();
+            empty.Add(new Employee("Smith", "John", "john@mail.com", "762589", 8, false));
+            empty.Add(new Employee("Bale", "Morgan", "morgan@mail.com", "258149", 8, false));
+
+            var except = empty?.Except(emps).ToList();
+            foreach (var item in except)
+            {
+                item.PrintEmployeeInfo();
             }
         }
     }
