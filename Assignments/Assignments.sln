@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepositoryPattern", "Reposi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Exceptions", "Exceptions\Exceptions.csproj", "{154F1B66-B82B-4FB1-B83E-7EC359F42C7B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DelegatesAndLINQ", "DelegatesAndLINQ\DelegatesAndLINQ.csproj", "{DA7F1D2D-BABD-4BFB-943C-1082C4E08D21}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DelegatesAndLINQ", "DelegatesAndLINQ\DelegatesAndLINQ.csproj", "{DA7F1D2D-BABD-4BFB-943C-1082C4E08D21}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GarbageCollectionSMTP", "GarbageCollectionSMTP\GarbageCollectionSMTP.csproj", "{F8ED2477-7A42-4EC7-BE68-B746515C8285}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{DA7F1D2D-BABD-4BFB-943C-1082C4E08D21}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DA7F1D2D-BABD-4BFB-943C-1082C4E08D21}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DA7F1D2D-BABD-4BFB-943C-1082C4E08D21}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F8ED2477-7A42-4EC7-BE68-B746515C8285}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F8ED2477-7A42-4EC7-BE68-B746515C8285}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F8ED2477-7A42-4EC7-BE68-B746515C8285}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F8ED2477-7A42-4EC7-BE68-B746515C8285}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
