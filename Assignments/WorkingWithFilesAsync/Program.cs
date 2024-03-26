@@ -29,6 +29,12 @@
                         case 2:
                             GetPatientByID(pr);
                             break;
+                        case 3:
+                            AddPatient(pr);
+                            break;
+                        case 4:
+                            UpdatePatient(pr);
+                            break;
                         case 5:
                             DeletePatientByID(pr);
                             break;
@@ -84,7 +90,101 @@
             }
             finally
             {
-                Console.WriteLine("..process of getting the patient finished");
+                Console.WriteLine("\n..process of getting the patient finished");
+            }
+        }
+
+        static void AddPatient(PatientRepository pr)
+        {
+            Console.WriteLine("\nProcess of adding the patient started..\n");
+
+            Patient p;
+            while (true)
+            {
+                Console.Write("Name: ");
+                var name = Console.ReadLine();
+
+                Console.Write("Surname: ");
+                var surname = Console.ReadLine();
+
+                Console.Write("Gender: ");
+                var gender = Console.ReadLine();
+
+                Console.Write("Assigned doctors: ");
+                var l1 = Console.ReadLine();
+                List<string> doctors = l1.Split(" ").ToList();
+
+                Console.Write("Illnesses: ");
+                var l2 = Console.ReadLine();
+                List<string> illnesses = l2.Split(" ").ToList();
+                
+                if (name != "" && surname != "" && gender != "" && l1 != "")
+                {
+                    p = new Patient(1, name, surname, gender, doctors, illnesses);
+                    break;
+                }
+                Console.WriteLine("\nFields cannot be null\n");
+            }
+
+            pr.Add(p);
+            Console.WriteLine("\nPacient succesfully added");
+            Console.WriteLine("\n..process of adding the patient finished");
+        }
+
+        static void UpdatePatient(PatientRepository pr)
+        {
+            Console.WriteLine("\nProcess of updating the patient started..");
+            Console.Write("\nEnter a patient's id: ");
+
+            var line = Console.ReadLine();
+            if (line is null || line == "")
+            {
+                Console.WriteLine("\nYou have to provide an ID for updating patient");
+                return;
+            }
+
+            int id = int.Parse(line);
+
+            Patient p;
+            while (true)
+            {
+                Console.Write("Name: ");
+                var name = Console.ReadLine();
+
+                Console.Write("Surname: ");
+                var surname = Console.ReadLine();
+
+                Console.Write("Gender: ");
+                var gender = Console.ReadLine();
+
+                Console.Write("Assigned doctors: ");
+                var l1 = Console.ReadLine();
+                List<string> doctors = l1.Split(" ").ToList();
+
+                Console.Write("Illnesses: ");
+                var l2 = Console.ReadLine();
+                List<string> illnesses = l2.Split(" ").ToList();
+
+                if (name != "" && surname != "" && gender != "" && l1 != "")
+                {
+                    p = new Patient(1, name, surname, gender, doctors, illnesses);
+                    break;
+                }
+                Console.WriteLine("\nFields cannot be null\n");
+            }
+
+            try
+            {
+                pr.Update(id, p);
+                Console.WriteLine("\nPacient succesfully updated");
+            }
+            catch (PatientDoesNotExistException ex)
+            {
+                Console.WriteLine($"\n{ex.Message}\n");
+            } 
+            finally
+            {
+                Console.WriteLine("\n..process of updating the patient finished");
             }
         }
 
@@ -96,7 +196,7 @@
             var line = Console.ReadLine();
             if (line is null || line == "")
             {
-                Console.WriteLine("\nYou have to provide an ID for searching patient");
+                Console.WriteLine("\nYou have to provide an ID for deleting patient");
                 return;
             }
 
@@ -112,7 +212,7 @@
             }
             finally
             {
-                Console.WriteLine("..process of getting the patient finished");
+                Console.WriteLine("..process of deleting the patient finished");
             }
         }
     }

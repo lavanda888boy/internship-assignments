@@ -45,17 +45,16 @@
             }
         }
 
-        public void Update(Patient patient)
+        public void Update(int id, Patient patient)
         {
-            ArgumentNullException.ThrowIfNull(patient);
-
-            int index = _patients.IndexOf(patient);
-            if (index == -1)
+            var p = _patients.Find(p => p.ID == id);
+            if (p is null)
             {
                 throw new PatientDoesNotExistException("Patient cannot be updated, it does not exist", patient);
             } 
             else
             {
+                int index = _patients.IndexOf(p);
                 _patients[index] = patient;
             }
         }
