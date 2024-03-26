@@ -20,9 +20,9 @@
         private List<string> _illnesses;
         public List<string>? Illnesses { get; set; }
 
-        public Patient(int id, string name, string surname, string gender, List<string> assignedDoctors, List<string> illnesses)
+        public Patient(string name, string surname, string gender, List<string> assignedDoctors, List<string> illnesses)
         {
-            _id = id;
+            _id = IdGenerator.CurrentID;
             _name = name;
             _surname = surname;
             _gender = gender;

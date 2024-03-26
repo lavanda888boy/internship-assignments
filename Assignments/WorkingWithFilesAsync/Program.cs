@@ -60,7 +60,7 @@
             {
                 foreach (var p in patients)
                 {
-                    Console.WriteLine(p.ToString());
+                    Console.WriteLine(p.ToString() + "\n");
                 }
             }
         }
@@ -120,7 +120,7 @@
                 
                 if (name != "" && surname != "" && gender != "" && l1 != "")
                 {
-                    p = new Patient(1, name, surname, gender, doctors, illnesses);
+                    p = new Patient(name, surname, gender, doctors, illnesses);
                     break;
                 }
                 Console.WriteLine("\nFields cannot be null\n");
@@ -164,10 +164,10 @@
                 Console.Write("Illnesses: ");
                 var l2 = Console.ReadLine();
                 List<string> illnesses = l2.Split(" ").ToList();
-
+                
                 if (name != "" && surname != "" && gender != "" && l1 != "")
                 {
-                    p = new Patient(1, name, surname, gender, doctors, illnesses);
+                    p = new Patient(name, surname, gender, doctors, illnesses);
                     break;
                 }
                 Console.WriteLine("\nFields cannot be null\n");
