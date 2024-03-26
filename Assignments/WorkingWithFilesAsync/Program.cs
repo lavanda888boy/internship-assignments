@@ -4,7 +4,7 @@
     {
         static void Main(string[] args)
         {
-            PatientRepository pr  = new PatientRepository();
+            PatientRepository pr = new PatientRepository();
             Console.WriteLine("Welcome to the hospital management!\n");
 
             while (true)
@@ -47,7 +47,7 @@
             }
         }
 
-        static void GetAllPatients(PatientRepository pr)
+        static async void GetAllPatients(PatientRepository pr)
         {
             Console.WriteLine();
 
@@ -55,9 +55,13 @@
             if (patients.Count() == 0)
             {
                 Console.WriteLine("There are currently no patients registered");
+                DateTimeOffset time = new(DateTime.UtcNow);
+                await Logger.WriteLogToFile($"GetAllPatients//{time}//success(no patients in the repository)");
             } 
             else
             {
+                DateTimeOffset time = new(DateTime.UtcNow);
+                await Logger.WriteLogToFile($"GetAllPatients//{time}//success");
                 foreach (var p in patients)
                 {
                     Console.WriteLine(p.ToString() + "\n");
@@ -65,7 +69,7 @@
             }
         }
 
-        static void GetPatientByID(PatientRepository pr)
+        static async void GetPatientByID(PatientRepository pr)
         {
             Console.WriteLine("\nProcess of getting the patient started..");
             Console.Write("\nEnter a patient's id: ");
@@ -73,6 +77,8 @@
             var line = Console.ReadLine();
             if (line is null  ||  line == "")
             {
+                DateTimeOffset time = new(DateTime.UtcNow);
+                await Logger.WriteLogToFile($"GetPatientByID//{time}//failure");
                 Console.WriteLine("\nYou have to provide an ID for searching patient");
                 return;
             } 
@@ -82,10 +88,15 @@
             try
             {
                 var patient = pr.GetById(id);
+
+                DateTimeOffset time = new(DateTime.UtcNow);
+                await Logger.WriteLogToFile($"GetPatientByID//{time}//success");
                 Console.WriteLine(patient.ToString());
             }
             catch (PatientDoesNotExistException ex)
             {
+                DateTimeOffset time = new(DateTime.UtcNow);
+                await Logger.WriteLogToFile($"GetPatientByID//{time}//failure");
                 Console.WriteLine($"\n{ex.Message}\n");
             }
             finally
@@ -94,7 +105,7 @@
             }
         }
 
-        static void AddPatient(PatientRepository pr)
+        static async void AddPatient(PatientRepository pr)
         {
             Console.WriteLine("\nProcess of adding the patient started..\n");
 
@@ -127,11 +138,14 @@
             }
 
             pr.Add(p);
+            DateTimeOffset time = new(DateTime.UtcNow);
+            await Logger.WriteLogToFile($"AddPatient//{time}//success");
+
             Console.WriteLine("\nPacient succesfully added");
             Console.WriteLine("\n..process of adding the patient finished");
         }
 
-        static void UpdatePatient(PatientRepository pr)
+        static async void UpdatePatient(PatientRepository pr)
         {
             Console.WriteLine("\nProcess of updating the patient started..");
             Console.Write("\nEnter a patient's id: ");
@@ -139,6 +153,9 @@
             var line = Console.ReadLine();
             if (line is null || line == "")
             {
+                DateTimeOffset time = new(DateTime.UtcNow);
+                await Logger.WriteLogToFile($"UpdatePatient//{time}//failure");
+
                 Console.WriteLine("\nYou have to provide an ID for updating patient");
                 return;
             }
@@ -167,7 +184,7 @@
                 
                 if (name != "" && surname != "" && gender != "" && l1 != "")
                 {
-                    p = new Patient(name, surname, gender, doctors, illnesses);
+                    p = new Patient(id, name, surname, gender, doctors, illnesses);
                     break;
                 }
                 Console.WriteLine("\nFields cannot be null\n");
@@ -176,10 +193,15 @@
             try
             {
                 pr.Update(id, p);
+
+                DateTimeOffset time = new(DateTime.UtcNow);
+                await Logger.WriteLogToFile($"UpdatePatient//{time}//success");
                 Console.WriteLine("\nPacient succesfully updated");
             }
             catch (PatientDoesNotExistException ex)
             {
+                DateTimeOffset time = new(DateTime.UtcNow);
+                await Logger.WriteLogToFile($"UpdatePatient//{time}//failure");
                 Console.WriteLine($"\n{ex.Message}\n");
             } 
             finally
@@ -188,7 +210,7 @@
             }
         }
 
-        static void DeletePatientByID(PatientRepository pr)
+        static async void DeletePatientByID(PatientRepository pr)
         {
             Console.WriteLine("\nProcess of deleting the patient started..");
             Console.Write("\nEnter a patient's id: ");
@@ -196,6 +218,9 @@
             var line = Console.ReadLine();
             if (line is null || line == "")
             {
+                DateTimeOffset time = new(DateTime.UtcNow);
+                await Logger.WriteLogToFile($"DeletePatient//{time}//failure");
+
                 Console.WriteLine("\nYou have to provide an ID for deleting patient");
                 return;
             }
@@ -205,14 +230,18 @@
             try
             {
                 pr.DeleteById(id);
+                DateTimeOffset time = new(DateTime.UtcNow);
+                await Logger.WriteLogToFile($"DeletePatient//{time}//success");
             }
             catch (PatientDoesNotExistException ex)
             {
+                DateTimeOffset time = new(DateTime.UtcNow);
+                await Logger.WriteLogToFile($"DeletePatient//{time}//failure");
                 Console.WriteLine($"\n{ex.Message}\n");
             }
             finally
             {
-                Console.WriteLine("..process of deleting the patient finished");
+                Console.WriteLine("\n..process of deleting the patient finished");
             }
         }
     }

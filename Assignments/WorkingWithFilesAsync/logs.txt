@@ -1,0 +1,8 @@
+GetAllPatients//26-Mar-24 8:21:37 PM +00:00//success(no patients in the repository)
+AddPatient//26-Mar-24 8:21:53 PM +00:00//success
+UpdatePatient//26-Mar-24 8:22:15 PM +00:00//success
+AddPatient//26-Mar-24 8:22:37 PM +00:00//success
+GetAllPatients//26-Mar-24 8:22:42 PM +00:00//success
+DeletePatient//26-Mar-24 8:23:06 PM +00:00//success
+GetAllPatients//26-Mar-24 8:23:11 PM +00:00//success
+GetPatientByID//26-Mar-24 8:23:39 PM +00:00//failure

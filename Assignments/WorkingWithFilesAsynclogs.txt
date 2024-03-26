@@ -1,0 +1,2 @@
+GetAllPatients--26-Mar-24 8:17:00 PM +00:00--success(no patients in the repository)
+GetPatientByID--26-Mar-24 8:17:22 PM +00:00--failure

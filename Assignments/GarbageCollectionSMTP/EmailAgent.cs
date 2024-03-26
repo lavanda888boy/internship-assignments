@@ -44,10 +44,6 @@ namespace GarbageCollectionSMTP
                 {
                     Console.WriteLine($"Failed to send email. Error: {ex.Message}");
                 }
-                catch (SecurityException ex)
-                {
-                    Console.WriteLine($"Email operation requires security permissions. Error: {ex.Message}");
-                }
             }
         }
     }

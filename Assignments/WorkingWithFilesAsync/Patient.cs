@@ -30,6 +30,12 @@
             _illnesses = illnesses;
         }
 
+        public Patient(int id, string name, string surname, string gender, List<string> assignedDoctors, List<string> illnesses)
+            : this(name, surname, gender, assignedDoctors, illnesses)
+        {
+            _id = id;
+        }
+
         public override string ToString()
         {
             var doctors = _assignedDoctors.Aggregate((curr, next) => curr + ", " + next);
