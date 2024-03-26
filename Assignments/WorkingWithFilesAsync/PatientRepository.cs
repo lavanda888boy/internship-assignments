@@ -16,7 +16,14 @@
 
         public void DeleteById(int id)
         {
-            throw new NotImplementedException();
+            var p = _patients.Find(p => p.ID == id); 
+            if (p is null)
+            {
+                throw new PatientDoesNotExistException($"Patient with id = {id} cannot be deleted, it does not exist");
+            } else
+            {
+                _patients.Remove(p);
+            }
         }
 
         public IEnumerable<Patient> GetAll()
@@ -26,12 +33,28 @@
 
         public Patient GetById(int id)
         {
-            throw new NotImplementedException();
+            var p = _patients.Find(p => p.ID == id);
+            if (p is null)
+            {
+                throw new PatientDoesNotExistException($"Patient with id = {id} cannot be extracted, it does not exist");
+            } else
+            {
+                return p;
+            }
         }
 
-        public void Update(Patient entity)
+        public void Update(Patient patient)
         {
-            throw new NotImplementedException();
+            ArgumentNullException.ThrowIfNull(patient);
+
+            int index = _patients.IndexOf(patient);
+            if (index == -1)
+            {
+                throw new PatientDoesNotExistException("Patient cannot be updated, it does not exist", patient);
+            } else
+            {
+                _patients[index] = patient;
+            }
         }
     }
 }

@@ -3,6 +3,7 @@
     internal class Patient
     {
         private readonly int _id;
+        public int ID { get { return _id; } }
         
         private string _name;
         public string Name { get { return _name; } }
