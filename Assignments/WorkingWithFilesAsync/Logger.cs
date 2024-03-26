@@ -6,7 +6,9 @@
 
         public static async Task WriteLogToFile(string log)
         {
-            using(StreamWriter sw = new StreamWriter(_logDirectory + "logs.txt", true))
+            DateTimeOffset today = new(DateTime.UtcNow);
+            string logFileName = $"Logs_{today.ToString("dd.MM.yyyy")}.txt";
+            using(StreamWriter sw = new StreamWriter(_logDirectory + logFileName, true))
             {
                 await sw.WriteLineAsync(log);
             }
