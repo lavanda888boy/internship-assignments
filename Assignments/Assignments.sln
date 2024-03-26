@@ -13,7 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Exceptions", "Exceptions\Ex
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DelegatesAndLINQ", "DelegatesAndLINQ\DelegatesAndLINQ.csproj", "{DA7F1D2D-BABD-4BFB-943C-1082C4E08D21}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GarbageCollectionSMTP", "GarbageCollectionSMTP\GarbageCollectionSMTP.csproj", "{F8ED2477-7A42-4EC7-BE68-B746515C8285}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GarbageCollectionSMTP", "GarbageCollectionSMTP\GarbageCollectionSMTP.csproj", "{F8ED2477-7A42-4EC7-BE68-B746515C8285}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkingWithFilesAsync", "WorkingWithFilesAsync\WorkingWithFilesAsync.csproj", "{C4A0D90E-2856-4D28-8AC7-DC96AE2DC290}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,10 @@ Global
 		{F8ED2477-7A42-4EC7-BE68-B746515C8285}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F8ED2477-7A42-4EC7-BE68-B746515C8285}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F8ED2477-7A42-4EC7-BE68-B746515C8285}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C4A0D90E-2856-4D28-8AC7-DC96AE2DC290}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C4A0D90E-2856-4D28-8AC7-DC96AE2DC290}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C4A0D90E-2856-4D28-8AC7-DC96AE2DC290}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C4A0D90E-2856-4D28-8AC7-DC96AE2DC290}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

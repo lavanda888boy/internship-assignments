@@ -20,7 +20,8 @@
             if (p is null)
             {
                 throw new PatientDoesNotExistException($"Patient with id = {id} cannot be deleted, it does not exist");
-            } else
+            } 
+            else
             {
                 _patients.Remove(p);
             }
@@ -37,7 +38,8 @@
             if (p is null)
             {
                 throw new PatientDoesNotExistException($"Patient with id = {id} cannot be extracted, it does not exist");
-            } else
+            } 
+            else
             {
                 return p;
             }
@@ -51,7 +53,8 @@
             if (index == -1)
             {
                 throw new PatientDoesNotExistException("Patient cannot be updated, it does not exist", patient);
-            } else
+            } 
+            else
             {
                 _patients[index] = patient;
             }
