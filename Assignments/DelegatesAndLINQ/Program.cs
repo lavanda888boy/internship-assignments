@@ -25,13 +25,13 @@
                 new Laptop("Acer", "Aspire", mike),
             ];
 
-            Action<Employee> action = (employee) => employee.WorkingDayLength += 1;
+            /*Action<Employee> action = (employee) => employee.WorkingDayLength += 1;
             ec.CollectiveAction(action);
 
             foreach (Employee employee in ec)
             {
                 employee.PrintEmployeeInfo();
-            }
+            }*/
 
             AdvancedLINQ(ec.Employees, devices);
 
@@ -75,7 +75,7 @@
 
         static void AdvancedLINQ(List<Employee> emps, List<Laptop> dvs)
         {
-            var employeeDevice = emps.Join(dvs,
+            /*var employeeDevice = emps.Join(dvs,
                                      emp => emp,
                                      dvs => dvs.Owner,
                                      (emp, dvs) => new { Owner = emp.Surname, DeviceName = $"{dvs.Manufacturer} {dvs.Model}" });
@@ -133,18 +133,80 @@
             catch (InvalidOperationException ex)
             {
                 Console.WriteLine(ex.Message);
-            }  
+            }  */
+
 
             Console.WriteLine("\nSet operation:");
             var empty = Enumerable.Empty<Employee>().ToList();
             empty.Add(new Employee("Smith", "John", "john@mail.com", "762589", 8, false));
             empty.Add(new Employee("Bale", "Morgan", "morgan@mail.com", "258149", 8, false));
+            empty.Add(new Employee("Schrute", "Dwight", "dwight@mail.com", "959559", 10, false));
 
-            var except = empty?.Except(emps).ToList();
-            foreach (var item in except)
+            var empsNames = emps.Select(e => new { FullName = $"{e.Surname} {e.Name}" });
+            var newEmpsNames = empty.Select(e => new { FullName = $"{e.Surname} {e.Name}" });
+
+            var union = newEmpsNames.Union(empsNames).ToDictionary(item => item.FullName, item => item);
+            var concat = emps.Concat(empty);
+            var intersect = empsNames.Intersect(newEmpsNames).ToHashSet();
+            var except = newEmpsNames.Except(empsNames).ToArray();
+            foreach (var item in union)
+            {
+                Console.WriteLine($"{item.Key} {item.Value}");
+            }
+            Console.WriteLine();
+            foreach (var item in concat)
             {
                 item.PrintEmployeeInfo();
             }
-        }
+            Console.WriteLine();
+            foreach (var item in intersect)
+            {
+                Console.WriteLine(item);
+            }
+
+            Console.WriteLine("\nScalar operations:\n");
+            var lazyEmpDayLength = emps.Min(e => e.WorkingDayLength);
+            Console.WriteLine(lazyEmpDayLength);
+
+            var hardworkingEmpDayLength = emps.Max(e => e.WorkingDayLength);
+            Console.WriteLine(hardworkingEmpDayLength);
+
+            var totalWorkingHours = emps.Sum(e => e.WorkingDayLength);
+            Console.WriteLine(totalWorkingHours);
+
+            var names = new List<string>{ "John", "Paul", "Peter", "Mike", "Tom" };
+            var otherNames = new List<string> { "Paul", "Peter", "Tom", "Mike", "John" };
+
+            var combinations = names.Zip(otherNames, (n, o) => (n + " " + o));
+            foreach (var item in combinations)
+            {
+                Console.WriteLine(item);
+            }
+
+            var stringOfNames = names.Aggregate((current, next) => current + ", " + next);
+            Console.WriteLine(stringOfNames);
+
+            if (names.Contains("Paul"))
+            {
+                Console.WriteLine("Paul is on the list");
+            }
+
+            if (names.SequenceEqual(otherNames))
+            {
+                Console.WriteLine("Sequences are equal");
+            }
+
+            Console.WriteLine();
+            var firstEmp = emps.FirstOrDefault(e => e.WorkingDayLength < 4, new Employee("John", "Doe", "mail.com", "111111", 0, true));
+            firstEmp.PrintEmployeeInfo();
+
+            Console.WriteLine();
+            var dev = dvs.ElementAt(2);
+            Console.WriteLine(dev.Model);
+
+            List<Employee> es = new List<Employee>();
+            var newEs = es.DefaultIfEmpty(new Employee("John", "Doe", "mail.com", "111111", 0, true));
+            newEs.ElementAt(0).PrintEmployeeInfo();
+        }   
     }
 }

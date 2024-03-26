@@ -1,6 +1,6 @@
 ﻿namespace DelegatesAndLINQ
 {
-    internal class Employee
+    internal class Employee : IComparable<Employee>
     {
         private string _name;
         public string Name => _name;
@@ -40,6 +40,24 @@
             Phone = phone;
             WorkingDayLength = workingDayLength;
             IsOnVacation = isOnVacation;
+        }
+
+        public int CompareTo(Employee? e)
+        {
+            if (e is null) throw new ArgumentNullException("Employee for comparison is null");
+
+            if (_name == e.Name && _surname == e.Surname && _email == e.Email && _phone == e.Phone && _workingDayLength == e.WorkingDayLength && _isOnVacation == e.IsOnVacation)
+            {
+                return 0;
+            }
+
+            if (_workingDayLength < e.WorkingDayLength)
+            {
+                return -1;
+            } else 
+            {
+                return 1;
+            }
         }
     }
 }
