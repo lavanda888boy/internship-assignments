@@ -2,7 +2,7 @@
 {
     internal class NotificationService
     {
-        public void SendNotification(Notification notification)
+        public static void SendNotification(Notification notification)
         {
             Console.WriteLine("Sending notification via notification service..");
             notification.Send();

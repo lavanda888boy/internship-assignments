@@ -9,14 +9,13 @@
             string content = "Hello, my friend";
 
             Notification n = new EmailNotification(new NotificationMessage(sender, recipient, content));
-            NotificationService service = new NotificationService();
-            service.SendNotification(n);
+            NotificationService.SendNotification(n);
 
             n.Message = new NotificationMessage(recipient, sender, "Oh, hi there");
-            service.SendNotification(n);
+            NotificationService.SendNotification(n);
 
             Notification n1 = new SMSNotification(new NotificationMessage(sender, recipient, content));
-            service.SendNotification(n1);
+            NotificationService.SendNotification(n1);
         }
     }
 }
