@@ -22,7 +22,11 @@
             {
                 s.Register(new CompactRepository());
             }
-            catch (InvalidSpeakerPersonalInfoException ex)
+            catch (ArgumentNullException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            catch (ArgumentException ex)
             {
                 Console.WriteLine(ex.Message);
             }

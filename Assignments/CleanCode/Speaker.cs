@@ -10,13 +10,13 @@
         private readonly int _certificationsLimit = 3;
         private readonly int _browserMajorVersion = 9;
 
-        private readonly List<(int, int)> _feeRanges = new()
+        private readonly Dictionary<int, int> _feeRanges = new()
         {
-            (1, 500),
-            (2, 250),
-            (4, 100),
-            (6, 50),
-            (10, 0)
+            { 1, 500 },
+            { 2, 250 },
+            { 4, 100 },
+            { 6, 50 },
+            { 10, 0 }
         };
 
         public string FirstName { get; set; }
@@ -33,35 +33,20 @@
 
         public void Register(IRepository repository)
         {
-            try
-            {
-                ValidatePersonalInfo();
+            ValidatePersonalInfo();
 
-                if (CheckCertifications())
-                {
-                    if (TryToApproveSessions())
-                    {
-                        CalculateRegistrationFee();
-                        repository.SaveSpeaker(this);
-                    }
-                    else
-                    {
-                        throw new NoSessionsApprovedException("No sessions approved.");
-                    }
-                }
-                else
-                {
-                    throw new SpeakerDoesntMeetRequirementsException("Speaker doesn't meet our abitrary and capricious standards.");
-                }
-            }
-            catch (ArgumentNullException ex)
+            if (!CheckCertifications())
             {
-                throw new InvalidSpeakerPersonalInfoException(ex.Message);
+                throw new SpeakerDoesntMeetRequirementsException("Speaker doesn't meet our abitrary and capricious standards.");
             }
-            catch (ArgumentException ex)
+
+            if (!TryToApproveSessions())
             {
-                throw new InvalidSpeakerPersonalInfoException(ex.Message);
+                throw new NoSessionsApprovedException("No sessions approved.");
             }
+
+            RegistrationFee = CalculateRegistrationFee();
+            repository.SaveSpeaker(this);
         }
 
         private void ValidatePersonalInfo()
@@ -74,48 +59,58 @@
 
         private bool CheckCertifications()
         {
-            if (Exp > _experienceLimit || HasBlog || Certifications.Count > _certificationsLimit || _employers.Contains(Employer))
-            {
-                return true;
-            }
-            else
-            {
-                string emailDomain = Email.Split('@').Last();
+            return (HasExperience() ||
+                   HasBlog ||
+                   HasEnoughCertifications() ||
+                   IsEmployed()) ||
+                   (HasEmailInDomains() && 
+                   !(HasInternetExplorerBrowser() && 
+                   HasRightBrowserVersion()));
+        }
 
-                if (_domains.Contains(emailDomain) && (!(Browser.Name == WebBrowser.BrowserName.InternetExplorer && Browser.MajorVersion < _browserMajorVersion)))
-                {
-                    return false;
-                }
-                else
-                {
-                    return true;
-                }
-            }
+        private bool HasExperience()
+        {
+            return Exp > _experienceLimit;
+        }
+
+        private bool HasEnoughCertifications()
+        {
+            return Certifications.Count > _certificationsLimit;
+        }
+
+        private bool IsEmployed()
+        {
+            return _employers.Contains(Employer);
+        }
+
+        private bool HasEmailInDomains()
+        {
+            return _domains.Contains(Email.Split('@').Last());
+        }
+
+        private bool HasInternetExplorerBrowser()
+        {
+            return Browser.Name == WebBrowser.BrowserName.InternetExplorer;
+        }
+
+        private bool HasRightBrowserVersion()
+        {
+            return Browser.MajorVersion < _browserMajorVersion;
         }
 
         private bool TryToApproveSessions()
         {
-            foreach (var session in Sessions)
-            {
-                if (_topics.Any(topic => session.Title.Contains(topic) || session.Description.Contains(topic)))
-                {
-                    return true;
-                }
-
-            }
-            return false;
+            return Sessions.Any(session => _topics.Any(topic => CheckSessionTopicCorrespondence(session, topic)));
         }
 
-        private void CalculateRegistrationFee()
+        private bool CheckSessionTopicCorrespondence(Session session, string topic)
         {
-            foreach (var (experienceThreshold, fee) in _feeRanges)
-            {
-                if (Exp <= experienceThreshold)
-                {
-                    RegistrationFee = fee;
-                    break;
-                }
-            }
+            return session.Title.Contains(topic) || session.Description.Contains(topic);
+        }
+
+        private int CalculateRegistrationFee()
+        {
+            return _feeRanges.First(f => Exp <= f.Key).Value;
         }
     }
 }
