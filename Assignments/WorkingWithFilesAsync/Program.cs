@@ -55,13 +55,11 @@
             if (patients.Count() == 0)
             {
                 Console.WriteLine("There are currently no patients registered");
-                DateTimeOffset time = new(DateTime.UtcNow);
-                await Logger.WriteLogToFile($"GetAllPatients//{time}//success(no patients in the repository)");
+                await Logger.WriteLogToFile("GetAllPatients", "success(no patients in the repository)");
             } 
             else
             {
-                DateTimeOffset time = new(DateTime.UtcNow);
-                await Logger.WriteLogToFile($"GetAllPatients//{time}//success");
+                await Logger.WriteLogToFile("GetAllPatients", "success");
                 foreach (var p in patients)
                 {
                     Console.WriteLine(p.ToString() + "\n");
@@ -77,8 +75,7 @@
             var line = Console.ReadLine();
             if (line is null  ||  line == "")
             {
-                DateTimeOffset time = new(DateTime.UtcNow);
-                await Logger.WriteLogToFile($"GetPatientByID//{time}//failure");
+                await Logger.WriteLogToFile("GetPatientByID", "failure");
                 Console.WriteLine("\nYou have to provide an ID for searching patient");
                 return;
             } 
@@ -88,15 +85,12 @@
             try
             {
                 var patient = pr.GetById(id);
-
-                DateTimeOffset time = new(DateTime.UtcNow);
-                await Logger.WriteLogToFile($"GetPatientByID//{time}//success");
+                await Logger.WriteLogToFile("GetPatientByID", "success");
                 Console.WriteLine(patient.ToString());
             }
             catch (PatientDoesNotExistException ex)
             {
-                DateTimeOffset time = new(DateTime.UtcNow);
-                await Logger.WriteLogToFile($"GetPatientByID//{time}//failure");
+                await Logger.WriteLogToFile($"GetPatientByID", "failure");
                 Console.WriteLine($"\n{ex.Message}\n");
             }
             finally
@@ -138,8 +132,7 @@
             }
 
             pr.Add(p);
-            DateTimeOffset time = new(DateTime.UtcNow);
-            await Logger.WriteLogToFile($"AddPatient//{time}//success");
+            await Logger.WriteLogToFile("AddPatient", "success");
 
             Console.WriteLine("\nPacient succesfully added");
             Console.WriteLine("\n..process of adding the patient finished");
@@ -153,8 +146,7 @@
             var line = Console.ReadLine();
             if (line is null || line == "")
             {
-                DateTimeOffset time = new(DateTime.UtcNow);
-                await Logger.WriteLogToFile($"UpdatePatient//{time}//failure");
+                await Logger.WriteLogToFile("UpdatePatient", "failure");
 
                 Console.WriteLine("\nYou have to provide an ID for updating patient");
                 return;
@@ -194,14 +186,12 @@
             {
                 pr.Update(id, p);
 
-                DateTimeOffset time = new(DateTime.UtcNow);
-                await Logger.WriteLogToFile($"UpdatePatient//{time}//success");
+                await Logger.WriteLogToFile("UpdatePatient", "success");
                 Console.WriteLine("\nPacient succesfully updated");
             }
             catch (PatientDoesNotExistException ex)
             {
-                DateTimeOffset time = new(DateTime.UtcNow);
-                await Logger.WriteLogToFile($"UpdatePatient//{time}//failure");
+                await Logger.WriteLogToFile("UpdatePatient", "failure");
                 Console.WriteLine($"\n{ex.Message}\n");
             } 
             finally
@@ -218,8 +208,7 @@
             var line = Console.ReadLine();
             if (line is null || line == "")
             {
-                DateTimeOffset time = new(DateTime.UtcNow);
-                await Logger.WriteLogToFile($"DeletePatient//{time}//failure");
+                await Logger.WriteLogToFile("DeletePatient", "failure");
 
                 Console.WriteLine("\nYou have to provide an ID for deleting patient");
                 return;
@@ -230,13 +219,11 @@
             try
             {
                 pr.DeleteById(id);
-                DateTimeOffset time = new(DateTime.UtcNow);
-                await Logger.WriteLogToFile($"DeletePatient//{time}//success");
+                await Logger.WriteLogToFile("DeletePatient", "success");
             }
             catch (PatientDoesNotExistException ex)
             {
-                DateTimeOffset time = new(DateTime.UtcNow);
-                await Logger.WriteLogToFile($"DeletePatient//{time}//failure");
+                await Logger.WriteLogToFile("DeletePatient", "failure");
                 Console.WriteLine($"\n{ex.Message}\n");
             }
             finally
