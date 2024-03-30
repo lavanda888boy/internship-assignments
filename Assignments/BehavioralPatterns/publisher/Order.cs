@@ -20,12 +20,10 @@ namespace BehavioralPatterns.publisher
         public ISubscriber? Customer { get; set; }
         public List<ISubscriber> Staff {  get; set; }
 
-        public Order(ISubscriber customer, List<ISubscriber> staff)
+        public Order()
         {
             OrderNumber = Guid.NewGuid().ToString();
-            Customer = customer;
-            Staff = staff;
-            Status = OrderStatus.PLACED;
+            Staff = new List<ISubscriber>();
         }
 
         public void Notify()
@@ -46,7 +44,16 @@ namespace BehavioralPatterns.publisher
 
         public void Attach(ISubscriber subscriber)
         {
-            Staff.Add(subscriber);
+            if (subscriber is Customer)
+            {
+                Customer = subscriber;
+                Console.WriteLine("Customer was attached to the order");
+            }
+            else
+            {
+                Staff.Add(subscriber);
+                Console.WriteLine("Staff member was attached to the order");
+            }
         }
 
         public void Detach(ISubscriber subscriber)

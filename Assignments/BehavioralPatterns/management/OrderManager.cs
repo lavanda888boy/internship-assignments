@@ -29,7 +29,12 @@ namespace BehavioralPatterns.management
         public void PlaceOrder(ISubscriber customer)
         {
             List<ISubscriber> orderStaff = _staff.Take(_staffCount).ToList();
-            IPublisher order = new Order(customer, orderStaff);
+            IPublisher order = new Order();
+
+            order.Attach(customer);
+            orderStaff.ForEach(s => order.Attach(s));
+            ((Order)order).Status = OrderStatus.PLACED;
+
             _orders.Add(order);
         }
 
