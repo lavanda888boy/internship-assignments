@@ -1,5 +1,6 @@
 ﻿using BehavioralPatterns.publisher;
 using BehavioralPatterns.subscriber;
+using BehavioralPatterns.utility;
 
 namespace BehavioralPatterns.management
 {
@@ -20,11 +21,31 @@ namespace BehavioralPatterns.management
             _orders = new List<IPublisher>();
         }
 
+        public List<IPublisher> GetOrders()
+        {
+            return _orders;
+        }
+
         public void PlaceOrder(ISubscriber customer)
         {
             List<ISubscriber> orderStaff = _staff.Take(_staffCount).ToList();
             IPublisher order = new Order(customer, orderStaff);
             _orders.Add(order);
+        }
+
+        public void ProcessOrder(string orderNumber)
+        {
+            var order = _orders.Cast<Order>().First(o => o.OrderNumber == orderNumber);
+            order.Status = OrderStatus.PROCESSING;
+        }
+
+        public void PrepareOrderForShipping(string orderNumber)
+        {
+            var order = _orders.Cast<Order>().First(o => o.OrderNumber == orderNumber);
+            order.Status = OrderStatus.READY_FOR_SHIPING;
+            
+            var staffListCopy = order.Staff.ToList();
+            staffListCopy.ForEach(s => order.Detach(s));
         }
     }
 }

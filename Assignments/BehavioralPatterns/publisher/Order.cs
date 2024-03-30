@@ -54,10 +54,12 @@ namespace BehavioralPatterns.publisher
             if (subscriber is Customer)
             {
                 Customer = null;
+                Console.WriteLine("Customer was detached from order");
             }
             else
             {
-                Staff.Remove(subscriber as ISubscriber);
+                Staff.Remove(subscriber);
+                Console.WriteLine("Staff member was detached from order");
             }
          }
     }
