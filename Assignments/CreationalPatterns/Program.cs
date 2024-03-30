@@ -1,5 +1,4 @@
 ﻿using CreationalPatterns.builder;
-using CreationalPatterns.entity;
 using CreationalPatterns.factory;
 
 namespace CreationalPatterns
