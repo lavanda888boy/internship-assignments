@@ -33,8 +33,8 @@ namespace SOLID
             INotificationManager notificationManager = new NotificationManager(userRepository, notificationServices);
             
             int senderId = 2;
-            int recipientId = 5;
-            string message = "Hello, my friend"; 
+            int recipientId = 1;
+            string message = "Hello, my friend. Check this out <call-to-action>"; 
             NotificationType notificationType = NotificationType.SMS;
 
             try
