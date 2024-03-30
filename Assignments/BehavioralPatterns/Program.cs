@@ -15,6 +15,8 @@ namespace BehavioralPatterns
             string orderNumber = ((Order) ordm.GetOrders().Last()).OrderNumber;
             ordm.ProcessOrder(orderNumber);
             ordm.PrepareOrderForShipping(orderNumber);
+
+            ordm.PlaceOrder(customer);
         }
     }
 }

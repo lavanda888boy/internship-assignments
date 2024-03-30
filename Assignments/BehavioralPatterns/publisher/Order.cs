@@ -35,10 +35,7 @@ namespace BehavioralPatterns.publisher
 
             if (Status == OrderStatus.PLACED || Status == OrderStatus.READY_FOR_SHIPING)
             {
-                foreach (var st in Staff)
-                {
-                    st.Update(OrderNumber, Status);
-                }
+                Staff.ForEach(st => st.Update(OrderNumber, Status));
             }
         }
 

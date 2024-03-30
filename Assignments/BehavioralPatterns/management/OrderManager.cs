@@ -9,7 +9,7 @@ namespace BehavioralPatterns.management
         private List<IPublisher> _orders;
         private List<ISubscriber> _staff = new()
         {
-            new Staff("Denis", true),
+            new Staff("Denis", false),
             new Staff("Mike", true),
             new Staff("Steve", false),
             new Staff("Harvey", true)
@@ -28,11 +28,22 @@ namespace BehavioralPatterns.management
 
         public void PlaceOrder(ISubscriber customer)
         {
-            List<ISubscriber> orderStaff = _staff.Take(_staffCount).ToList();
+            var orderStaff = _staff.Cast<Staff>().Where(s => s.IsFree).Take(_staffCount).ToList();
+            
+            if (orderStaff.Count == 0)
+            {
+                Console.WriteLine("No staff available for order processing");
+                return;
+            }
+            
             IPublisher order = new Order();
 
             order.Attach(customer);
-            orderStaff.ForEach(s => order.Attach(s));
+            orderStaff.ForEach(s =>
+            {
+                order.Attach(s);
+                s.IsFree = false;
+            });
             ((Order)order).Status = OrderStatus.PLACED;
 
             _orders.Add(order);
