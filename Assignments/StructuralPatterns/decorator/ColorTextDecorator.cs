@@ -11,7 +11,7 @@
 
         public override string GetText()
         {
-            return $"{_textComponent.GetText()}\nColor: {Color}";
+            return $"{_textComponent.GetText()}\n<<Color: {Color}>>";
         }
     }
 }

@@ -6,7 +6,7 @@
 
         public override string GetText()
         {
-            return $"{_textComponent.GetText()}\nItalic styled";
+            return $"{_textComponent.GetText()}\n<<Italic>>";
         }
     }
 }

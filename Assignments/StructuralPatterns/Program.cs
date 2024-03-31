@@ -1,4 +1,5 @@
 ﻿using StructuralPatterns.decorator;
+using StructuralPatterns.facade;
 
 namespace StructuralPatterns
 {
@@ -7,7 +8,10 @@ namespace StructuralPatterns
         static void Main(string[] args)
         {
             ITextComponent text = new TextComponent("Some text");
-            Console.WriteLine(text.GetText());
+            ITextEditor textEditor = new TextEditor(text);
+            Console.WriteLine(textEditor.MakeColored("red").GetText());
+            Console.WriteLine(textEditor.MakeBold().GetText());
+            Console.WriteLine(textEditor.Undo().GetText());
         }
     }
 }
