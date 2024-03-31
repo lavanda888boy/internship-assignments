@@ -9,5 +9,6 @@ namespace StructuralPatterns.facade
         ITextComponent Underline();
         ITextComponent MakeColored(string color);
         ITextComponent Undo();
+        void Reset();
     }
 }

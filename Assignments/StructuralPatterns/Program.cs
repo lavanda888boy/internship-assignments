@@ -11,6 +11,7 @@ namespace StructuralPatterns
 
             while(true)
             {
+                editor.Reset();
                 Console.WriteLine("Welcome to the text editor! Please enter the text to edit:");
                 var text = Console.ReadLine();
                 Console.WriteLine();
