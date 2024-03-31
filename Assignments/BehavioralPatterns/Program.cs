@@ -1,6 +1,7 @@
 ﻿using BehavioralPatterns.management;
 using BehavioralPatterns.publisher;
 using BehavioralPatterns.subscriber;
+using BehavioralPatterns.utility;
 
 namespace BehavioralPatterns
 {
@@ -8,7 +9,7 @@ namespace BehavioralPatterns
     {
         static void Main(string[] args)
         {
-            ISubscriber customer = new Customer("Seva");
+            ISubscriber customer = new Customer("Seva", NotificationType.EMAIL);
             IOrderManagement ordm = new OrderManager();
             ordm.PlaceOrder(customer);
 
