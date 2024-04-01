@@ -41,6 +41,10 @@ namespace SOLID
             {
                 notificationManager.Notify(senderId, recipientId, message, notificationType);
             }
+            catch (UserDoesNotExistException ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
             catch (ServiceNotAvailableException ex)
             {
                 Console.WriteLine(ex.Message);

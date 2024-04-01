@@ -1,16 +1,13 @@
-﻿using CreationalPatterns.builder;
-using CreationalPatterns.entity;
+﻿using CreationalPatterns.entity;
+using CreationalPatterns.utility;
 
 namespace CreationalPatterns.factory
 {
-    internal class EspressoCreator : CoffeeCreator
+    internal class EspressoCreator : ICoffeeCreator
     {
-        public EspressoCreator(ICoffeeBuilder coffeeBuilder) : base(coffeeBuilder) { }
-
-        public override Coffee CreateCoffee(CoffeeProperties cp)
+        public Coffee CreateCoffee(MilkType milkType)
         {
-            return _coffeeBuilder.AddBlackCoffee()
-                                 .GetCoffee();
+            return new Espresso();
         }
     }
 }

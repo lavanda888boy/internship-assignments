@@ -18,34 +18,28 @@ namespace SOLID.infrastructure
 
         public void Notify(int senderId, int recipientId, string message, NotificationType notificationType)
         {
-            User sender = _userRepository.GetById(senderId);
+            User sender;
             User recipient;
 
-            try
+            sender = _userRepository.GetById(senderId);
+
+            var service = _notificationServices.FirstOrDefault(s => s.GetType() == GetServiceType(notificationType));
+            if (service == null)
             {
-                var service = _notificationServices.FirstOrDefault(s => s.GetType() == GetServiceType(notificationType));
-                if (service == null)
-                {
-                    throw new ServiceNotAvailableException("The chosen notification service is not available");
-                }
-                
-                recipient = _userRepository.GetById(recipientId);
-                
-                if (message.Contains("<call-to-action>"))
-                {
-                    AdvancedNotification advancedNotification = new AdvancedNotification(message, "<call-to-action>");
-                    service.SendNotification(sender, recipient, advancedNotification);
-                }
-                else
-                {
-                    Notification notification = new Notification(message);
-                    service.SendNotification(sender, recipient, notification);
-                }
+                throw new ServiceNotAvailableException("The chosen notification service is not available");
             }
-            catch (UserDoesNotExistException ex)
+
+            recipient = _userRepository.GetById(recipientId);
+
+            if (message.Contains("<call-to-action>"))
             {
-                Console.WriteLine(ex.Message);
-                Console.WriteLine("User cannot be notified");
+                AdvancedNotification advancedNotification = new AdvancedNotification(message, "<call-to-action>");
+                service.SendNotification(sender, recipient, advancedNotification);
+            }
+            else
+            {
+                Notification notification = new Notification(message);
+                service.SendNotification(sender, recipient, notification);
             }
         }
 

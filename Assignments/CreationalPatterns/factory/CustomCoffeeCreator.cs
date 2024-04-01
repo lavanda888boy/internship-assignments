@@ -1,20 +1,24 @@
-﻿using CreationalPatterns.builder;
-using CreationalPatterns.entity;
+﻿using CreationalPatterns.entity;
+using CreationalPatterns.utility;
 
 namespace CreationalPatterns.factory
 {
-    internal class CustomCoffeeCreator : CoffeeCreator
+    internal class CustomCoffeeCreator : ICoffeeCreator
     {
-        public CustomCoffeeCreator(ICoffeeBuilder coffeeBuilder, Coffee baseCoffee) : base(coffeeBuilder)
+        private Coffee baseCoffee;
+        public int SugarCount { get; set; }
+
+        public CustomCoffeeCreator(Coffee baseCoffee ,int sugarCount)
         {
-            coffeeBuilder.Reset(baseCoffee);
+            this.baseCoffee = baseCoffee;
+            SugarCount = sugarCount;
         }
 
-        public override Coffee CreateCoffee(CoffeeProperties cp)
+        public Coffee CreateCoffee(MilkType milkType)
         {
-            return _coffeeBuilder.AddMilk(cp.MilkType)
-                                 .AddSugar(cp.SugarCount)
-                                 .GetCoffee();
+            baseCoffee.AddMilk(milkType);
+            baseCoffee.AddSugar(SugarCount);
+            return baseCoffee;
         }
     }
 }

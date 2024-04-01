@@ -11,7 +11,7 @@
 
         public override string ToString()
         {
-            return $"Date: {CreationDate};\nMessage: {Content};\nCall-to-action: {CallToAction}\n";
+            return $"Date: {CreationDate};\nMessage: {Content.Replace(" <call-to-action>", "")}\nCall-to-action: {CallToAction}\n";
         }
     }
 }
