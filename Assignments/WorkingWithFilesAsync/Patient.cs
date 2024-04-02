@@ -14,10 +14,8 @@
         private string _gender;
         public string Gender { get { return _gender; } }
 
-        private List<string> _assignedDoctors;
         public List<string> AssignedDoctors { get; set; }
 
-        private List<string> _illnesses;
         public List<string>? Illnesses { get; set; }
 
         public Patient(string name, string surname, string gender, List<string> assignedDoctors, List<string> illnesses)
@@ -26,8 +24,8 @@
             _name = name;
             _surname = surname;
             _gender = gender;
-            _assignedDoctors = assignedDoctors;
-            _illnesses = illnesses;
+            AssignedDoctors = assignedDoctors;
+            Illnesses = illnesses;
         }
 
         public Patient(int id, string name, string surname, string gender, List<string> assignedDoctors, List<string> illnesses)
@@ -38,9 +36,24 @@
 
         public override string ToString()
         {
-            var doctors = _assignedDoctors.Aggregate((curr, next) => curr + ", " + next);
-            var illnesses = _illnesses.Aggregate((curr, next) => curr + ", " + next);
+            var doctors = AssignedDoctors.Aggregate((curr, next) => curr + ", " + next);
+            var illnesses = Illnesses.Aggregate((curr, next) => curr + ", " + next);
             return $"ID: {_id}\nName: {_name} Surname: {_surname}\nGender: {_gender}\nDoctors: {doctors}\nIllnesses: {illnesses}";
+        }
+
+        public override bool Equals(object otherPatient)
+        {
+            if (otherPatient == null || GetType() != otherPatient.GetType())
+            {
+                return false;
+            }
+
+            var other = (Patient) otherPatient;
+            return ID == other.ID &&
+                   Name == other.Name &&
+                   Surname == other.Surname &&
+                   Gender == other.Gender &&
+                   AssignedDoctors.SequenceEqual(other.AssignedDoctors);
         }
     }
 }
