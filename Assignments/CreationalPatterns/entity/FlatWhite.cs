@@ -14,7 +14,7 @@ namespace CreationalPatterns.entity
         {
             if (milkType != MilkType.NO_TYPE)
             {
-                throw new InvalidIngredientOperationException("Cannot add milk to Cappuccino");
+                throw new InvalidIngredientOperationException("Cannot add milk to Flatwhite");
             }
         }
     }

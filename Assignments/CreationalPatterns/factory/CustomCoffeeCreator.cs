@@ -8,7 +8,7 @@ namespace CreationalPatterns.factory
         private Coffee baseCoffee;
         public int SugarCount { get; set; }
 
-        public CustomCoffeeCreator(Coffee baseCoffee ,int sugarCount)
+        public CustomCoffeeCreator(Coffee baseCoffee, int sugarCount)
         {
             this.baseCoffee = baseCoffee;
             SugarCount = sugarCount;

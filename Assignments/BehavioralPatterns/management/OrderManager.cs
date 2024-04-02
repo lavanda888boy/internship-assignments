@@ -1,4 +1,5 @@
-﻿using BehavioralPatterns.publisher;
+﻿using BehavioralPatterns.exception;
+using BehavioralPatterns.publisher;
 using BehavioralPatterns.subscriber;
 using BehavioralPatterns.utility;
 
@@ -6,62 +7,57 @@ namespace BehavioralPatterns.management
 {
     internal class OrderManager : IOrderManagement
     {
-        private List<IPublisher> _orders;
-        private List<ISubscriber> _staff = new()
+        private List<Order> _orders = new List<Order>();
+        private List<Staff> _staff = new()
         {
-            new Staff("Denis", false),
-            new Staff("Mike", true),
-            new Staff("Steve", false),
-            new Staff("Harvey", true)
+            new Staff("Denis"),
+            new Staff("Mike"),
+            new Staff("Steve"),
+            new Staff("Harvey")
         };
-        private readonly int _staffCount = 2;
+        private const int _staffPerOrderLimit = 2;
 
-        public OrderManager()
-        {
-            _orders = new List<IPublisher>();
-        }
+        public OrderManager() { }
 
-        public List<IPublisher> GetOrders()
+        public List<Order> GetOrders()
         {
             return _orders;
         }
 
-        public void PlaceOrder(ISubscriber customer)
+        public void PlaceOrder(Customer customer)
         {
-            var orderStaff = _staff.Cast<Staff>().Where(s => s.IsFree).Take(_staffCount).ToList();
-            
-            if (orderStaff.Count == 0)
+            Order order = new Order(new OrderNotificationService());
+            var orderStaff = new List<Staff>();
+            int staffCount = 0;
+            orderStaff = _staff.Where(st => st.TryAttachToOrder(order) && ++staffCount <= _staffPerOrderLimit)
+                               .ToList();
+
+            if (orderStaff.Count < _staffPerOrderLimit)
             {
-                Console.WriteLine("No staff available for order processing");
-                return;
+                throw new NoStaffAvailableException("There are no employees to process the order");
             }
-            
-            IPublisher order = new Order();
 
+            orderStaff.ForEach(order.Attach);
             order.Attach(customer);
-            orderStaff.ForEach(s =>
-            {
-                order.Attach(s);
-                s.IsFree = false;
-            });
-            ((Order)order).Status = OrderStatus.PLACED;
-
+            
+            order.Status = OrderStatus.PLACED;
             _orders.Add(order);
         }
 
         public void ProcessOrder(string orderNumber)
         {
-            var order = _orders.Cast<Order>().First(o => o.OrderNumber == orderNumber);
+            var order = _orders.First(o => o.OrderNumber == orderNumber);
             order.Status = OrderStatus.PROCESSING;
         }
 
         public void PrepareOrderForShipping(string orderNumber)
         {
-            var order = _orders.Cast<Order>().First(o => o.OrderNumber == orderNumber);
+            var order = _orders.First(o => o.OrderNumber == orderNumber);
             order.Status = OrderStatus.READY_FOR_SHIPING;
             
             var staffListCopy = order.Staff.ToList();
-            staffListCopy.ForEach(s => order.Detach(s));
+            staffListCopy.ForEach(order.Detach);
+            staffListCopy.ForEach(s => s.DetachFromOrder(order));
         }
     }
 }

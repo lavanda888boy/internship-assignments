@@ -1,10 +1,12 @@
-﻿using BehavioralPatterns.subscriber;
+﻿using BehavioralPatterns.management;
+using BehavioralPatterns.subscriber;
 using BehavioralPatterns.utility;
 
 namespace BehavioralPatterns.publisher
 {
     internal class Order : IPublisher
     {
+        private readonly OrderNotificationService _notificationService;
         public string OrderNumber { get; }
 
         private OrderStatus _status;
@@ -18,25 +20,18 @@ namespace BehavioralPatterns.publisher
             }
         }
         public ISubscriber? Customer { get; set; }
-        public List<ISubscriber> Staff {  get; set; }
+        public List<ISubscriber> Staff { get; set; }
 
-        public Order()
+        public Order(OrderNotificationService notificationService)
         {
             OrderNumber = Guid.NewGuid().ToString();
             Staff = new List<ISubscriber>();
+            _notificationService = notificationService;
         }
 
         public void Notify()
         {
-            if (Customer is not null)
-            {
-                Customer.Update(OrderNumber, Status);
-            }
-
-            if (Status == OrderStatus.PLACED || Status == OrderStatus.READY_FOR_SHIPING)
-            {
-                Staff.ForEach(st => st.Update(OrderNumber, Status));
-            }
+            _notificationService.NotifyOrderSubscribers(this);
         }
 
         public void Attach(ISubscriber subscriber)
@@ -44,6 +39,7 @@ namespace BehavioralPatterns.publisher
             if (subscriber is Customer)
             {
                 Customer = subscriber;
+                subscriber.TryAttachToOrder(this);
                 Console.WriteLine("Customer was attached to the order");
             }
             else
@@ -58,6 +54,7 @@ namespace BehavioralPatterns.publisher
             if (subscriber is Customer)
             {
                 Customer = null;
+                subscriber.DetachFromOrder(this);
                 Console.WriteLine("Customer was detached from order");
             }
             else

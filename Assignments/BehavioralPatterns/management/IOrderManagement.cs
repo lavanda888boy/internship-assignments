@@ -5,8 +5,8 @@ namespace BehavioralPatterns.management
 {
     internal interface IOrderManagement
     {
-        List<IPublisher> GetOrders();
-        void PlaceOrder(ISubscriber customer);
+        List<Order> GetOrders();
+        void PlaceOrder(Customer customer);
         void ProcessOrder(string orderNumber);
         void PrepareOrderForShipping(string orderNumber);
     }

@@ -1,9 +1,12 @@
-﻿using BehavioralPatterns.utility;
+﻿using BehavioralPatterns.publisher;
+using BehavioralPatterns.utility;
 
 namespace BehavioralPatterns.subscriber
 {
     internal class Customer : ISubscriber
     {
+        private List<Order> _attachedOrders = new List<Order>();
+
         public string Name { get; set; }
         public NotificationType NotificationType { get; set; }
 
@@ -25,6 +28,17 @@ namespace BehavioralPatterns.subscriber
             }
 
             Console.WriteLine($"Dear customer {Name}, your order {orderNumber} status is now: {status}");
+        }
+
+        public bool TryAttachToOrder(Order order)
+        {
+            _attachedOrders.Add(order);
+            return true;
+        }
+
+        public void DetachFromOrder(Order order)
+        {
+            _attachedOrders.Remove(order);
         }
     }
 }
