@@ -1,6 +1,6 @@
 ﻿namespace WorkingWithFilesAsync
 {
-    internal class Logger
+    public class Logger
     {
         private static string _logDirectory = "D:\\University materials\\Programmes\\internship-assignments\\Assignments\\WorkingWithFilesAsync\\";
 

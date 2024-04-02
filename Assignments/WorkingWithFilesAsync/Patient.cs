@@ -1,6 +1,6 @@
 ﻿namespace WorkingWithFilesAsync
 {
-    internal class Patient
+    public class Patient
     {
         private readonly int _id;
         public int ID { get { return _id; } }

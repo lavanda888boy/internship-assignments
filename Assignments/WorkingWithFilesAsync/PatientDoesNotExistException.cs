@@ -1,6 +1,6 @@
 ﻿namespace WorkingWithFilesAsync
 {
-    internal class PatientDoesNotExistException : Exception
+    public class PatientDoesNotExistException : Exception
     {
         private readonly Patient? _patient;
 

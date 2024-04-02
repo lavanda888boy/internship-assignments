@@ -1,12 +1,12 @@
 ﻿namespace WorkingWithFilesAsync
 {
-    internal class PatientRepository : IRepository<Patient>
+    public class PatientRepository : IRepository<Patient>
     {
         private List<Patient> _patients;
 
-        public PatientRepository()
+        public PatientRepository(List<Patient> patients)
         {
-            _patients = new List<Patient>();
+            _patients = patients;
         }
 
         public void Add(Patient patient)

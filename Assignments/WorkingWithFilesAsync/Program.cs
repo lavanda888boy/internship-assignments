@@ -4,7 +4,8 @@
     {
         static void Main(string[] args)
         {
-            PatientRepository pr = new PatientRepository();
+            List<Patient> patients = new List<Patient>();
+            PatientRepository pr = new PatientRepository(patients);
             Console.WriteLine("Welcome to the hospital management!\n");
 
             while (true)
