@@ -29,6 +29,12 @@ namespace BehavioralPatterns.subscriber
                 return false;
             }
 
+            if (_attachedOrders.Contains(order))
+            {
+                Console.WriteLine("Staff member already attached to order");
+                return false;
+            }
+
             _attachedOrders.Add(order);
             return true;
         }

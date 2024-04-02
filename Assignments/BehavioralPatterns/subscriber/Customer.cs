@@ -32,6 +32,12 @@ namespace BehavioralPatterns.subscriber
 
         public bool TryAttachToOrder(Order order)
         {
+            if (_attachedOrders.Contains(order))
+            {
+                Console.WriteLine("Customer already attached to order");
+                return false;
+            }
+            
             _attachedOrders.Add(order);
             return true;
         }
