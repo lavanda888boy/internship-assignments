@@ -1,6 +1,6 @@
 ﻿using WorkingWithFilesAsync;
 
-namespace WorkingWithFilesAsyncTest
+namespace WorkingWithFilesAsyncTest.Repository.Tests
 {
     public class PatientRepositoryTest
     {
@@ -13,6 +13,7 @@ namespace WorkingWithFilesAsyncTest
                 new Patient(1, "Walter", "White", "M", new List<string>() { "Steve" }, new List<string>() { "cancer" }),
                 new Patient(2, "Mandy", "Smith", "W", new List<string>() { "Steve" }, new List<string>() { "cough" }),
             };
+
             _patientRepository = new PatientRepositoryMock(patients);
         }
     }

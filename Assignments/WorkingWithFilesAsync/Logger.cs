@@ -1,10 +1,12 @@
 ﻿namespace WorkingWithFilesAsync
 {
-    public class Logger
+    public class Logger : ILogger
     {
-        private static string _logDirectory = "D:\\University materials\\Programmes\\internship-assignments\\Assignments\\WorkingWithFilesAsync\\";
+        private string _logDirectory = "D:\\University materials\\Programmes\\internship-assignments\\Assignments\\WorkingWithFilesAsync\\";
 
-        public static async Task WriteLogToFile(string methodName, string message)
+        public Logger() { }
+
+        public async Task WriteLogToFile(string methodName, string message)
         {
             DateTimeOffset today = new(DateTime.UtcNow);
             string logFileName = $"Logs_{today.ToString("dd.MM.yyyy")}.txt";

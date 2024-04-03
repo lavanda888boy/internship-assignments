@@ -1,6 +1,6 @@
 ﻿using WorkingWithFilesAsync;
 
-namespace WorkingWithFilesAsyncTest
+namespace WorkingWithFilesAsyncTest.Repository.Tests
 {
     public class PatientRepositoryMock
     {

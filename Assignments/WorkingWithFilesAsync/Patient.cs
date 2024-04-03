@@ -53,7 +53,9 @@
                    Name == other.Name &&
                    Surname == other.Surname &&
                    Gender == other.Gender &&
-                   AssignedDoctors.SequenceEqual(other.AssignedDoctors);
+                   AssignedDoctors.SequenceEqual(other.AssignedDoctors) &&
+                   ((Illnesses == null && other.Illnesses == null) ||
+                   (Illnesses != null && other.Illnesses != null && Illnesses.SequenceEqual(other.Illnesses)));
         }
     }
 }

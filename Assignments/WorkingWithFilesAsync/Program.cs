@@ -6,6 +6,7 @@
         {
             List<Patient> patients = new List<Patient>();
             PatientRepository pr = new PatientRepository(patients);
+            Logger logger = new Logger();
             Console.WriteLine("Welcome to the hospital management!\n");
 
             while (true)
@@ -25,19 +26,19 @@
                     switch (c)
                     {
                         case 1:
-                            GetAllPatients(pr);
+                            GetAllPatients(pr, logger);
                             break;
                         case 2:
-                            GetPatientByID(pr);
+                            GetPatientByID(pr, logger);
                             break;
                         case 3:
-                            AddPatient(pr);
+                            AddPatient(pr, logger);
                             break;
                         case 4:
-                            UpdatePatient(pr);
+                            UpdatePatient(pr, logger);
                             break;
                         case 5:
-                            DeletePatientByID(pr);
+                            DeletePatientByID(pr, logger);
                             break;
                         default:
                             break;
@@ -48,7 +49,7 @@
             }
         }
 
-        static async void GetAllPatients(PatientRepository pr)
+        static async void GetAllPatients(PatientRepository pr, Logger logger)
         {
             Console.WriteLine();
 
@@ -56,11 +57,11 @@
             if (patients.Count() == 0)
             {
                 Console.WriteLine("There are currently no patients registered");
-                await Logger.WriteLogToFile("GetAllPatients", "success(no patients in the repository)");
+                await logger.WriteLogToFile("GetAllPatients", "success(no patients in the repository)");
             } 
             else
             {
-                await Logger.WriteLogToFile("GetAllPatients", "success");
+                await logger.WriteLogToFile("GetAllPatients", "success");
                 foreach (var p in patients)
                 {
                     Console.WriteLine(p.ToString() + "\n");
@@ -68,7 +69,7 @@
             }
         }
 
-        static async void GetPatientByID(PatientRepository pr)
+        static async void GetPatientByID(PatientRepository pr, Logger logger)
         {
             Console.WriteLine("\nProcess of getting the patient started..");
             Console.Write("\nEnter a patient's id: ");
@@ -76,7 +77,7 @@
             var line = Console.ReadLine();
             if (line is null  ||  line == "")
             {
-                await Logger.WriteLogToFile("GetPatientByID", "failure");
+                await logger.WriteLogToFile("GetPatientByID", "failure");
                 Console.WriteLine("\nYou have to provide an ID for searching patient");
                 return;
             } 
@@ -86,12 +87,12 @@
             try
             {
                 var patient = pr.GetById(id);
-                await Logger.WriteLogToFile("GetPatientByID", "success");
+                await logger.WriteLogToFile("GetPatientByID", "success");
                 Console.WriteLine(patient.ToString());
             }
             catch (PatientDoesNotExistException ex)
             {
-                await Logger.WriteLogToFile($"GetPatientByID", "failure");
+                await logger.WriteLogToFile($"GetPatientByID", "failure");
                 Console.WriteLine($"\n{ex.Message}\n");
             }
             finally
@@ -100,7 +101,7 @@
             }
         }
 
-        static async void AddPatient(PatientRepository pr)
+        static async void AddPatient(PatientRepository pr, Logger logger)
         {
             Console.WriteLine("\nProcess of adding the patient started..\n");
 
@@ -133,13 +134,13 @@
             }
 
             pr.Add(p);
-            await Logger.WriteLogToFile("AddPatient", "success");
+            await logger.WriteLogToFile("AddPatient", "success");
 
             Console.WriteLine("\nPacient succesfully added");
             Console.WriteLine("\n..process of adding the patient finished");
         }
 
-        static async void UpdatePatient(PatientRepository pr)
+        static async void UpdatePatient(PatientRepository pr, Logger logger)
         {
             Console.WriteLine("\nProcess of updating the patient started..");
             Console.Write("\nEnter a patient's id: ");
@@ -147,7 +148,7 @@
             var line = Console.ReadLine();
             if (line is null || line == "")
             {
-                await Logger.WriteLogToFile("UpdatePatient", "failure");
+                await logger.WriteLogToFile("UpdatePatient", "failure");
 
                 Console.WriteLine("\nYou have to provide an ID for updating patient");
                 return;
@@ -187,12 +188,12 @@
             {
                 pr.Update(id, p);
 
-                await Logger.WriteLogToFile("UpdatePatient", "success");
+                await logger.WriteLogToFile("UpdatePatient", "success");
                 Console.WriteLine("\nPacient succesfully updated");
             }
             catch (PatientDoesNotExistException ex)
             {
-                await Logger.WriteLogToFile("UpdatePatient", "failure");
+                await logger.WriteLogToFile("UpdatePatient", "failure");
                 Console.WriteLine($"\n{ex.Message}\n");
             } 
             finally
@@ -201,7 +202,7 @@
             }
         }
 
-        static async void DeletePatientByID(PatientRepository pr)
+        static async void DeletePatientByID(PatientRepository pr, Logger logger)
         {
             Console.WriteLine("\nProcess of deleting the patient started..");
             Console.Write("\nEnter a patient's id: ");
@@ -209,7 +210,7 @@
             var line = Console.ReadLine();
             if (line is null || line == "")
             {
-                await Logger.WriteLogToFile("DeletePatient", "failure");
+                await logger.WriteLogToFile("DeletePatient", "failure");
 
                 Console.WriteLine("\nYou have to provide an ID for deleting patient");
                 return;
@@ -220,11 +221,11 @@
             try
             {
                 pr.DeleteById(id);
-                await Logger.WriteLogToFile("DeletePatient", "success");
+                await logger.WriteLogToFile("DeletePatient", "success");
             }
             catch (PatientDoesNotExistException ex)
             {
-                await Logger.WriteLogToFile("DeletePatient", "failure");
+                await logger.WriteLogToFile("DeletePatient", "failure");
                 Console.WriteLine($"\n{ex.Message}\n");
             }
             finally

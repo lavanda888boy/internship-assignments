@@ -1,5 +1,4 @@
-﻿using BehavioralPatterns.exception;
-using BehavioralPatterns.publisher;
+﻿using BehavioralPatterns.publisher;
 using BehavioralPatterns.utility;
 
 namespace BehavioralPatterns.subscriber
