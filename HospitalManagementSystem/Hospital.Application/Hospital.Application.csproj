@@ -7,4 +7,18 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Hospital.Domain\Hospital.Domain.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Departments\Commands\" />
+    <Folder Include="Departments\Responses\" />
+    <Folder Include="Departments\Queries\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MediatR" Version="12.2.0" />
+  </ItemGroup>
+
 </Project>
