@@ -11,30 +11,25 @@ namespace StructuralPatterns.facade
 
         public override ITextComponent MakeBold()
         {
-            TextCommand command = new TextCommand(TextCommandName.BOLD);
-            AddCommandToHistoryIfNotPresent(command);
+            ToggleBold();
             return GetFormattedTextRepresentation();
         }
 
         public override ITextComponent MakeColored(string color)
         {
-            TextCommand command = new TextCommand(TextCommandName.COLOR);
-            command.Color = color;
-            AddCommandToHistoryIfNotPresent(command);
+            ToggleColor(color);
             return GetFormattedTextRepresentation();
         }
 
         public override ITextComponent MakeItalic()
         {
-            TextCommand command = new TextCommand(TextCommandName.ITALIC);
-            AddCommandToHistoryIfNotPresent(command);
+            ToggleItalic();
             return GetFormattedTextRepresentation();
         }
 
         public override ITextComponent Underline()
         {
-            TextCommand command = new TextCommand(TextCommandName.UNDERLINED);
-            AddCommandToHistoryIfNotPresent(command);
+            ToggleUnderline();
             return GetFormattedTextRepresentation();
         }
 
@@ -78,14 +73,56 @@ namespace StructuralPatterns.facade
             return formattedText;
         }
 
-        private void AddCommandToHistoryIfNotPresent(TextCommand command)
+        private void ToggleBold()
         {
-            if (!(command.CommandName == TextCommandName.COLOR && _usedCommands.Any(c => c.CommandName == TextCommandName.COLOR)) && 
-                !_usedCommands.Any(c => c.CommandName == command.CommandName && c.Color == command.Color))
+            var isBold = _usedCommands.FirstOrDefault(c => c.CommandName == TextCommandName.BOLD);
+            if (isBold != null)
             {
-                _usedCommands.Add(command);
+                _usedCommands.Remove(isBold);
+            }
+            else
+            {
+                _usedCommands.Add(new TextCommand(TextCommandName.BOLD));
+            }
+        }
+
+        private void ToggleItalic()
+        {
+            var isItalic = _usedCommands.FirstOrDefault(c => c.CommandName == TextCommandName.ITALIC);
+            if (isItalic != null)
+            {
+                _usedCommands.Remove(isItalic);
+            }
+            else
+            {
+                _usedCommands.Add(new TextCommand(TextCommandName.ITALIC));
+            }
+        }
+
+        private void ToggleUnderline()
+        {
+            var isUnderlined = _usedCommands.FirstOrDefault(c => c.CommandName == TextCommandName.UNDERLINED);
+            if (isUnderlined != null)
+            {
+                _usedCommands.Remove(isUnderlined);
+            }
+            else
+            {
+                _usedCommands.Add(new TextCommand(TextCommandName.UNDERLINED));
+            }
+        }
+        
+        private void ToggleColor(string color)
+        {
+            var isColored = _usedCommands.FirstOrDefault(c => c.CommandName == TextCommandName.COLOR);
+            if (isColored != null)
+            {
+                _usedCommands.Remove(isColored);
             }
 
+            TextCommand c = new TextCommand(TextCommandName.COLOR);
+            c.Color = color;
+            _usedCommands.Add(c);
         }
     }
 }
