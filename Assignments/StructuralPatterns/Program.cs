@@ -7,25 +7,24 @@ namespace StructuralPatterns
     {
         static void Main(string[] args)
         {
-            TextEditor editor = new TextEditor(new TextComponent(""));
+            BaseTextEditor editor = new HistoryTextEditor();
 
             while(true)
             {
-                editor.Reset();
                 Console.WriteLine("Welcome to the text editor! Please enter the text to edit:");
                 var text = Console.ReadLine();
                 Console.WriteLine();
 
-                if (text != "")
+                if (text != ""  &&  text is not null)
                 {
                     ProcessCommands(text, editor);
                 }
             }
         }
 
-        static void ProcessCommands(string text, ITextEditor textEditor)
+        static void ProcessCommands(string text, BaseTextEditor textEditor)
         {
-            ((TextEditor) textEditor).Text = new TextComponent(text);
+            textEditor.BaseText = new TextComponent(text);
 
             while (true)
             {
@@ -34,12 +33,13 @@ namespace StructuralPatterns
                 Console.WriteLine("i - make it italic");
                 Console.WriteLine("u - make it underlined");
                 Console.WriteLine("c - apply color to it");
-                Console.WriteLine("z - undo last operation");
+                Console.WriteLine("l - list all previous commands");
+                Console.WriteLine("z - undo operation");
                 Console.WriteLine("s - enter new text\n");
 
                 var option = Console.ReadLine();
                 Console.WriteLine();
-                
+
                 switch (option)
                 {
                     case "b":
@@ -54,8 +54,11 @@ namespace StructuralPatterns
                     case "c":
                         Console.WriteLine(textEditor.MakeColored(ProcessColorAddition()).GetText());
                         break;
+                    case "l":
+                        ((HistoryTextEditor)textEditor).PrintAllUsedCommands();
+                        break;
                     case "z":
-                        Console.WriteLine(textEditor.Undo().GetText());
+                        Console.WriteLine(((HistoryTextEditor)textEditor).Undo(GetCommandToUndo()).GetText());
                         break;
                     case "s":
                         return;
@@ -74,6 +77,14 @@ namespace StructuralPatterns
             Console.WriteLine();
 
             return color;
+        }
+
+        static int GetCommandToUndo()
+        {
+            Console.WriteLine("Enter the number of the command to undo:");
+            var commandNumber = Console.ReadLine();
+            Console.WriteLine();
+            return int.Parse(commandNumber);
         }
     }
 }
