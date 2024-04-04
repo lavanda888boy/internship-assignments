@@ -54,7 +54,7 @@ namespace Hospital.Infrastructure.Repository
             {
                 existingPatient.Name = patient.Name;
                 existingPatient.Surname = patient.Surname;
-                existingPatient.DateOfBirth = patient.DateOfBirth;
+                existingPatient.Age = patient.Age;
                 existingPatient.Gender = patient.Gender;
                 existingPatient.Address = patient.Address;
                 existingPatient.PhoneNumber = patient.PhoneNumber;
