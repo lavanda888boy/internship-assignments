@@ -1,6 +1,5 @@
 ﻿using Hospital.Application.Abstractions;
 using Hospital.Domain.Models;
-using Hospital.Infrastructure.Exceptions;
 
 namespace Hospital.Infrastructure.Repository
 {
@@ -26,15 +25,7 @@ namespace Hospital.Infrastructure.Repository
 
         public MedicalRecord GetById(int id)
         {
-            try
-            {
-                MedicalRecord medicalRecord = _medicalRecords.Single(mr => mr.Id == id);
-                return medicalRecord;
-            }
-            catch (InvalidOperationException ex)
-            {
-                throw new EntityNotFoundByIdException(ex.Message + $"\nMedical Record Id: {id}");
-            }
+            return _medicalRecords.Single(mr => mr.Id == id);
         }
 
         public List<MedicalRecord> GetByProperty(Func<MedicalRecord, bool> medicalRecordProperty)

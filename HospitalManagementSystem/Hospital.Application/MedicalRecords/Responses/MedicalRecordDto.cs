@@ -11,15 +11,17 @@ namespace Hospital.Application.MedicalRecords.Responses
         public required string ExaminationNotes { get; set; }
         public string? Diagnosis { get; set; }
 
-        public static MedicalRecordDto FromMedicalRecord(MedicalRecordDto medicalRecord)
+        public static MedicalRecordDto FromMedicalRecord(MedicalRecord medicalRecord)
         {
             return new MedicalRecordDto()
             {
                 Id = medicalRecord.Id,
                 ExaminedPatient = medicalRecord.ExaminedPatient,
+                ResponsibleDoctor = medicalRecord.ResponsibleDoctor,
                 DateOfExamination = medicalRecord.DateOfExamination,
                 ExaminationNotes = medicalRecord.ExaminationNotes,
                 Diagnosis = medicalRecord.Diagnosis,
             };
+        }
     }
 }

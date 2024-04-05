@@ -2,7 +2,7 @@
 
 namespace Hospital.Application.Patients.Responses
 {
-    internal class PatientDto
+    public class PatientDto
     {
         public int Id { get; set; }
         public required string Name { get; set; }

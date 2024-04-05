@@ -13,8 +13,14 @@
 
   <ItemGroup>
     <Folder Include="Departments\Commands\" />
-    <Folder Include="Departments\Responses\" />
     <Folder Include="Departments\Queries\" />
+    <Folder Include="Doctors\Commands\" />
+    <Folder Include="Doctors\Queries\" />
+    <Folder Include="Illnesses\Commands\" />
+    <Folder Include="Illnesses\Queries\" />
+    <Folder Include="MedicalRecords\Commands\" />
+    <Folder Include="MedicalRecords\Queries\" />
+    <Folder Include="Patients\Commands\" />
   </ItemGroup>
 
   <ItemGroup>

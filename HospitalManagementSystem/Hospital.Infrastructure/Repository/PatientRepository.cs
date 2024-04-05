@@ -1,6 +1,5 @@
 ﻿using Hospital.Application.Abstractions;
 using Hospital.Domain.Models;
-using Hospital.Infrastructure.Exceptions;
 
 namespace Hospital.Infrastructure.Repository
 {
@@ -26,15 +25,7 @@ namespace Hospital.Infrastructure.Repository
 
         public Patient GetById(int id)
         {
-            try
-            {
-                Patient patient = _patients.Single(p => p.Id == id);
-                return patient;
-            }
-            catch (InvalidOperationException ex)
-            {
-                throw new EntityNotFoundByIdException(ex.Message + $"\nPatient Id: {id}");
-            }
+            return _patients.Single(p => p.Id == id);
         }
 
         public List<Patient>? GetByProperty(Func<Patient, bool> patientProperty)
@@ -49,7 +40,7 @@ namespace Hospital.Infrastructure.Repository
 
         public Patient? Update(Patient patient)
         {
-            var existingPatient = GetById(patient.Id);
+            var existingPatient = _patients.FirstOrDefault(p => p.Id == patient.Id);
             if (existingPatient != null)
             {
                 existingPatient.Name = patient.Name;
