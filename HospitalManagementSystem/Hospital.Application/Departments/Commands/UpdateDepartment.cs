@@ -19,18 +19,21 @@ namespace Hospital.Application.Departments.Commands
 
         public Task<DepartmentDto> Handle(UpdateDepartment request, CancellationToken cancellationToken)
         {
-            var department = _departmentRepository.Update(new Department()
+            var result = _departmentRepository.Update(new Department()
             {
                 Id = request.Id,
                 Name = request.Name,
             });
 
-            if (department is null)
+            if (result)
+            {
+                var department = _departmentRepository.GetById(request.Id);
+                return Task.FromResult(DepartmentDto.FromDepartment(department));
+            }
+            else
             {
                 throw new NoEntityFoundException($"Cannot update non-existing department with id {request.Id}");
             }
-
-            return Task.FromResult(DepartmentDto.FromDepartment(department));
         }
     }
 }

@@ -38,7 +38,6 @@ namespace Hospital.Infrastructure.Repository
             var existingWorkingHours = _workingHours.First(wh => wh.Id == workingHours.Id);
             if (existingWorkingHours != null)
             {
-                existingWorkingHours.Doctor = workingHours.Doctor;
                 existingWorkingHours.StartShift = workingHours.StartShift;
                 existingWorkingHours.EndShift = workingHours.EndShift;
 
