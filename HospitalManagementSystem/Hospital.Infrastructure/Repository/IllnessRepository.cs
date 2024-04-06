@@ -3,10 +3,9 @@ using Hospital.Domain.Models;
 
 namespace Hospital.Infrastructure.Repository
 {
-    internal class IllnessRepository : IRepository<Illness>
+    public class IllnessRepository : IRepository<Illness>
     {
         private List<Illness> _illnesses = new();
-
         public Illness Create(Illness illness)
         {
             _illnesses.Add(illness);
@@ -25,30 +24,24 @@ namespace Hospital.Infrastructure.Repository
 
         public Illness GetById(int id)
         {
-            return _illnesses.Single(i => i.Id == id);
+            return _illnesses.First(i => i.Id == id);
         }
 
-        public List<Illness> GetByProperty(Func<Illness, bool> illnessProperty)
+        public List<Illness>? SearchByProperty(Func<Illness, bool> illnessPredicate)
         {
-            return _illnesses.Where(illnessProperty).ToList();
+            return _illnesses.Where(illnessPredicate).ToList();
         }
 
-        public int GetLastId()
-        {
-            return _illnesses.Any() ? _illnesses.Max(illness => illness.Id) : 0;
-        }
-
-        public Illness? Update(Illness illness)
+        public bool Update(Illness illness)
         {
             var existingIllness = _illnesses.FirstOrDefault(i => i.Id == illness.Id);
             if (existingIllness != null)
             {
-                existingIllness.Name = illness.Name;
-                existingIllness.DateOfDiagnosis = illness.DateOfDiagnosis;
-                existingIllness.DateOfTreatmentEnd = illness.DateOfTreatmentEnd;
-                existingIllness.DiagnosisDoctor = illness.DiagnosisDoctor;
+                existingIllness.Name = existingIllness.Name;
+                existingIllness.IllnessSeverity = existingIllness.IllnessSeverity;
+                return true;
             }
-            return existingIllness;
+            return false;
         }
     }
 }

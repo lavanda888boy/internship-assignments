@@ -19,7 +19,7 @@ namespace Hospital.Application.Doctors.Queries
 
         public Task<List<DoctorDto>> Handle(GetDoctorsByProperty request, CancellationToken cancellationToken)
         {
-            var doctors = _doctorRepository.GetByProperty(request.DoctorProperty);
+            var doctors = _doctorRepository.SearchByProperty(request.DoctorProperty);
 
             if (doctors is null)
             {

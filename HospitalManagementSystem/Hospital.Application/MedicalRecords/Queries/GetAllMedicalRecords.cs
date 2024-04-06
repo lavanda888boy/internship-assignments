@@ -11,9 +11,9 @@ namespace Hospital.Application.MedicalRecords.Queries
     public class GetAllMedicalRecordsHandler
         : IRequestHandler<GetAllMedicalRecords, List<MedicalRecordDto>>
     {
-        private readonly IRepository<MedicalRecord> _medicalRecordRepository;
+        private readonly IRepository<RegularMedicalRecord> _medicalRecordRepository;
 
-        public GetAllMedicalRecordsHandler(IRepository<MedicalRecord> medicalRecordRepository)
+        public GetAllMedicalRecordsHandler(IRepository<RegularMedicalRecord> medicalRecordRepository)
         {
             _medicalRecordRepository = medicalRecordRepository;
         }

@@ -3,32 +3,32 @@ using Hospital.Domain.Models;
 
 namespace Hospital.Infrastructure.Repository
 {
-    internal class MedicalRecordRepository : IRepository<MedicalRecord>
+    internal class MedicalRecordRepository : IRepository<RegularMedicalRecord>
     {
-        private List<MedicalRecord> _medicalRecords = new();
+        private List<RegularMedicalRecord> _medicalRecords = new();
 
-        public MedicalRecord Create(MedicalRecord record)
+        public RegularMedicalRecord Create(RegularMedicalRecord record)
         {
             _medicalRecords.Add(record);
             return record;
         }
 
-        public bool Delete(MedicalRecord record)
+        public bool Delete(RegularMedicalRecord record)
         {
             return _medicalRecords.Remove(record);
         }
 
-        public List<MedicalRecord> GetAll()
+        public List<RegularMedicalRecord> GetAll()
         {
             return _medicalRecords;
         }
 
-        public MedicalRecord GetById(int id)
+        public RegularMedicalRecord GetById(int id)
         {
-            return _medicalRecords.Single(mr => mr.Id == id);
+            return _medicalRecords.First(mr => mr.Id == id);
         }
 
-        public List<MedicalRecord> GetByProperty(Func<MedicalRecord, bool> medicalRecordProperty)
+        public List<RegularMedicalRecord> SearchByProperty(Func<RegularMedicalRecord, bool> medicalRecordProperty)
         {
             return _medicalRecords.Where(medicalRecordProperty).ToList();
         }
@@ -38,7 +38,7 @@ namespace Hospital.Infrastructure.Repository
             return _medicalRecords.Any() ? _medicalRecords.Max(record => record.Id) : 0;
         }
 
-        public MedicalRecord? Update(MedicalRecord record)
+        public bool Update(RegularMedicalRecord record)
         {
             var existingRecord = _medicalRecords.FirstOrDefault(r => r.Id == record.Id);
             if (existingRecord != null)
@@ -47,9 +47,16 @@ namespace Hospital.Infrastructure.Repository
                 existingRecord.ResponsibleDoctor = record.ResponsibleDoctor;
                 existingRecord.DateOfExamination = record.DateOfExamination;
                 existingRecord.ExaminationNotes = record.ExaminationNotes;
-                existingRecord.Diagnosis = record.Diagnosis;
+
+                if (record is DiagnosisMedicalRecord)
+                {
+                    ((DiagnosisMedicalRecord)existingRecord).DiagnosedIllness = ((DiagnosisMedicalRecord)record).DiagnosedIllness;
+                    ((DiagnosisMedicalRecord)existingRecord).ProposedTreatment = ((DiagnosisMedicalRecord)record).ProposedTreatment;
+                }
+
+                return true;
             }
-            return existingRecord;
+            return false;
         }
     }
 }

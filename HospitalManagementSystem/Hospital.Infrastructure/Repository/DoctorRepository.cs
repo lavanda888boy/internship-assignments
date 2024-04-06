@@ -25,10 +25,10 @@ namespace Hospital.Infrastructure.Repository
 
         public Doctor GetById(int id)
         {
-            return _doctors.Single(d => d.Id == id);
+            return _doctors.First(d => d.Id == id);
         }
 
-        public List<Doctor> GetByProperty(Func<Doctor, bool> doctorProperty)
+        public List<Doctor> SearchByProperty(Func<Doctor, bool> doctorProperty)
         {
             return _doctors.Where(doctorProperty).ToList();
         }
@@ -38,7 +38,7 @@ namespace Hospital.Infrastructure.Repository
             return _doctors.Any() ? _doctors.Max(doctor => doctor.Id) : 0;
         }
 
-        public Doctor? Update(Doctor doctor)
+        public bool Update(Doctor doctor)
         {
             var existingDoctor = _doctors.FirstOrDefault(d => d.Id == doctor.Id);
             if (existingDoctor != null)
@@ -48,8 +48,12 @@ namespace Hospital.Infrastructure.Repository
                 existingDoctor.Address = doctor.Address;
                 existingDoctor.PhoneNumber = doctor.PhoneNumber;
                 existingDoctor.Department = doctor.Department;
+                existingDoctor.AssignedPatients = doctor.AssignedPatients;
+                existingDoctor.WorkingHours = doctor.WorkingHours;
+
+                return true;
             }
-            return existingDoctor;
+            return false;
         }
     }
 }

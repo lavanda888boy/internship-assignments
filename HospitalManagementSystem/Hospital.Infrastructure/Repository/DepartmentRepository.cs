@@ -25,10 +25,10 @@ namespace Hospital.Infrastructure.Repository
 
         public Department GetById(int id)
         {
-            return _departments.Single(d => d.Id == id);
+            return _departments.First(d => d.Id == id);
         }
 
-        public List<Department> GetByProperty(Func<Department, bool> departmentPredicate)
+        public List<Department> SearchByProperty(Func<Department, bool> departmentPredicate)
         {
             return _departments.Where(departmentPredicate).ToList();
         }
@@ -38,14 +38,15 @@ namespace Hospital.Infrastructure.Repository
             return _departments.Any() ? _departments.Max(department => department.Id) : 0;
         }
 
-        public Department? Update(Department department)
+        public bool Update(Department department)
         {
             var existingDepartment = _departments.FirstOrDefault(d => d.Id == department.Id);
             if (existingDepartment != null)
             {
                 existingDepartment.Name = department.Name;
+                return true;
             }
-            return existingDepartment;
+            return false;
         }
     }
 }

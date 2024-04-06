@@ -21,7 +21,7 @@ namespace Hospital.Application.Departments.Queries
 
         public Task<List<DepartmentDto>> Handle(GetDepartmentsByProperty request, CancellationToken cancellationToken)
         {
-            var departments = _departmentRepository.GetByProperty(request.DepartmentProperty);
+            var departments = _departmentRepository.SearchByProperty(request.DepartmentProperty);
 
             if (departments is null)
             {

@@ -6,22 +6,22 @@ using MediatR;
 
 namespace Hospital.Application.MedicalRecords.Queries
 {
-    public record GetMedicalRecordsByProperty(Func<MedicalRecord, bool> MedicalRecordProperty)
+    public record GetMedicalRecordsByProperty(Func<RegularMedicalRecord, bool> MedicalRecordProperty)
         : IRequest<List<MedicalRecordDto>>;
 
     public class GetMedicalRecordsByPropertyHandler
         : IRequestHandler<GetMedicalRecordsByProperty, List<MedicalRecordDto>>
     {
-        private readonly IRepository<MedicalRecord> _medicalRecordRepository;
+        private readonly IRepository<RegularMedicalRecord> _medicalRecordRepository;
 
-        public GetMedicalRecordsByPropertyHandler(IRepository<MedicalRecord> medicalRecordRepository)
+        public GetMedicalRecordsByPropertyHandler(IRepository<RegularMedicalRecord> medicalRecordRepository)
         {
             _medicalRecordRepository = medicalRecordRepository;
         }
 
         public Task<List<MedicalRecordDto>> Handle(GetMedicalRecordsByProperty request, CancellationToken cancellationToken)
         {
-            var medicalRecords = _medicalRecordRepository.GetByProperty(request.MedicalRecordProperty);
+            var medicalRecords = _medicalRecordRepository.SearchByProperty(request.MedicalRecordProperty);
 
             if (medicalRecords is null)
             {
