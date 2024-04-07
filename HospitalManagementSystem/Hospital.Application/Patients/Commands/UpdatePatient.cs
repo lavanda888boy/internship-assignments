@@ -12,11 +12,11 @@ namespace Hospital.Application.Patients.Commands
 
     public class UpdatePatientHandler : IRequestHandler<UpdatePatient, PatientDto>
     {
-        private readonly IRepository<Patient> _patientRepository;
-        private readonly IRepository<Doctor> _doctorRepository;
+        private readonly IPatientRepository _patientRepository;
+        private readonly IDoctorRepository _doctorRepository;
 
-        public UpdatePatientHandler(IRepository<Patient> patientRepository,
-            IRepository<Doctor> doctorRepository)
+        public UpdatePatientHandler(IPatientRepository patientRepository,
+            IDoctorRepository doctorRepository)
         {
             _patientRepository = patientRepository;
             _doctorRepository = doctorRepository;

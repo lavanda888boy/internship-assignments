@@ -1,10 +1,9 @@
 ﻿using Hospital.Application.Abstractions;
 using Hospital.Domain.Models;
-using System.Numerics;
 
 namespace Hospital.Infrastructure.Repository
 {
-    public class IllnessRepository : IRepository<Illness>
+    public class IllnessRepository : IIllnessRepository
     {
         private List<Illness> _illnesses = new();
         public Illness Create(Illness illness)

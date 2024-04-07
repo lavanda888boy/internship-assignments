@@ -10,9 +10,9 @@ namespace Hospital.Application.Departments.Commands
 
     public class UpdateDepartmentHandler : IRequestHandler<UpdateDepartment, DepartmentDto>
     {
-        private readonly IRepository<Department> _departmentRepository;
+        private readonly IDepartmentRepository _departmentRepository;
 
-        public UpdateDepartmentHandler(IRepository<Department> departmentRepository)
+        public UpdateDepartmentHandler(IDepartmentRepository departmentRepository)
         {
             _departmentRepository = departmentRepository;
         }

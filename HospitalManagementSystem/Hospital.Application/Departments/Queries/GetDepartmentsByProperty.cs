@@ -12,9 +12,9 @@ namespace Hospital.Application.Departments.Queries
     public class GetDepartmentsByPropertyHandler : IRequestHandler<GetDepartmentsByProperty,
         List<DepartmentDto>>
     {
-        private readonly IRepository<Department> _departmentRepository;
+        private readonly IDepartmentRepository _departmentRepository;
 
-        public GetDepartmentsByPropertyHandler(IRepository<Department> departmentRepository)
+        public GetDepartmentsByPropertyHandler(IDepartmentRepository departmentRepository)
         {
             _departmentRepository = departmentRepository;
         }

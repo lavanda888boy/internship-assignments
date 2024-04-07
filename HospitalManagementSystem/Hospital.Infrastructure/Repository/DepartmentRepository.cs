@@ -3,7 +3,7 @@ using Hospital.Domain.Models;
 
 namespace Hospital.Infrastructure.Repository
 {
-    internal class DepartmentRepository : IRepository<Department>
+    public class DepartmentRepository : IDepartmentRepository
     {
         private List<Department> _departments = new();
 
@@ -38,11 +38,6 @@ namespace Hospital.Infrastructure.Repository
         public List<Department> SearchByProperty(Func<Department, bool> departmentPredicate)
         {
             return _departments.Where(departmentPredicate).ToList();
-        }
-
-        public int GetLastId()
-        {
-            return _departments.Any() ? _departments.Max(department => department.Id) : 0;
         }
 
         public bool Update(Department department)

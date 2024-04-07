@@ -1,7 +1,6 @@
 ﻿using Hospital.Application.Abstractions;
 using Hospital.Application.Exceptions;
 using Hospital.Application.Doctors.Responses;
-using Hospital.Domain.Models;
 using MediatR;
 
 namespace Hospital.Application.Doctors.Queries
@@ -10,9 +9,9 @@ namespace Hospital.Application.Doctors.Queries
 
     public class GetDoctorByIdHandler : IRequestHandler<GetDoctorById, DoctorDto>
     {
-        private readonly IRepository<Doctor> _doctorRepository;
+        private readonly IDoctorRepository _doctorRepository;
 
-        public GetDoctorByIdHandler(IRepository<Doctor> doctorRepository)
+        public GetDoctorByIdHandler(IDoctorRepository doctorRepository)
         {
             _doctorRepository = doctorRepository;
         }
@@ -23,7 +22,7 @@ namespace Hospital.Application.Doctors.Queries
 
             if (doctor is null)
             {
-                throw new NoEntityFoundException($"There is no doctor with id {request.DsoctorId}");
+                throw new NoEntityFoundException($"There is no doctor with id {request.DoctorId}");
             }
 
             return Task.FromResult(DoctorDto.FromDoctor(doctor));

@@ -9,9 +9,9 @@ namespace Hospital.Application.Departments.Commands
 
     public class CreateDepartmentHandler : IRequestHandler<CreateDepartment, DepartmentDto>
     {
-        private readonly IRepository<Department> _departmentRepository;
+        private readonly IDepartmentRepository _departmentRepository;
 
-        public CreateDepartmentHandler(IRepository<Department> departmentRepository)
+        public CreateDepartmentHandler(IDepartmentRepository departmentRepository)
         {
             _departmentRepository = departmentRepository;
         }

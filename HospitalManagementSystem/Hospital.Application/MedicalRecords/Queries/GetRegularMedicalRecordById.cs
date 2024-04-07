@@ -1,24 +1,23 @@
 ﻿using Hospital.Application.Abstractions;
 using Hospital.Application.Exceptions;
 using Hospital.Application.MedicalRecords.Responses;
-using Hospital.Domain.Models;
 using MediatR;
 
 namespace Hospital.Application.MedicalRecords.Queries
 {
-    public record GetMedicalRecordById(int MedicalRecordId) : IRequest<MedicalRecordDto>;
+    public record GetRegularMedicalRecordById(int MedicalRecordId) : IRequest<RegularMedicalRecordDto>;
 
     public class GetMedicalRecordByIdHandler
-        : IRequestHandler<GetMedicalRecordById, MedicalRecordDto>
+        : IRequestHandler<GetRegularMedicalRecordById, RegularMedicalRecordDto>
     {
-        private readonly IRepository<RegularMedicalRecord> _medicalRecordRepository;
+        private readonly IRegularMedicalRecordRepository _medicalRecordRepository;
 
-        public GetMedicalRecordByIdHandler(IRepository<RegularMedicalRecord> medicalRecordRepository)
+        public GetMedicalRecordByIdHandler(IRegularMedicalRecordRepository medicalRecordRepository)
         {
             _medicalRecordRepository = medicalRecordRepository;
         }
 
-        public Task<MedicalRecordDto> Handle(GetMedicalRecordById request, CancellationToken cancellationToken)
+        public Task<RegularMedicalRecordDto> Handle(GetRegularMedicalRecordById request, CancellationToken cancellationToken)
         {
             var medicalRecord = _medicalRecordRepository.GetById(request.MedicalRecordId);
 
@@ -27,7 +26,7 @@ namespace Hospital.Application.MedicalRecords.Queries
                 throw new NoEntityFoundException($"There is no medical record with id {request.MedicalRecordId}");
             }
 
-            return Task.FromResult(MedicalRecordDto.FromMedicalRecord(medicalRecord));
+            return Task.FromResult(RegularMedicalRecordDto.FromMedicalRecord(medicalRecord));
         }
     }
 }

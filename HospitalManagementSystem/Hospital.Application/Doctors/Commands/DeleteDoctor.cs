@@ -1,6 +1,5 @@
 ﻿using Hospital.Application.Abstractions;
 using Hospital.Application.Exceptions;
-using Hospital.Domain.Models;
 using MediatR;
 
 namespace Hospital.Application.Doctors.Commands
@@ -9,11 +8,11 @@ namespace Hospital.Application.Doctors.Commands
 
     public class DeleteDoctorHandler : IRequestHandler<DeleteDoctor, int>
     {
-        private readonly IRepository<Doctor> _doctorRepository;
-        private readonly IRepository<Patient> _patientRepository;
+        private readonly IDoctorRepository _doctorRepository;
+        private readonly IPatientRepository _patientRepository;
 
-        public DeleteDoctorHandler(IRepository<Doctor> doctorRepository, 
-            IRepository<Patient> patientRepository)
+        public DeleteDoctorHandler(IDoctorRepository doctorRepository, 
+            IPatientRepository patientRepository)
         {
             _doctorRepository = doctorRepository;
             _patientRepository = patientRepository;
@@ -35,7 +34,7 @@ namespace Hospital.Application.Doctors.Commands
             }
             else
             {
-                throw new NoEntityFoundException($"Cannot delete non-existing doctor with id {request.Id}");
+                throw new NoEntityFoundException($"Cannot delete non-existing doctor with id {request.DoctorId}");
             }
         }
     }

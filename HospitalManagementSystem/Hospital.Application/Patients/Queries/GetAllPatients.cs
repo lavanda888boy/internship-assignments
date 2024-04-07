@@ -1,6 +1,5 @@
 ﻿using Hospital.Application.Abstractions;
 using Hospital.Application.Patients.Responses;
-using Hospital.Domain.Models;
 using MediatR;
 
 namespace Hospital.Application.Patients.Queries
@@ -9,9 +8,9 @@ namespace Hospital.Application.Patients.Queries
 
     public class GetAllPatientsHandler : IRequestHandler<GetAllPatients, List<PatientDto>>
     {
-        private readonly IRepository<Patient> _patientRepository;
+        private readonly IPatientRepository _patientRepository;
 
-        public GetAllPatientsHandler(IRepository<Patient> patientRepository)
+        public GetAllPatientsHandler(IPatientRepository patientRepository)
         {
             _patientRepository = patientRepository;
         }

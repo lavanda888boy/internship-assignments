@@ -3,7 +3,7 @@ using Hospital.Domain.Models;
 
 namespace Hospital.Infrastructure.Repository
 {
-    public class TreatmentRepository : IRepository<Treatment>
+    public class TreatmentRepository : ITreatmentRepository
     {
         private List<Treatment> _treatments = new();
 

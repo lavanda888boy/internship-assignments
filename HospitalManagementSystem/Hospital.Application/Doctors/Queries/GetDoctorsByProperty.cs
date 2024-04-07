@@ -10,9 +10,9 @@ namespace Hospital.Application.Doctors.Queries
 
     public class GetDoctorsByPropertyHandler : IRequestHandler<GetDoctorsByProperty, List<DoctorDto>>
     {
-        private readonly IRepository<Doctor> _doctorRepository;
+        private readonly IDoctorRepository _doctorRepository;
 
-        public GetDoctorsByPropertyHandler(IRepository<Doctor> doctorRepository)
+        public GetDoctorsByPropertyHandler(IDoctorRepository doctorRepository)
         {
             _doctorRepository = doctorRepository;
         }

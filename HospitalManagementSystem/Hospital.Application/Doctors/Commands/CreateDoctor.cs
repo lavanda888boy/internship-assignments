@@ -11,11 +11,11 @@ namespace Hospital.Application.Doctors.Commands
 
     public class CreateDoctorHandler : IRequestHandler<CreateDoctor, DoctorDto>
     {
-        private readonly IRepository<Doctor> _doctorRepository;
-        private readonly IRepository<Department> _departmentRepository;
+        private readonly IDoctorRepository _doctorRepository;
+        private readonly IDepartmentRepository _departmentRepository;
 
-        public CreateDoctorHandler(IRepository<Doctor> doctorRepository,
-            IRepository<Department> departmentRepository)
+        public CreateDoctorHandler(IDoctorRepository doctorRepository,
+            IDepartmentRepository departmentRepository)
         {
             _doctorRepository = doctorRepository;
             _departmentRepository = departmentRepository;

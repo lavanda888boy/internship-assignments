@@ -1,6 +1,5 @@
 ﻿using Hospital.Application.Abstractions;
 using Hospital.Application.Exceptions;
-using Hospital.Domain.Models;
 using MediatR;
 
 namespace Hospital.Application.Patients.Commands
@@ -9,11 +8,11 @@ namespace Hospital.Application.Patients.Commands
 
     public class DeletePatientHandler : IRequestHandler<DeletePatient, int>
     {
-        private readonly IRepository<Patient> _patientRepository;
-        private readonly IRepository<Doctor> _doctorRepository;
+        private readonly IPatientRepository _patientRepository;
+        private readonly IDoctorRepository _doctorRepository;
 
-        public DeletePatientHandler(IRepository<Patient> patientRepository,
-            IRepository<Doctor> doctorRepository)
+        public DeletePatientHandler(IPatientRepository patientRepository,
+            IDoctorRepository doctorRepository)
         {
             _patientRepository = patientRepository;
             _doctorRepository = doctorRepository;

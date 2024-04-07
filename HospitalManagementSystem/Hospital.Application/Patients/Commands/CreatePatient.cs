@@ -9,13 +9,13 @@ namespace Hospital.Application.Patients.Commands
     public record CreatePatient(int Id, string Name, string Surname, int Age, string Gender,
         string Address, string? PhoneNumber, string? InsuranceNumber) : IRequest<PatientDto>;
 
-    public class CreatePatientCommandHandler : IRequestHandler<CreatePatient, PatientDto>
+    public class CreatePatientHandler : IRequestHandler<CreatePatient, PatientDto>
     {
-        private readonly IRepository<Patient> _patientRepository;
-        private readonly IRepository<Doctor> _doctorRepository;
+        private readonly IPatientRepository _patientRepository;
+        private readonly IDoctorRepository _doctorRepository;
 
-        public CreatePatientCommandHandler(IRepository<Patient> patientRepository, 
-            IRepository<Doctor> doctorRepository)
+        public CreatePatientHandler(IPatientRepository patientRepository,
+            IDoctorRepository doctorRepository)
         {
             _patientRepository = patientRepository;
             _doctorRepository = doctorRepository;
