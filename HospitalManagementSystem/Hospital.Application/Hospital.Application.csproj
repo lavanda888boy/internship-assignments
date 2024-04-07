@@ -15,7 +15,6 @@
     <Folder Include="Departments\Commands\" />
     <Folder Include="Departments\Queries\" />
     <Folder Include="Doctors\Queries\" />
-    <Folder Include="MedicalRecords\Commands\" />
   </ItemGroup>
 
   <ItemGroup>

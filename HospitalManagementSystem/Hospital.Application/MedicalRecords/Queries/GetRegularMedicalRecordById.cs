@@ -7,12 +7,12 @@ namespace Hospital.Application.MedicalRecords.Queries
 {
     public record GetRegularMedicalRecordById(int MedicalRecordId) : IRequest<RegularMedicalRecordDto>;
 
-    public class GetMedicalRecordByIdHandler
+    public class GetRegularMedicalRecordByIdHandler
         : IRequestHandler<GetRegularMedicalRecordById, RegularMedicalRecordDto>
     {
         private readonly IRegularMedicalRecordRepository _medicalRecordRepository;
 
-        public GetMedicalRecordByIdHandler(IRegularMedicalRecordRepository medicalRecordRepository)
+        public GetRegularMedicalRecordByIdHandler(IRegularMedicalRecordRepository medicalRecordRepository)
         {
             _medicalRecordRepository = medicalRecordRepository;
         }
@@ -23,7 +23,7 @@ namespace Hospital.Application.MedicalRecords.Queries
 
             if (medicalRecord is null)
             {
-                throw new NoEntityFoundException($"There is no medical record with id {request.MedicalRecordId}");
+                throw new NoEntityFoundException($"There is no regular medical record with id {request.MedicalRecordId}");
             }
 
             return Task.FromResult(RegularMedicalRecordDto.FromMedicalRecord(medicalRecord));

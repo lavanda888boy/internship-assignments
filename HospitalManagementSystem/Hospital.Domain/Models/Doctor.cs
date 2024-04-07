@@ -14,8 +14,7 @@
 
         public bool AddPatient(Patient patient)
         {
-            if ((AssignedPatients.Count + 1 == _assignedPatientsLimit) || 
-                AssignedPatients.First(p => p.Id == patient.Id) is not null)
+            if (AssignedPatients.Count + 1 == _assignedPatientsLimit)
             {
                 return false;
             }

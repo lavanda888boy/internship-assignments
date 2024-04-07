@@ -7,12 +7,12 @@ namespace Hospital.Application.MedicalRecords.Queries
     public record GetAllRegularMedicalRecords()
         : IRequest<List<RegularMedicalRecordDto>>;
 
-    public class GetAllMedicalRecordsHandler
+    public class GetAllRegularMedicalRecordsHandler
         : IRequestHandler<GetAllRegularMedicalRecords, List<RegularMedicalRecordDto>>
     {
         private readonly IRegularMedicalRecordRepository _medicalRecordRepository;
 
-        public GetAllMedicalRecordsHandler(IRegularMedicalRecordRepository medicalRecordRepository)
+        public GetAllRegularMedicalRecordsHandler(IRegularMedicalRecordRepository medicalRecordRepository)
         {
             _medicalRecordRepository = medicalRecordRepository;
         }

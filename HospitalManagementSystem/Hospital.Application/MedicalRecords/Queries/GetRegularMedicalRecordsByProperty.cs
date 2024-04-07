@@ -9,12 +9,12 @@ namespace Hospital.Application.MedicalRecords.Queries
     public record GetRegularMedicalRecordsByProperty(Func<RegularMedicalRecord, bool> MedicalRecordProperty)
         : IRequest<List<RegularMedicalRecordDto>>;
 
-    public class GetMedicalRecordsByPropertyHandler
+    public class GetRegularMedicalRecordsByPropertyHandler
         : IRequestHandler<GetRegularMedicalRecordsByProperty, List<RegularMedicalRecordDto>>
     {
         private readonly IRegularMedicalRecordRepository _medicalRecordRepository;
 
-        public GetMedicalRecordsByPropertyHandler(IRegularMedicalRecordRepository medicalRecordRepository)
+        public GetRegularMedicalRecordsByPropertyHandler(IRegularMedicalRecordRepository medicalRecordRepository)
         {
             _medicalRecordRepository = medicalRecordRepository;
         }

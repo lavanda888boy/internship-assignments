@@ -42,7 +42,7 @@ namespace Hospital.Application.Patients.Commands
                 updatedPatient.AssignedDoctors = existingPatient.AssignedDoctors;
 
                 var patientDoctorsIds = existingPatient.AssignedDoctors
-                                                       .Select(d => d.Id);
+                                                       .Select(d => d.Id).ToList();
                 var doctorsIdsToAdd = request.AssignedDoctorIds.Except(patientDoctorsIds);
                 var doctorsIdsToRemove = patientDoctorsIds.Except(request.AssignedDoctorIds);
 

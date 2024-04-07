@@ -49,7 +49,7 @@ namespace Hospital.Application.Doctors.Commands
                 updatedDoctor.AssignedPatients = existingDoctor.AssignedPatients;
 
                 var doctorPatientsIds = existingDoctor.AssignedPatients
-                                                      .Select(p => p.Id);
+                                                      .Select(p => p.Id).ToList();
                 var patientsIdsToAdd = request.AssignedPatientIds.Except(doctorPatientsIds);
                 var patientsIdsToRemove = doctorPatientsIds.Except(request.AssignedPatientIds);
 
