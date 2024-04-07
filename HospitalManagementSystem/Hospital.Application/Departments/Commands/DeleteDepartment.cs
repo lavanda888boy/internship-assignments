@@ -1,14 +1,13 @@
 ﻿using Hospital.Application.Abstractions;
-using Hospital.Application.Departments.Responses;
 using Hospital.Application.Exceptions;
 using Hospital.Domain.Models;
 using MediatR;
 
 namespace Hospital.Application.Departments.Commands
 {
-    public record DeleteDepartment(int DepartmentId) : IRequest<DepartmentDto>;
+    public record DeleteDepartment(int DepartmentId) : IRequest<int>;
 
-    public class DeleteDepartmentHandler : IRequestHandler<DeleteDepartment, DepartmentDto>
+    public class DeleteDepartmentHandler : IRequestHandler<DeleteDepartment, int>
     {
         private readonly IRepository<Department> _departmentRepository;
 
@@ -17,17 +16,18 @@ namespace Hospital.Application.Departments.Commands
             _departmentRepository = departmentRepository;
         }
 
-        public Task<DepartmentDto> Handle(DeleteDepartment request, CancellationToken cancellationToken)
+        public Task<int> Handle(DeleteDepartment request, CancellationToken cancellationToken)
         {
-            var department = _departmentRepository.GetById(request.DepartmentId);
+            var result = _departmentRepository.Delete(request.DepartmentId);
 
-            if (department is null)
+            if (result)
+            {
+                return Task.FromResult(request.DepartmentId);
+            }
+            else
             {
                 throw new NoEntityFoundException($"Cannot delete non-existing department with id {request.DepartmentId}");
             }
-            _departmentRepository.Delete(department);
-
-            return Task.FromResult(DepartmentDto.FromDepartment(department));
         }
     }
 }

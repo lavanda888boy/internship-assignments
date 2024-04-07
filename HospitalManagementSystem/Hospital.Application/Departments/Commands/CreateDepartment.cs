@@ -5,7 +5,7 @@ using MediatR;
 
 namespace Hospital.Application.Departments.Commands
 {
-    public record CreateDepartment(string Name) : IRequest<DepartmentDto>;
+    public record CreateDepartment(int Id, string Name) : IRequest<DepartmentDto>;
 
     public class CreateDepartmentHandler : IRequestHandler<CreateDepartment, DepartmentDto>
     {
@@ -20,7 +20,7 @@ namespace Hospital.Application.Departments.Commands
         {
             var department = _departmentRepository.Create(new Department()
             {
-                Id = _departmentRepository.GetLastId(),
+                Id = request.Id,
                 Name = request.Name,
             });
 

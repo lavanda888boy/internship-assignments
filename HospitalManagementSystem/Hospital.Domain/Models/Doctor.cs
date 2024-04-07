@@ -11,5 +11,23 @@
         public required Department Department { get; set; }
         public ICollection<Patient> AssignedPatients { get; set; } = new List<Patient>();
         public required DoctorWorkingHours WorkingHours { get; set; }
+
+        public bool AddPatient(Patient patient)
+        {
+            if ((AssignedPatients.Count + 1 == _assignedPatientsLimit) || 
+                AssignedPatients.First(p => p.Id == patient.Id) is not null)
+            {
+                return false;
+            }
+
+            AssignedPatients.Add(patient);
+            return true;
+        }
+
+        public void RemovePatient(int patientId)
+        {
+            var patientToRemove = AssignedPatients.First(p => p.Id == patientId);
+            AssignedPatients.Remove(patientToRemove);
+        }
     }
 }
