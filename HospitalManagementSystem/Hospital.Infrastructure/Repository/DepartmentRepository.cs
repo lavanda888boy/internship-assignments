@@ -13,9 +13,16 @@ namespace Hospital.Infrastructure.Repository
             return department;
         }
 
-        public bool Delete(Department department)
+        public bool Delete(int departmentId)
         {
-            return _departments.Remove(department);
+            var departmentToRemove = GetById(departmentId);
+            if (departmentToRemove is null)
+            {
+                return false;
+            }
+
+            _departments.Remove(departmentToRemove);
+            return true;
         }
 
         public List<Department> GetAll()
@@ -40,10 +47,11 @@ namespace Hospital.Infrastructure.Repository
 
         public bool Update(Department department)
         {
-            var existingDepartment = _departments.FirstOrDefault(d => d.Id == department.Id);
+            var existingDepartment = GetById(department.Id);
             if (existingDepartment != null)
             {
-                existingDepartment.Name = department.Name;
+                int index = _departments.IndexOf(existingDepartment);
+                _departments[index] = department;
                 return true;
             }
             return false;

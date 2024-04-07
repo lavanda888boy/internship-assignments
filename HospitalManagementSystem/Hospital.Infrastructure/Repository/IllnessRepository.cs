@@ -1,5 +1,6 @@
 ﻿using Hospital.Application.Abstractions;
 using Hospital.Domain.Models;
+using System.Numerics;
 
 namespace Hospital.Infrastructure.Repository
 {
@@ -12,9 +13,16 @@ namespace Hospital.Infrastructure.Repository
             return illness;
         }
 
-        public bool Delete(Illness illness)
+        public bool Delete(int illnessId)
         {
-            return _illnesses.Remove(illness);
+            var illnessToRemove = GetById(illnessId);
+            if (illnessToRemove is null)
+            {
+                return false;
+            }
+
+            _illnesses.Remove(illnessToRemove);
+            return true;
         }
 
         public List<Illness> GetAll()
@@ -34,11 +42,11 @@ namespace Hospital.Infrastructure.Repository
 
         public bool Update(Illness illness)
         {
-            var existingIllness = _illnesses.FirstOrDefault(i => i.Id == illness.Id);
+            var existingIllness = GetById(illness.Id);
             if (existingIllness != null)
             {
-                existingIllness.Name = existingIllness.Name;
-                existingIllness.IllnessSeverity = existingIllness.IllnessSeverity;
+                int index = _illnesses.IndexOf(existingIllness);
+                _illnesses[index] = illness;
                 return true;
             }
             return false;

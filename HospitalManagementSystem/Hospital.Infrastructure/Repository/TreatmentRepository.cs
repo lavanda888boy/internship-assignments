@@ -13,9 +13,16 @@ namespace Hospital.Infrastructure.Repository
             return treatment;
         }
 
-        public bool Delete(Treatment treatment)
+        public bool Delete(int treatmentId)
         {
-            return _treatments.Remove(treatment);
+            var treatmentToRemove = GetById(treatmentId);
+            if (treatmentToRemove is null)
+            {
+                return false;
+            }
+
+            _treatments.Remove(treatmentToRemove);
+            return true;
         }
 
         public List<Treatment> GetAll()
@@ -35,15 +42,13 @@ namespace Hospital.Infrastructure.Repository
 
         public bool Update(Treatment treatment)
         {
-            var existingTreatment = _treatments.First(t => t.Id == treatment.Id);
+            var existingTreatment = GetById(treatment.Id);
             if (existingTreatment != null)
             {
-                existingTreatment.PrescribedMedicine = treatment.PrescribedMedicine;
-                existingTreatment.TreatmentDuration = treatment.TreatmentDuration;
-
+                int index = _treatments.IndexOf(existingTreatment);
+                _treatments[index] = treatment;
                 return true;
             }
-
             return false;
         }
     }

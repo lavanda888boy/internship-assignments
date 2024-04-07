@@ -13,9 +13,16 @@ namespace Hospital.Infrastructure.Repository
             return doctor;
         }
 
-        public bool Delete(Doctor doctor)
+        public bool Delete(int doctorId)
         {
-            return _doctors.Remove(doctor);
+            var doctorToRemove = GetById(doctorId);
+            if (doctorToRemove is null)
+            {
+                return false;
+            }
+
+            _doctors.Remove(doctorToRemove);
+            return true;
         }
 
         public List<Doctor> GetAll()
@@ -40,17 +47,11 @@ namespace Hospital.Infrastructure.Repository
 
         public bool Update(Doctor doctor)
         {
-            var existingDoctor = _doctors.FirstOrDefault(d => d.Id == doctor.Id);
+            var existingDoctor = GetById(doctor.Id);
             if (existingDoctor != null)
             {
-                existingDoctor.Name = doctor.Name;
-                existingDoctor.Surname = doctor.Surname;
-                existingDoctor.Address = doctor.Address;
-                existingDoctor.PhoneNumber = doctor.PhoneNumber;
-                existingDoctor.Department = doctor.Department;
-                existingDoctor.AssignedPatients = doctor.AssignedPatients;
-                existingDoctor.WorkingHours = doctor.WorkingHours;
-
+                int index = _doctors.IndexOf(existingDoctor);
+                _doctors[index] = doctor;
                 return true;
             }
             return false;

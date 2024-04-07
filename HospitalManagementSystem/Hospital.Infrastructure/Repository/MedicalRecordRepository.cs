@@ -13,9 +13,16 @@ namespace Hospital.Infrastructure.Repository
             return record;
         }
 
-        public bool Delete(RegularMedicalRecord record)
+        public bool Delete(int recordId)
         {
-            return _medicalRecords.Remove(record);
+            var recordToRemove = GetById(recordId);
+            if (recordToRemove is null)
+            {
+                return false;
+            }
+
+            _medicalRecords.Remove(recordToRemove);
+            return true;
         }
 
         public List<RegularMedicalRecord> GetAll()
@@ -40,20 +47,11 @@ namespace Hospital.Infrastructure.Repository
 
         public bool Update(RegularMedicalRecord record)
         {
-            var existingRecord = _medicalRecords.FirstOrDefault(r => r.Id == record.Id);
+            var existingRecord = GetById(record.Id);
             if (existingRecord != null)
             {
-                existingRecord.ExaminedPatient = record.ExaminedPatient;
-                existingRecord.ResponsibleDoctor = record.ResponsibleDoctor;
-                existingRecord.DateOfExamination = record.DateOfExamination;
-                existingRecord.ExaminationNotes = record.ExaminationNotes;
-
-                if (record is DiagnosisMedicalRecord)
-                {
-                    ((DiagnosisMedicalRecord)existingRecord).DiagnosedIllness = ((DiagnosisMedicalRecord)record).DiagnosedIllness;
-                    ((DiagnosisMedicalRecord)existingRecord).ProposedTreatment = ((DiagnosisMedicalRecord)record).ProposedTreatment;
-                }
-
+                int index = _medicalRecords.IndexOf(existingRecord);
+                _medicalRecords[index] = record;
                 return true;
             }
             return false;
