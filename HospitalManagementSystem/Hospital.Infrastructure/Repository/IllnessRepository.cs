@@ -29,9 +29,9 @@ namespace Hospital.Infrastructure.Repository
             return _illnesses;
         }
 
-        public Illness GetById(int id)
+        public Illness? GetById(int id)
         {
-            return _illnesses.First(i => i.Id == id);
+            return _illnesses.FirstOrDefault(i => i.Id == id);
         }
 
         public List<Illness>? SearchByProperty(Func<Illness, bool> illnessPredicate)

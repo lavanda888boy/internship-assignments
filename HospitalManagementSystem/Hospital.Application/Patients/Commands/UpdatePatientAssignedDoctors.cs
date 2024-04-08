@@ -6,39 +6,40 @@ using MediatR;
 
 namespace Hospital.Application.Patients.Commands
 {
-    public record UpdatePatient(int Id, string Name, string Surname, int Age, string Gender,
-        string Address, string? PhoneNumber, string? InsuranceNumber, List<int> AssignedDoctorIds) 
+    public record UpdatePatientAssignedDoctors(int Id, List<int> AssignedDoctorIds) 
         : IRequest<PatientDto>;
 
-    public class UpdatePatientHandler : IRequestHandler<UpdatePatient, PatientDto>
+    public class UpdatePatientAssignedDoctorsHandler 
+        : IRequestHandler<UpdatePatientAssignedDoctors, PatientDto>
     {
         private readonly IPatientRepository _patientRepository;
         private readonly IDoctorRepository _doctorRepository;
 
-        public UpdatePatientHandler(IPatientRepository patientRepository,
+        public UpdatePatientAssignedDoctorsHandler(IPatientRepository patientRepository,
             IDoctorRepository doctorRepository)
         {
             _patientRepository = patientRepository;
             _doctorRepository = doctorRepository;
         }
 
-        public Task<PatientDto> Handle(UpdatePatient request, CancellationToken cancellationToken)
+        public Task<PatientDto> Handle(UpdatePatientAssignedDoctors request, CancellationToken cancellationToken)
         {
-            var updatedPatient = new Patient()
-            {
-                Id = request.Id,
-                Name = request.Name,
-                Surname = request.Surname,
-                Age = request.Age,
-                Gender = request.Gender,
-                Address = request.Address,
-                PhoneNumber = request.PhoneNumber,
-                InsuranceNumber = request.InsuranceNumber,
-            };
-
             var existingPatient = _patientRepository.GetById(request.Id);
+
             if (existingPatient != null)
             {
+                var updatedPatient = new Patient()
+                {
+                    Id = request.Id,
+                    Name = existingPatient.Name,
+                    Surname = existingPatient.Surname,
+                    Age = existingPatient.Age,
+                    Gender = existingPatient.Gender,
+                    Address = existingPatient.Address,
+                    PhoneNumber = existingPatient.PhoneNumber,
+                    InsuranceNumber = existingPatient.InsuranceNumber,
+                };
+
                 updatedPatient.AssignedDoctors = existingPatient.AssignedDoctors;
 
                 var patientDoctorsIds = existingPatient.AssignedDoctors

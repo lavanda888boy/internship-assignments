@@ -30,9 +30,9 @@ namespace Hospital.Infrastructure.Repository
             return _departments;
         }
 
-        public Department GetById(int id)
+        public Department? GetById(int id)
         {
-            return _departments.First(d => d.Id == id);
+            return _departments.FirstOrDefault(d => d.Id == id);
         }
 
         public List<Department> SearchByProperty(Func<Department, bool> departmentPredicate)

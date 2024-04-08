@@ -4,19 +4,19 @@ using MediatR;
 
 namespace Hospital.Application.MedicalRecords.Queries
 {
-    public record GetAllDiagnosisMedicalRecords() : IRequest<List<DiagnosisMedicalRecordDto>>;
+    public record ListAllDiagnosisMedicalRecords() : IRequest<List<DiagnosisMedicalRecordDto>>;
 
-    public class GetAllDiagnosisMedicalRecordsHandler 
-        : IRequestHandler<GetAllDiagnosisMedicalRecords, List<DiagnosisMedicalRecordDto>>
+    public class ListAllDiagnosisMedicalRecordsHandler 
+        : IRequestHandler<ListAllDiagnosisMedicalRecords, List<DiagnosisMedicalRecordDto>>
     {
         private readonly IDiagnosisMedicalRecordRepository _medicalRecordRepository;
 
-        public GetAllDiagnosisMedicalRecordsHandler(IDiagnosisMedicalRecordRepository medicalRecordRepository)
+        public ListAllDiagnosisMedicalRecordsHandler(IDiagnosisMedicalRecordRepository medicalRecordRepository)
         {
             _medicalRecordRepository = medicalRecordRepository;
         }
 
-        public Task<List<DiagnosisMedicalRecordDto>> Handle(GetAllDiagnosisMedicalRecords request,
+        public Task<List<DiagnosisMedicalRecordDto>> Handle(ListAllDiagnosisMedicalRecords request,
             CancellationToken cancellationToken)
         {
             var medicalRecords = _medicalRecordRepository.GetAll();

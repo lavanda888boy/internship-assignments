@@ -5,18 +5,18 @@ using MediatR;
 
 namespace Hospital.Application.Departments.Commands
 {
-    public record CreateDepartment(int Id, string Name) : IRequest<DepartmentDto>;
+    public record RegisterNewHospitalDepartment(int Id, string Name) : IRequest<DepartmentDto>;
 
-    public class CreateDepartmentHandler : IRequestHandler<CreateDepartment, DepartmentDto>
+    public class RegisterNewHospitalDepartmentHandler : IRequestHandler<RegisterNewHospitalDepartment, DepartmentDto>
     {
         private readonly IDepartmentRepository _departmentRepository;
 
-        public CreateDepartmentHandler(IDepartmentRepository departmentRepository)
+        public RegisterNewHospitalDepartmentHandler(IDepartmentRepository departmentRepository)
         {
             _departmentRepository = departmentRepository;
         }
 
-        public Task<DepartmentDto> Handle(CreateDepartment request, CancellationToken cancellationToken)
+        public Task<DepartmentDto> Handle(RegisterNewHospitalDepartment request, CancellationToken cancellationToken)
         {
             var department = _departmentRepository.Create(new Department()
             {

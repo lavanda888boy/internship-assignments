@@ -6,18 +6,18 @@ using MediatR;
 
 namespace Hospital.Application.Departments.Commands
 {
-    public record UpdateDepartment(int Id, string Name) : IRequest<DepartmentDto>;
+    public record ChangeDepartmentClassification(int Id, string Name) : IRequest<DepartmentDto>;
 
-    public class UpdateDepartmentHandler : IRequestHandler<UpdateDepartment, DepartmentDto>
+    public class ChangeDepartmentClassificationHandler : IRequestHandler<ChangeDepartmentClassification, DepartmentDto>
     {
         private readonly IDepartmentRepository _departmentRepository;
 
-        public UpdateDepartmentHandler(IDepartmentRepository departmentRepository)
+        public ChangeDepartmentClassificationHandler(IDepartmentRepository departmentRepository)
         {
             _departmentRepository = departmentRepository;
         }
 
-        public Task<DepartmentDto> Handle(UpdateDepartment request, CancellationToken cancellationToken)
+        public Task<DepartmentDto> Handle(ChangeDepartmentClassification request, CancellationToken cancellationToken)
         {
             var result = _departmentRepository.Update(new Department()
             {

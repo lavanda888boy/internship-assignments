@@ -7,7 +7,7 @@ namespace Hospital.Application.Abstractions
         RegularMedicalRecord Create(RegularMedicalRecord entity);
         bool Update(RegularMedicalRecord entity);
         bool Delete(int id);
-        RegularMedicalRecord GetById(int id);
+        RegularMedicalRecord? GetById(int id);
         List<RegularMedicalRecord>? SearchByProperty(Func<RegularMedicalRecord, bool> entityPredicate);
         List<RegularMedicalRecord> GetAll();
     }

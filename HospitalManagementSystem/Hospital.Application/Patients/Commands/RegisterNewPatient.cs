@@ -6,22 +6,22 @@ using MediatR;
 
 namespace Hospital.Application.Patients.Commands
 {
-    public record CreatePatient(int Id, string Name, string Surname, int Age, string Gender,
+    public record RegisterNewPatient(int Id, string Name, string Surname, int Age, string Gender,
         string Address, string? PhoneNumber, string? InsuranceNumber) : IRequest<PatientDto>;
 
-    public class CreatePatientHandler : IRequestHandler<CreatePatient, PatientDto>
+    public class RegisterNewPatientHandler : IRequestHandler<RegisterNewPatient, PatientDto>
     {
         private readonly IPatientRepository _patientRepository;
         private readonly IDoctorRepository _doctorRepository;
 
-        public CreatePatientHandler(IPatientRepository patientRepository,
+        public RegisterNewPatientHandler(IPatientRepository patientRepository,
             IDoctorRepository doctorRepository)
         {
             _patientRepository = patientRepository;
             _doctorRepository = doctorRepository;
         }
 
-        public Task<PatientDto> Handle(CreatePatient request, CancellationToken cancellationToken)
+        public Task<PatientDto> Handle(RegisterNewPatient request, CancellationToken cancellationToken)
         {
             var patient = new Patient
             {

@@ -6,46 +6,36 @@ using MediatR;
 
 namespace Hospital.Application.Doctors.Commands
 {
-    public record UpdateDoctor(int Id, string Name, string Surname, string Address,
-        string PhoneNumber, int DepartmentId, List<int> AssignedPatientIds, 
-        int WorkingHoursId, TimeSpan StartShift, TimeSpan EndShift) : IRequest<DoctorDto>;
+    public record UpdateDoctorAssignedPatients(int Id, List<int> AssignedPatientIds) : IRequest<DoctorDto>;
 
-    public class UpdateDoctorHandler : IRequestHandler<UpdateDoctor, DoctorDto>
+    public class UpdateDoctorAssignedPatientsHandler : IRequestHandler<UpdateDoctorAssignedPatients, DoctorDto>
     {
         private readonly IDoctorRepository _doctorRepository;
-        private readonly IDepartmentRepository _departmentRepository;
         private readonly IPatientRepository _patientRepository;
 
-        public UpdateDoctorHandler(IDoctorRepository doctorRepository, 
-            IDepartmentRepository departmentRepository,
+        public UpdateDoctorAssignedPatientsHandler(IDoctorRepository doctorRepository,
             IPatientRepository patientRepository)
         {
             _doctorRepository = doctorRepository;
-            _departmentRepository = departmentRepository;
             _patientRepository = patientRepository;
         }
 
-        public Task<DoctorDto> Handle(UpdateDoctor request, CancellationToken cancellationToken)
+        public Task<DoctorDto> Handle(UpdateDoctorAssignedPatients request, CancellationToken cancellationToken)
         {
-            var updatedDoctor = new Doctor()
-            {
-                Id = request.Id,
-                Name = request.Name,
-                Surname = request.Surname,
-                Address = request.Address,
-                PhoneNumber = request.PhoneNumber,
-                Department = _departmentRepository.GetById(request.DepartmentId),
-                WorkingHours = new DoctorWorkingHours()
-                {
-                    Id = request.WorkingHoursId,
-                    StartShift = request.StartShift,
-                    EndShift = request.EndShift
-                }
-            };
-
             var existingDoctor = _doctorRepository.GetById(request.Id);
             if (existingDoctor != null)
             {
+                var updatedDoctor = new Doctor()
+                {
+                    Id = request.Id,
+                    Name = existingDoctor.Name,
+                    Surname = existingDoctor.Surname,
+                    Address = existingDoctor.Address,
+                    PhoneNumber = existingDoctor.PhoneNumber,
+                    Department = existingDoctor.Department,
+                    WorkingHours = existingDoctor.WorkingHours,
+                };
+
                 updatedDoctor.AssignedPatients = existingDoctor.AssignedPatients;
 
                 var doctorPatientsIds = existingDoctor.AssignedPatients

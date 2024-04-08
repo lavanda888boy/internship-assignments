@@ -30,9 +30,9 @@ namespace Hospital.Infrastructure.Repository
             return _patients;
         }
 
-        public Patient GetById(int id)
+        public Patient? GetById(int id)
         {
-            return _patients.First(p => p.Id == id);
+            return _patients.FirstOrDefault(p => p.Id == id);
         }
 
         public List<Patient>? SearchByProperty(Func<Patient, bool> patientProperty)

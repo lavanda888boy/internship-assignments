@@ -5,23 +5,23 @@ using MediatR;
 
 namespace Hospital.Application.Doctors.Commands
 {
-    public record CreateDoctor(int Id, string Name, string Surname, string Address, 
+    public record EmployNewDoctor(int Id, string Name, string Surname, string Address, 
         string PhoneNumber, int DepartmentId, int WorkingHoursId, TimeSpan StartShift,
-        TimeSpan EndShift) : IRequest<DoctorDto>;
+        TimeSpan EndShift, List<DayOfWeek> WeekDays) : IRequest<DoctorDto>;
 
-    public class CreateDoctorHandler : IRequestHandler<CreateDoctor, DoctorDto>
+    public class EmployNewDoctorHandler : IRequestHandler<EmployNewDoctor, DoctorDto>
     {
         private readonly IDoctorRepository _doctorRepository;
         private readonly IDepartmentRepository _departmentRepository;
 
-        public CreateDoctorHandler(IDoctorRepository doctorRepository,
+        public EmployNewDoctorHandler(IDoctorRepository doctorRepository,
             IDepartmentRepository departmentRepository)
         {
             _doctorRepository = doctorRepository;
             _departmentRepository = departmentRepository;
         }
 
-        public Task<DoctorDto> Handle(CreateDoctor request, CancellationToken cancellationToken)
+        public Task<DoctorDto> Handle(EmployNewDoctor request, CancellationToken cancellationToken)
         {
             var doctor = new Doctor
             {
@@ -35,7 +35,8 @@ namespace Hospital.Application.Doctors.Commands
                 {
                     Id = request.WorkingHoursId,
                     StartShift = request.StartShift,
-                    EndShift = request.EndShift
+                    EndShift = request.EndShift,
+                    WeekDays = request.WeekDays,
                 }
             };
 

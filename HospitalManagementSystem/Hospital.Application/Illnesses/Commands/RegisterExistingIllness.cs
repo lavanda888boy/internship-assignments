@@ -6,19 +6,19 @@ using Hospital.Application.Abstractions;
 
 namespace Hospital.Application.Illnesses.Commands
 {
-    public record CreateIllness(int Id, string Name, IllnessSeverity IllnessSeverity) 
+    public record RegisterExistingIllness(int Id, string Name, IllnessSeverity IllnessSeverity) 
         : IRequest<IllnessDto>;
 
-    public class CreateIllnessHandler : IRequestHandler<CreateIllness, IllnessDto>
+    public class RegisterExistingIllnessHandler : IRequestHandler<RegisterExistingIllness, IllnessDto>
     {
         private readonly IIllnessRepository _illnessRepository;
 
-        public CreateIllnessHandler(IIllnessRepository illnessRepository)
+        public RegisterExistingIllnessHandler(IIllnessRepository illnessRepository)
         {
             _illnessRepository = illnessRepository;
         }
 
-        public Task<IllnessDto> Handle(CreateIllness request, CancellationToken cancellationToken)
+        public Task<IllnessDto> Handle(RegisterExistingIllness request, CancellationToken cancellationToken)
         {
             var newIllness = new Illness
             {
