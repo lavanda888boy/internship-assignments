@@ -1,9 +1,13 @@
 ﻿using Hospital.Application.Abstractions;
 using Hospital.Application.Departments.Commands;
 using Hospital.Application.Doctors.Commands;
+using Hospital.Application.Doctors.Queries;
+using Hospital.Application.Doctors.Responses;
 using Hospital.Application.Illnesses.Commands;
 using Hospital.Application.MedicalRecords.Commands;
 using Hospital.Application.Patients.Commands;
+using Hospital.Application.Patients.Queries;
+using Hospital.Application.Patients.Responses;
 using Hospital.Domain.Models.Utility;
 using Hospital.Infrastructure.Repository;
 using MediatR;
@@ -49,3 +53,18 @@ Console.WriteLine(record.ProposedTreatment.PrescribedMedicine);
 
 var updatedRecord = await mediator.Send(new AdjustDiagnosisMedicalRecordExaminationNotes(1, "Patient is not so ill"));
 Console.WriteLine(updatedRecord.ExaminationNotes);
+
+PatientFilterDto pFilters = new PatientFilterDto()
+{
+    Name = "John",
+};
+var filteredPatients = await mediator.Send(new SearchPatientsByASetOfProperties(pFilters));
+Console.WriteLine(filteredPatients.Count);
+
+DoctorFilterDto dFilters = new DoctorFilterDto()
+{
+    Name = "Seva",
+    Address = "Malibu",
+};
+var filteredDoctors = await mediator.Send(new SearchDoctorsByASetOfProperties(dFilters));
+Console.WriteLine(filteredDoctors.Count);
