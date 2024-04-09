@@ -38,7 +38,7 @@ namespace Hospital.Application.Patients.Commands
             var doctors = _doctorRepository.GetAll();
             foreach (var doctor in doctors)
             {
-                if (doctor.AddPatient(patient))
+                if (doctor.TryAddPatient(patient))
                 {
                     patient.AddDoctor(doctor);
                     _patientRepository.Create(patient);

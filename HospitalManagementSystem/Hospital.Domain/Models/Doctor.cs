@@ -12,9 +12,10 @@
         public ICollection<Patient> AssignedPatients { get; set; } = new List<Patient>();
         public required DoctorWorkingHours WorkingHours { get; set; }
 
-        public bool AddPatient(Patient patient)
+        public bool TryAddPatient(Patient patient)
         {
-            if (AssignedPatients.Count + 1 == _assignedPatientsLimit)
+            if (AssignedPatients.Count + 1 == _assignedPatientsLimit ||
+                AssignedPatients.Any(p => p.Id == patient.Id))
             {
                 return false;
             }

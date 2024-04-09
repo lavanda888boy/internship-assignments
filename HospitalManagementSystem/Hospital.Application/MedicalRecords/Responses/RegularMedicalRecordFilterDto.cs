@@ -1,6 +1,4 @@
-﻿using Hospital.Domain.Models;
-
-namespace Hospital.Application.MedicalRecords.Responses
+﻿namespace Hospital.Application.MedicalRecords.Responses
 {
     public class RegularMedicalRecordFilterDto
     {

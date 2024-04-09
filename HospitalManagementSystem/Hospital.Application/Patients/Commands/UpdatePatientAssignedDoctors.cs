@@ -1,7 +1,6 @@
 ﻿using Hospital.Application.Abstractions;
 using Hospital.Application.Exceptions;
 using Hospital.Application.Patients.Responses;
-using Hospital.Domain.Models;
 using MediatR;
 
 namespace Hospital.Application.Patients.Commands
@@ -28,49 +27,33 @@ namespace Hospital.Application.Patients.Commands
 
             if (existingPatient != null)
             {
-                var updatedPatient = new Patient()
-                {
-                    Id = request.Id,
-                    Name = existingPatient.Name,
-                    Surname = existingPatient.Surname,
-                    Age = existingPatient.Age,
-                    Gender = existingPatient.Gender,
-                    Address = existingPatient.Address,
-                    PhoneNumber = existingPatient.PhoneNumber,
-                    InsuranceNumber = existingPatient.InsuranceNumber,
-                };
-
-                updatedPatient.AssignedDoctors = existingPatient.AssignedDoctors;
-
                 var patientDoctorsIds = existingPatient.AssignedDoctors
                                                        .Select(d => d.Id).ToList();
-                var doctorsIdsToAdd = request.AssignedDoctorIds.Except(patientDoctorsIds);
-                var doctorsIdsToRemove = patientDoctorsIds.Except(request.AssignedDoctorIds);
+                var doctorsToAdd = request.AssignedDoctorIds.Except(patientDoctorsIds).Select(_doctorRepository.GetById).ToList();
+                var doctorsToRemove = patientDoctorsIds.Except(request.AssignedDoctorIds).Select(_doctorRepository.GetById).ToList();
 
-                foreach (var item in doctorsIdsToAdd)
+                foreach (var doctor in doctorsToAdd)
                 {
-                    var doctor = _doctorRepository.GetById(item);
-                    if (doctor.AddPatient(updatedPatient))
+                    if (doctor.TryAddPatient(existingPatient))
                     {
-                        updatedPatient.AddDoctor(doctor);
+                        existingPatient.AddDoctor(doctor);
                         _doctorRepository.Update(doctor);
                     }
                     else
                     {
-                        throw new DoctorAssignedPatientsLimitExceeded("Too many patients to add to the existing doctor");
+                        throw new DoctorPatientAssignationException("Too many patients to add to the existing doctor");
                     }
                 }
 
-                foreach (var item in doctorsIdsToRemove)
+                foreach (var doctor in doctorsToRemove)
                 {
-                    var doctor = _doctorRepository.GetById(item);
-                    updatedPatient.RemoveDoctor(item);
-                    doctor.RemovePatient(updatedPatient.Id);
+                    existingPatient.RemoveDoctor(doctor.Id);
+                    doctor.RemovePatient(existingPatient.Id);
                     _doctorRepository.Update(doctor);
                 }
 
-                _patientRepository.Update(updatedPatient);
-                return Task.FromResult(PatientDto.FromPatient(updatedPatient));
+                _patientRepository.Update(existingPatient);
+                return Task.FromResult(PatientDto.FromPatient(existingPatient));
             }
             else
             {

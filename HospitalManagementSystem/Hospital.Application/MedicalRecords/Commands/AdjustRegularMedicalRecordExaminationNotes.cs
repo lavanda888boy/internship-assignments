@@ -28,17 +28,10 @@ namespace Hospital.Application.MedicalRecords.Commands
             }
             else
             {
-                var updatedRecord = new RegularMedicalRecord()
-                {
-                    Id = request.Id,
-                    ExaminedPatient = existingRecord.ExaminedPatient,
-                    ResponsibleDoctor = existingRecord.ResponsibleDoctor,
-                    DateOfExamination = existingRecord.DateOfExamination,
-                    ExaminationNotes = request.ExaminationNotes,
-                };
+                existingRecord.ExaminationNotes = request.ExaminationNotes;
+                _medicalRecordRepository.Update(existingRecord);
 
-                _medicalRecordRepository.Update(updatedRecord);
-                return Task.FromResult(RegularMedicalRecordDto.FromMedicalRecord(updatedRecord));
+                return Task.FromResult(RegularMedicalRecordDto.FromMedicalRecord(existingRecord));
             }
         }
     }

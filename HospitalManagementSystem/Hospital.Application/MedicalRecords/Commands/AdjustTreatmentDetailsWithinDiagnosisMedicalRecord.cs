@@ -6,7 +6,7 @@ using MediatR;
 
 namespace Hospital.Application.MedicalRecords.Commands
 {
-    public record AdjustTreatmentDetailsWithinDiagnosisMedicalRecord(int Id, int IllnessId, int TreatmentId,
+    public record AdjustTreatmentDetailsWithinDiagnosisMedicalRecord(int Id, int IllnessId,
        string PrescribedMedicine, TimeSpan TreatmentDuration) : IRequest<DiagnosisMedicalRecordDto>;
 
     public class AdjustTreatmentDetailsWithinDiagnosisMedicalRecordHandler 
@@ -33,25 +33,14 @@ namespace Hospital.Application.MedicalRecords.Commands
             }
             else
             {
-                var updatedRecord = new DiagnosisMedicalRecord()
-                {
-                    Id = request.Id,
-                    ExaminedPatient = existingRecord.ExaminedPatient,
-                    ResponsibleDoctor = existingRecord.ResponsibleDoctor,
-                    DateOfExamination = existingRecord.DateOfExamination,
-                    ExaminationNotes = existingRecord.ExaminationNotes,
-                    DiagnosedIllness = _illnessRepository.GetById(request.IllnessId),
-                    ProposedTreatment = new Treatment()
-                    {
-                        Id = request.TreatmentId,
-                        PrescribedMedicine = request.PrescribedMedicine,
-                        TreatmentDuration = request.TreatmentDuration,
-                    }
-                };
+                existingRecord.DiagnosedIllness = _illnessRepository.GetById(request.IllnessId);
+                existingRecord.ProposedTreatment.PrescribedMedicine = request.PrescribedMedicine;
+                existingRecord.ProposedTreatment.TreatmentDuration = request.TreatmentDuration;
 
-                _treatmentRepository.Update(updatedRecord.ProposedTreatment);
-                _medicalRecordRepository.Update(updatedRecord);
-                return Task.FromResult(DiagnosisMedicalRecordDto.FromMedicalRecord(updatedRecord));
+                _treatmentRepository.Update(existingRecord.ProposedTreatment);
+                _medicalRecordRepository.Update(existingRecord);
+
+                return Task.FromResult(DiagnosisMedicalRecordDto.FromMedicalRecord(existingRecord));
             }
         }
     }

@@ -53,9 +53,7 @@ namespace Hospital.Application.MedicalRecords.Commands
             }
 
             bool examinedPatientIsAssignedToTheDoctor = examinedPatient.AssignedDoctors
-                                                                       .Select(d => d.Id)
-                                                                       .ToList()
-                                                                       .Contains(responsibleDoctor.Id);
+                                                                       .Any(d => d.Id == responsibleDoctor.Id);
             if (examinedPatientIsAssignedToTheDoctor)
             {
                 var medicalRecord = new DiagnosisMedicalRecord
