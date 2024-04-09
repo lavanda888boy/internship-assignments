@@ -64,7 +64,7 @@ Console.WriteLine(filteredPatients.Count);
 DoctorFilterDto dFilters = new DoctorFilterDto()
 {
     Name = "Seva",
-    Address = "Malibu",
+    DepartmentName = "Heart diseases",
 };
 var filteredDoctors = await mediator.Send(new SearchDoctorsByASetOfProperties(dFilters));
 Console.WriteLine(filteredDoctors.Count);

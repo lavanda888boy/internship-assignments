@@ -20,12 +20,12 @@ namespace Hospital.Application.Doctors.Queries
 
         public Task<List<DoctorDto>> Handle(SearchDoctorsByASetOfProperties request, CancellationToken cancellationToken)
         {
-            Expression<Func<Doctor, bool>> predicate = p =>
-                (string.IsNullOrEmpty(request.DoctorFilters.Name) || p.Name == request.DoctorFilters.Name) &&
-                (string.IsNullOrEmpty(request.DoctorFilters.Surname) || p.Surname == request.DoctorFilters.Surname) &&
-                (string.IsNullOrEmpty(request.DoctorFilters.Address) || p.Address == request.DoctorFilters.Address) &&
-                (string.IsNullOrEmpty(request.DoctorFilters.PhoneNumber) || p.PhoneNumber == request.DoctorFilters.PhoneNumber) &&
-                (request.DoctorFilters.DepartmentId == 0 || p.Department.Id == request.DoctorFilters.DepartmentId);
+            Expression<Func<Doctor, bool>> predicate = d =>
+                (string.IsNullOrEmpty(request.DoctorFilters.Name) || d.Name == request.DoctorFilters.Name) &&
+                (string.IsNullOrEmpty(request.DoctorFilters.Surname) || d.Surname == request.DoctorFilters.Surname) &&
+                (string.IsNullOrEmpty(request.DoctorFilters.Address) || d.Address == request.DoctorFilters.Address) &&
+                (string.IsNullOrEmpty(request.DoctorFilters.PhoneNumber) || d.PhoneNumber == request.DoctorFilters.PhoneNumber) &&
+                (string.IsNullOrEmpty(request.DoctorFilters.DepartmentName) || d.Department.Name == request.DoctorFilters.DepartmentName);
 
             var doctors = _doctorRepository.SearchByProperty(predicate.Compile());
 
