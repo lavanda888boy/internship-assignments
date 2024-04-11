@@ -29,9 +29,4 @@
     <Using Include="Xunit" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Doctors.Test\Commands.Test\" />
-    <Folder Include="MedicalRecords.Test\Commands.Test\" />
-  </ItemGroup>
-
 </Project>

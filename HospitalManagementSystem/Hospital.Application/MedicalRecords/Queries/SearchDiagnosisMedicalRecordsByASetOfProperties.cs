@@ -32,7 +32,7 @@ namespace Hospital.Application.MedicalRecords.Queries
 
             var medicalRecords = _medicalRecordRepository.SearchByProperty(predicate.Compile());
 
-            if (medicalRecords is null)
+            if (medicalRecords.Count == 0)
             {
                 throw new NoEntityFoundException("No diagnosis medical records with such properties exist");
             }

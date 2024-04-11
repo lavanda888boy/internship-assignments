@@ -50,34 +50,34 @@ namespace Hospital.Application.Test.MedicalRecords.Test.Queries.Test
                 Age = 20,
                 PhoneNumber = "085964712",
                 AssignedDoctors = new List<Doctor>
-                    {
-                        d
-                    }
+                {
+                    d
+                }
             };
 
             var records = new List<DiagnosisMedicalRecord>()
+            {
+                new DiagnosisMedicalRecord()
                 {
-                    new DiagnosisMedicalRecord()
+                    Id = 1,
+                    ExaminedPatient = p,
+                    ResponsibleDoctor = d,
+                    DateOfExamination = DateTimeOffset.Now,
+                    ExaminationNotes = "patient is not ok",
+                    DiagnosedIllness = new Illness()
                     {
                         Id = 1,
-                        ExaminedPatient = p,
-                        ResponsibleDoctor = d,
-                        DateOfExamination = DateTimeOffset.Now,
-                        ExaminationNotes = "patient is not ok",
-                        DiagnosedIllness = new Illness()
-                        {
-                            Id = 1,
-                            Name = "allergy",
-                            IllnessSeverity = IllnessSeverity.MEDIUM,
-                        },
-                        ProposedTreatment = new Treatment()
-                        {
-                            Id = 1,
-                            PrescribedMedicine = "suprastin",
-                            TreatmentDuration = new TimeSpan(4, 0, 0, 0)
-                        }
+                        Name = "allergy",
+                        IllnessSeverity = IllnessSeverity.MEDIUM,
+                    },
+                    ProposedTreatment = new Treatment()
+                    {
+                        Id = 1,
+                        PrescribedMedicine = "suprastin",
+                        TreatmentDuration = new TimeSpan(4, 0, 0, 0)
                     }
-                };
+                }
+            };
 
             _recordRepositoryMock.Setup(repo => repo.GetAll()).Returns(records);
 

@@ -1,7 +1,6 @@
 ﻿using Hospital.Application.Abstractions;
 using Hospital.Application.Exceptions;
 using Hospital.Application.MedicalRecords.Responses;
-using Hospital.Domain.Models;
 using MediatR;
 
 namespace Hospital.Application.MedicalRecords.Commands
