@@ -29,7 +29,7 @@ namespace Hospital.Application.Doctors.Queries
 
             var doctors = _doctorRepository.SearchByProperty(predicate.Compile());
 
-            if (doctors is null)
+            if (doctors.Count == 0)
             {
                 throw new NoEntityFoundException("No doctors with such properties exist");
             }

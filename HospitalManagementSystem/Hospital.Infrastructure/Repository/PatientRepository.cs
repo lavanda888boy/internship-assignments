@@ -35,7 +35,7 @@ namespace Hospital.Infrastructure.Repository
             return _patients.FirstOrDefault(p => p.Id == id);
         }
 
-        public List<Patient>? SearchByProperty(Func<Patient, bool> patientProperty)
+        public List<Patient> SearchByProperty(Func<Patient, bool> patientProperty)
         {
             return _patients.Where(patientProperty).ToList();
         }

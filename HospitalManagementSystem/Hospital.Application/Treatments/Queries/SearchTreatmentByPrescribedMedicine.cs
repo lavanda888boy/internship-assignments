@@ -21,7 +21,7 @@ namespace Hospital.Application.Treatments.Queries
         {
             var treatments = _treatmentRepository.SearchByProperty(t => t.PrescribedMedicine == request.TreatmentMedicine);
 
-            if (treatments is null)
+            if (treatments.Count == 0)
             {
                 throw new NoEntityFoundException("No treatments with such prescribed medicines exist");
             }

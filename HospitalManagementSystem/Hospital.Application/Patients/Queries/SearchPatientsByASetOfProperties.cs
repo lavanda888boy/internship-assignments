@@ -31,7 +31,7 @@ namespace Hospital.Application.Patients.Queries
 
             var patients = _patientRepository.SearchByProperty(predicate.Compile());
 
-            if (patients is null)
+            if (patients.Count == 0)
             {
                 throw new NoEntityFoundException("No patients with such properties exist");
             }

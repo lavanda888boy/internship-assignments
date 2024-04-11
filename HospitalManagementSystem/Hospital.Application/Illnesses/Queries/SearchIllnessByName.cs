@@ -20,7 +20,7 @@ namespace Hospital.Application.Illnesses.Queries
         {
             var illnesses = _illnessRepository.SearchByProperty(i => i.Name == request.IllnessName);
 
-            if (illnesses is null)
+            if (illnesses.Count == 0)
             {
                 throw new NoEntityFoundException("No illness with such name exists");
             }

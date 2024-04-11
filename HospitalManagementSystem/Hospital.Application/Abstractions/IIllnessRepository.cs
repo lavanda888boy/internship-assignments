@@ -8,7 +8,7 @@ namespace Hospital.Application.Abstractions
         bool Update(Illness entity);
         bool Delete(int id);
         Illness? GetById(int id);
-        List<Illness>? SearchByProperty(Func<Illness, bool> entityPredicate);
+        List<Illness> SearchByProperty(Func<Illness, bool> entityPredicate);
         List<Illness> GetAll();
     }
 }

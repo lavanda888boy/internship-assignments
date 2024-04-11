@@ -41,6 +41,7 @@ namespace Hospital.Application.Patients.Commands
                 if (doctor.TryAddPatient(patient))
                 {
                     patient.AddDoctor(doctor);
+                    _doctorRepository.Update(doctor);
                     _patientRepository.Create(patient);
 
                     return Task.FromResult(PatientDto.FromPatient(patient));

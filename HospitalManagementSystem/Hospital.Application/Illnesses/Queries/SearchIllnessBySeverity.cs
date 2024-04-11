@@ -23,7 +23,7 @@ namespace Hospital.Application.Illnesses.Queries
         {
             var illnesses = _illnessRepository.SearchByProperty(i => i.IllnessSeverity == request.IllnessSeverity);
 
-            if (illnesses is null)
+            if (illnesses.Count == 0)
             {
                 throw new NoEntityFoundException("No illnesses with such severity exist");
             }

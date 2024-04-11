@@ -2,7 +2,7 @@
 {
     public class Doctor
     {
-        private int _assignedPatientsLimit = 5;
+        private int _assignedPatientsLimit = 2;
         public required int Id { get; set; }
         public required string Name { get; set; }
         public required string Surname { get; set; }
@@ -14,7 +14,7 @@
 
         public bool TryAddPatient(Patient patient)
         {
-            if (AssignedPatients.Count + 1 == _assignedPatientsLimit ||
+            if (AssignedPatients.Count + 1 > _assignedPatientsLimit ||
                 AssignedPatients.Any(p => p.Id == patient.Id))
             {
                 return false;

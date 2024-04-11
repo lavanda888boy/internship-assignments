@@ -20,7 +20,7 @@ namespace Hospital.Application.Departments.Queries
         {
             var departments = _departmentRepository.SearchByProperty(d => d.Name == request.DepartmentName);
 
-            if (departments is null)
+            if (departments.Count == 0)
             {
                 throw new NoEntityFoundException("No department with such name exists");
             }

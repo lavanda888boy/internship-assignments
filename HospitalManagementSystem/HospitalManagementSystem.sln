@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34723.18
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hospital.Domain", "Hospital.Domain\Hospital.Domain.csproj", "{9D496AB4-54CD-4647-A224-C69690C2DE51}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hospital.Domain", "Hospital.Domain\Hospital.Domain.csproj", "{9D496AB4-54CD-4647-A224-C69690C2DE51}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hospital.Application", "Hospital.Application\Hospital.Application.csproj", "{5E7F9518-4359-4D92-95CD-A42CC42B3C17}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hospital.Application", "Hospital.Application\Hospital.Application.csproj", "{5E7F9518-4359-4D92-95CD-A42CC42B3C17}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hospital.Infrastructure", "Hospital.Infrastructure\Hospital.Infrastructure.csproj", "{C6B0FC4B-6DFD-4862-A273-B63D095C7EE9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hospital.Infrastructure", "Hospital.Infrastructure\Hospital.Infrastructure.csproj", "{C6B0FC4B-6DFD-4862-A273-B63D095C7EE9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hospital.ConsolePresentation", "Hospital.ConsolePresentation\Hospital.ConsolePresentation.csproj", "{3AB735CC-53EF-4E9B-919D-779B23A82459}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hospital.ConsolePresentation", "Hospital.ConsolePresentation\Hospital.ConsolePresentation.csproj", "{3AB735CC-53EF-4E9B-919D-779B23A82459}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hospital.Application.Test", "Hospital.Application.Test\Hospital.Application.Test.csproj", "{1D15EEFC-66BE-4D80-A1AD-23D663B19B78}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{3AB735CC-53EF-4E9B-919D-779B23A82459}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3AB735CC-53EF-4E9B-919D-779B23A82459}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3AB735CC-53EF-4E9B-919D-779B23A82459}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D15EEFC-66BE-4D80-A1AD-23D663B19B78}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D15EEFC-66BE-4D80-A1AD-23D663B19B78}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D15EEFC-66BE-4D80-A1AD-23D663B19B78}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D15EEFC-66BE-4D80-A1AD-23D663B19B78}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
