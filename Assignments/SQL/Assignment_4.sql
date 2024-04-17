@@ -15,12 +15,12 @@ WHERE ListPrice < (
 
 -- 2. Employees with the smallest number of vacation and sick leave hours
 
-SELECT FirstName, LastName
+SELECT FirstName, LastName, person.BusinessEntityID
 FROM Person.Person AS person
 WHERE person.BusinessEntityID IN (
 	SELECT employee.BusinessEntityID
 	FROM HumanResources.Employee AS employee
-	WHERE VacationHours + SickLeaveHours = (
+	WHERE employee.VacationHours + employee.SickLeaveHours = (
 		SELECT MIN(VacationHours + SickLeaveHours)
 		FROM HumanResources.Employee
 	)
@@ -41,6 +41,19 @@ WHERE header.PurchaseOrderID IN (
 	)
 )
 ORDER BY Name;
+
+SELECT DISTINCT Name, AccountNumber
+FROM Purchasing.Vendor AS vendor
+	INNER JOIN Purchasing.PurchaseOrderHeader AS header
+		ON vendor.BusinessEntityID = header.VendorID
+	INNER JOIN Purchasing.PurchaseOrderDetail AS detail
+		ON header.PurchaseOrderID = detail.PurchaseOrderID
+WHERE detail.LineTotal > (
+	SELECT AVG(LineTotal)
+	FROM Purchasing.PurchaseOrderDetail
+)
+ORDER BY Name;
+
 
 -- 4. Order cost categorization in Australia
 

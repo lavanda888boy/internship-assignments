@@ -39,8 +39,8 @@ ORDER BY MaxQuantity DESC;
 
 SELECT TOP 1 product.Name, AVG(review.Rating) AS AverageRating
 FROM Production.ProductReview review
-         JOIN Production.Product product
-              ON product.ProductID = review.ProductID
+    INNER JOIN Production.Product product
+        ON product.ProductID = review.ProductID
 GROUP BY product.Name
 ORDER BY product.Name DESC;
 
@@ -75,17 +75,17 @@ FROM HumanResources.Employee AS employee
 		ON employee.BusinessEntityID = person.BusinessEntityID
 	INNER JOIN Purchasing.PurchaseOrderHeader AS header
 		ON employee.BusinessEntityID = header.EmployeeID
-GROUP BY person.FirstName, person.LastName, employee.JobTitle
+GROUP BY person.BusinessEntityID, person.FirstName, person.LastName, employee.JobTitle
 HAVING COUNT(header.EmployeeID) > 300
 ORDER BY Orders DESC;
 
--- 8. Most expensive products which are already not available
+-- 8. Most expensive products which are available and do not have a category
 
-SELECT product.Name, subscategory.Name AS Category, product.ListPrice, product.SellEndDate
+SELECT product.Name, category.Name AS Category, product.ListPrice, product.SellEndDate
 FROM Production.Product AS product
-	LEFT JOIN Production.ProductSubcategory AS subscategory
-		ON product.ProductSubcategoryID = subscategory.ProductSubcategoryID
+	LEFT JOIN Production.ProductSubcategory AS subcategory
+		ON product.ProductSubcategoryID = subcategory.ProductSubcategoryID
 	LEFT JOIN Production.ProductCategory AS category
-		ON subscategory.ProductCategoryID = category.ProductCategoryID
-WHERE product.SellEndDate IS NOT NULL
+		ON subcategory.ProductCategoryID = category.ProductCategoryID
+WHERE product.SellEndDate IS NULL
 ORDER BY product.ListPrice DESC;
