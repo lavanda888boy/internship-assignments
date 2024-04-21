@@ -6,6 +6,8 @@ namespace Hospital.Infrastructure
 {
     public class HospitalManagementDbContext : DbContext
     {
+        private string _dbConnectionString = "Server=ARTIFICIALBEAUT\\SQL_AMDARIS;Database=Hospital;Trusted_Connection=True;TrustServerCertificate=True;";
+
         public DbSet<Patient> Patients { get; set; } = default!;
         public DbSet<Doctor> Doctors { get; set; } = default!;
         public DbSet<Department> Departments { get; set; } = default!;
@@ -17,7 +19,7 @@ namespace Hospital.Infrastructure
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer("Server=ARTIFICIALBEAUT\\SQL_AMDARIS;Database=Hospital;Trusted_Connection=True;TrustServerCertificate=True;")
+            optionsBuilder.UseSqlServer(_dbConnectionString)
                           .LogTo(Console.WriteLine, new[] { DbLoggerCategory.Database.Command.Name }, LogLevel.Information);
         }
 
@@ -92,8 +94,8 @@ namespace Hospital.Infrastructure
             // diagnosismedicalrecord-illness one-to-one
             modelBuilder.Entity<DiagnosisMedicalRecord>()
                         .HasOne(r => r.DiagnosedIllness)
-                        .WithOne()
-                        .HasForeignKey<DiagnosisMedicalRecord>(r => r.DiagnosedIllnessId)
+                        .WithMany()
+                        .HasForeignKey(r => r.DiagnosedIllnessId)
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
