@@ -26,7 +26,7 @@ namespace Hospital.Application.Patients.Responses
                 Address = patient.Address,
                 PhoneNumber = patient.PhoneNumber,
                 InsuranceNumber = patient.InsuranceNumber,
-                AssignedDoctors = patient.AssignedDoctors,
+                AssignedDoctors = patient.AssignedDoctor,
             };
         }
     }

@@ -24,7 +24,7 @@ namespace Hospital.Application.Doctors.Commands
             var existingDoctor = _doctorRepository.GetById(request.Id);
             if (existingDoctor != null)
             {
-                var doctorPatientsIds = existingDoctor.AssignedPatients
+                var doctorPatientsIds = existingDoctor.AssignedPatient
                                                       .Select(p => p.Id).ToList();
                 var patientsToAdd = request.AssignedPatientIds.Except(doctorPatientsIds).Select(_patientRepository.GetById).ToList();
                 var patientsToRemove = doctorPatientsIds.Except(request.AssignedPatientIds).Select(_patientRepository.GetById).ToList();

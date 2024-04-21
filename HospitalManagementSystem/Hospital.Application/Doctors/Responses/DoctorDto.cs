@@ -23,7 +23,7 @@ namespace Hospital.Application.Doctors.Responses
                 Address = doctor.Address,
                 PhoneNumber = doctor.PhoneNumber,
                 Department = doctor.Department,
-                AssignedPatients = doctor.AssignedPatients,
+                AssignedPatients = doctor.AssignedPatient,
                 WorkingHours = doctor.WorkingHours
             };
         }

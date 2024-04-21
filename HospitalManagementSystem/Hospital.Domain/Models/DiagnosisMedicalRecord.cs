@@ -1,8 +1,25 @@
-﻿namespace Hospital.Domain.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
+
+namespace Hospital.Domain.Models
 {
-    public class DiagnosisMedicalRecord : RegularMedicalRecord
+    public class DiagnosisMedicalRecord
     {
+        [Column("RecordId")]
+        public required int Id { get; set; }
+
+        public required Patient ExaminedPatient { get; set; }
+        public required Doctor ResponsibleDoctor { get; set; }
+        public required DateTimeOffset DateOfExamination { get; set; }
+
+        [MinLength(10)]
+        [MaxLength(250)]
+        public required string ExaminationNotes { get; set; }
+
+        public required int DiagnosedIllnessId { get; set; }
         public required Illness DiagnosedIllness { get; set; }
+
+        public required int ProposedTreatmentId { get; set; }
         public required Treatment ProposedTreatment { get; set; }
     }
 }

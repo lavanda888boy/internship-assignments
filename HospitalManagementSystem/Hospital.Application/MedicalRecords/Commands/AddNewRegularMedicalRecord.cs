@@ -40,7 +40,7 @@ namespace Hospital.Application.MedicalRecords.Commands
                 throw new NoEntityFoundException($"Cannot create regular medical record for a non-existing doctor with id {request.DoctorId}");
             }
 
-            bool examinedPatientIsAssignedToTheDoctor = examinedPatient.AssignedDoctors
+            bool examinedPatientIsAssignedToTheDoctor = examinedPatient.AssignedDoctor
                                                                        .Any(d => d.Id == responsibleDoctor.Id);
             if (examinedPatientIsAssignedToTheDoctor)
             {

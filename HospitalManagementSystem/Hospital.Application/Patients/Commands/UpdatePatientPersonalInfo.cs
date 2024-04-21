@@ -37,7 +37,7 @@ namespace Hospital.Application.Patients.Commands
                     InsuranceNumber = request.InsuranceNumber,
                 };
 
-                updatedPatient.AssignedDoctors = existingPatient.AssignedDoctors;
+                updatedPatient.AssignedDoctor = existingPatient.AssignedDoctor;
                 _patientRepository.Update(updatedPatient);
 
                 return Task.FromResult(PatientDto.FromPatient(updatedPatient));
