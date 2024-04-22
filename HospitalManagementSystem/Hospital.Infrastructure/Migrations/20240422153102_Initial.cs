@@ -25,20 +25,6 @@ namespace Hospital.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "DoctorWorkingHours",
-                columns: table => new
-                {
-                    DoctorWorkingHoursId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    StartShift = table.Column<TimeSpan>(type: "time", nullable: false),
-                    EndShift = table.Column<TimeSpan>(type: "time", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_DoctorWorkingHours", x => x.DoctorWorkingHoursId);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Illnesses",
                 columns: table => new
                 {
@@ -72,17 +58,16 @@ namespace Hospital.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Treatments",
+                name: "WeekDay",
                 columns: table => new
                 {
-                    TreatmentId = table.Column<int>(type: "int", nullable: false)
+                    WeekDayId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    PrescribedMedicine = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
-                    TreatmentDuration = table.Column<TimeSpan>(type: "time", nullable: false)
+                    DayOfWeek = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Treatments", x => x.TreatmentId);
+                    table.PrimaryKey("PK_WeekDay", x => x.WeekDayId);
                 });
 
             migrationBuilder.CreateTable(
@@ -106,32 +91,6 @@ namespace Hospital.Infrastructure.Migrations
                         column: x => x.DepartmentId,
                         principalTable: "Departments",
                         principalColumn: "DepartmentId",
-                        onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_Doctors_DoctorWorkingHours_WorkingHoursId",
-                        column: x => x.WorkingHoursId,
-                        principalTable: "DoctorWorkingHours",
-                        principalColumn: "DoctorWorkingHoursId",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "WeekDay",
-                columns: table => new
-                {
-                    WeekDayId = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    DayOfWeek = table.Column<int>(type: "int", nullable: false),
-                    DoctorWorkingHoursId = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_WeekDay", x => x.WeekDayId);
-                    table.ForeignKey(
-                        name: "FK_WeekDay_DoctorWorkingHours_DoctorWorkingHoursId",
-                        column: x => x.DoctorWorkingHoursId,
-                        principalTable: "DoctorWorkingHours",
-                        principalColumn: "DoctorWorkingHoursId",
                         onDelete: ReferentialAction.Restrict);
                 });
 
@@ -169,36 +128,56 @@ namespace Hospital.Infrastructure.Migrations
                         principalTable: "Patients",
                         principalColumn: "PatientId",
                         onDelete: ReferentialAction.Restrict);
-                    table.ForeignKey(
-                        name: "FK_DiagnosisRecords_Treatments_ProposedTreatmentId",
-                        column: x => x.ProposedTreatmentId,
-                        principalTable: "Treatments",
-                        principalColumn: "TreatmentId",
-                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
                 name: "DoctorPatient",
                 columns: table => new
                 {
-                    AssignedDoctorsId = table.Column<int>(type: "int", nullable: false),
-                    AssignedPatientsId = table.Column<int>(type: "int", nullable: false)
+                    AssignedDoctorId = table.Column<int>(type: "int", nullable: false),
+                    AssignedPatientId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DoctorPatient", x => new { x.AssignedDoctorsId, x.AssignedPatientsId });
+                    table.PrimaryKey("PK_DoctorPatient", x => new { x.AssignedDoctorId, x.AssignedPatientId });
                     table.ForeignKey(
-                        name: "FK_DoctorPatient_Doctors_AssignedDoctorsId",
-                        column: x => x.AssignedDoctorsId,
+                        name: "FK_DoctorPatient_Doctors_AssignedDoctorId",
+                        column: x => x.AssignedDoctorId,
                         principalTable: "Doctors",
                         principalColumn: "DoctorId",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_DoctorPatient_Patients_AssignedPatientsId",
-                        column: x => x.AssignedPatientsId,
+                        name: "FK_DoctorPatient_Patients_AssignedPatientId",
+                        column: x => x.AssignedPatientId,
                         principalTable: "Patients",
                         principalColumn: "PatientId",
                         onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "DoctorWorkingHours",
+                columns: table => new
+                {
+                    DoctorWorkingHoursId = table.Column<int>(type: "int", nullable: false),
+                    StartShift = table.Column<TimeSpan>(type: "time", nullable: false),
+                    EndShift = table.Column<TimeSpan>(type: "time", nullable: false),
+                    WeekDayId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DoctorWorkingHours", x => x.DoctorWorkingHoursId);
+                    table.ForeignKey(
+                        name: "FK_DoctorWorkingHours_Doctors_DoctorWorkingHoursId",
+                        column: x => x.DoctorWorkingHoursId,
+                        principalTable: "Doctors",
+                        principalColumn: "DoctorId",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_DoctorWorkingHours_WeekDay_WeekDayId",
+                        column: x => x.WeekDayId,
+                        principalTable: "WeekDay",
+                        principalColumn: "WeekDayId",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -229,11 +208,29 @@ namespace Hospital.Infrastructure.Migrations
                         onDelete: ReferentialAction.Restrict);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Treatments",
+                columns: table => new
+                {
+                    TreatmentId = table.Column<int>(type: "int", nullable: false),
+                    PrescribedMedicine = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    TreatmentDuration = table.Column<TimeSpan>(type: "time", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Treatments", x => x.TreatmentId);
+                    table.ForeignKey(
+                        name: "FK_Treatments_DiagnosisRecords_TreatmentId",
+                        column: x => x.TreatmentId,
+                        principalTable: "DiagnosisRecords",
+                        principalColumn: "RecordId",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_DiagnosisRecords_DiagnosedIllnessId",
                 table: "DiagnosisRecords",
-                column: "DiagnosedIllnessId",
-                unique: true);
+                column: "DiagnosedIllnessId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_DiagnosisRecords_ExaminedPatientId",
@@ -241,20 +238,14 @@ namespace Hospital.Infrastructure.Migrations
                 column: "ExaminedPatientId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DiagnosisRecords_ProposedTreatmentId",
-                table: "DiagnosisRecords",
-                column: "ProposedTreatmentId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_DiagnosisRecords_ResponsibleDoctorId",
                 table: "DiagnosisRecords",
                 column: "ResponsibleDoctorId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DoctorPatient_AssignedPatientsId",
+                name: "IX_DoctorPatient_AssignedPatientId",
                 table: "DoctorPatient",
-                column: "AssignedPatientsId");
+                column: "AssignedPatientId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Doctors_DepartmentId",
@@ -262,10 +253,9 @@ namespace Hospital.Infrastructure.Migrations
                 column: "DepartmentId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Doctors_WorkingHoursId",
-                table: "Doctors",
-                column: "WorkingHoursId",
-                unique: true);
+                name: "IX_DoctorWorkingHours_WeekDayId",
+                table: "DoctorWorkingHours",
+                column: "WeekDayId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RegularRecords_ExaminedPatientId",
@@ -276,45 +266,40 @@ namespace Hospital.Infrastructure.Migrations
                 name: "IX_RegularRecords_ResponsibleDoctorId",
                 table: "RegularRecords",
                 column: "ResponsibleDoctorId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_WeekDay_DoctorWorkingHoursId",
-                table: "WeekDay",
-                column: "DoctorWorkingHoursId");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "DiagnosisRecords");
+                name: "DoctorPatient");
 
             migrationBuilder.DropTable(
-                name: "DoctorPatient");
+                name: "DoctorWorkingHours");
 
             migrationBuilder.DropTable(
                 name: "RegularRecords");
 
             migrationBuilder.DropTable(
-                name: "WeekDay");
-
-            migrationBuilder.DropTable(
-                name: "Illnesses");
-
-            migrationBuilder.DropTable(
                 name: "Treatments");
 
             migrationBuilder.DropTable(
+                name: "WeekDay");
+
+            migrationBuilder.DropTable(
+                name: "DiagnosisRecords");
+
+            migrationBuilder.DropTable(
                 name: "Doctors");
+
+            migrationBuilder.DropTable(
+                name: "Illnesses");
 
             migrationBuilder.DropTable(
                 name: "Patients");
 
             migrationBuilder.DropTable(
                 name: "Departments");
-
-            migrationBuilder.DropTable(
-                name: "DoctorWorkingHours");
         }
     }
 }

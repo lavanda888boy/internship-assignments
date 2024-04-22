@@ -12,7 +12,6 @@ namespace Hospital.Application.Patients.Responses
         public required string Address { get; set; }
         public string? PhoneNumber { get; set; }
         public string? InsuranceNumber { get; set; }
-        public required ICollection<Doctor> AssignedDoctors { get; set; }
 
         public static PatientDto FromPatient(Patient patient)
         {
@@ -26,7 +25,6 @@ namespace Hospital.Application.Patients.Responses
                 Address = patient.Address,
                 PhoneNumber = patient.PhoneNumber,
                 InsuranceNumber = patient.InsuranceNumber,
-                AssignedDoctors = patient.AssignedDoctor,
             };
         }
     }

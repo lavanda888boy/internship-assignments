@@ -11,43 +11,25 @@ namespace Hospital.Domain.Models
         public required int Id { get; set; }
 
         [MinLength(1)]
-        [MaxLength(20)]
+        [MaxLength(50)]
         public required string Name { get; set; }
 
         [MinLength(1)]
-        [MaxLength(20)]
+        [MaxLength(50)]
         public required string Surname { get; set; }
 
-        [MinLength(10)]
-        [MaxLength(30)]
+        [MinLength(5)]
+        [MaxLength(100)]
         public required string Address { get; set; }
 
-        [MinLength(8)]
-        [MaxLength(10)]
+        [MinLength(5)]
+        [MaxLength(20)]
         public required string PhoneNumber { get; set; }
 
         public required Department Department { get; set; }
-        public ICollection<Patient> AssignedPatient { get; set; } = [];
+        public ICollection<DoctorsPatients> DoctorsPatients { get; set; } = [];
 
         public required int WorkingHoursId { get; set; }
-        public required DoctorWorkingHours WorkingHours { get; set; }
-
-        public bool TryAddPatient(Patient patient)
-        {
-            if (AssignedPatient.Count + 1 > _assignedPatientsLimit ||
-                AssignedPatient.Any(p => p.Id == patient.Id))
-            {
-                return false;
-            }
-
-            AssignedPatient.Add(patient);
-            return true;
-        }
-
-        public void RemovePatient(int patientId)
-        {
-            var patientToRemove = AssignedPatient.First(p => p.Id == patientId);
-            AssignedPatient.Remove(patientToRemove);
-        }
+        public required DoctorSchedule WorkingHours { get; set; }
     }
 }

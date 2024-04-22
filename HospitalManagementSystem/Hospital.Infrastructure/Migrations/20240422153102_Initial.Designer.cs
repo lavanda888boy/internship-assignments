@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hospital.Infrastructure.Migrations
 {
     [DbContext(typeof(HospitalManagementDbContext))]
-    [Migration("20240421001546_RelationFix_2.0")]
-    partial class RelationFix_20
+    [Migration("20240422153102_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -94,9 +94,6 @@ namespace Hospital.Infrastructure.Migrations
 
                     b.HasIndex("ExaminedPatientId");
 
-                    b.HasIndex("ProposedTreatmentId")
-                        .IsUnique();
-
                     b.HasIndex("ResponsibleDoctorId");
 
                     b.ToTable("DiagnosisRecords");
@@ -141,20 +138,14 @@ namespace Hospital.Infrastructure.Migrations
 
                     b.HasIndex("DepartmentId");
 
-                    b.HasIndex("WorkingHoursId")
-                        .IsUnique();
-
                     b.ToTable("Doctors");
                 });
 
             modelBuilder.Entity("Hospital.Domain.Models.DoctorWorkingHours", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasColumnName("DoctorWorkingHoursId");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<TimeSpan>("EndShift")
                         .HasColumnType("time");
@@ -272,11 +263,8 @@ namespace Hospital.Infrastructure.Migrations
             modelBuilder.Entity("Hospital.Domain.Models.Treatment", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasColumnName("TreatmentId");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("PrescribedMedicine")
                         .IsRequired()
@@ -337,12 +325,6 @@ namespace Hospital.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Hospital.Domain.Models.Treatment", "ProposedTreatment")
-                        .WithOne()
-                        .HasForeignKey("Hospital.Domain.Models.DiagnosisMedicalRecord", "ProposedTreatmentId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("Hospital.Domain.Models.Doctor", "ResponsibleDoctor")
                         .WithMany()
                         .HasForeignKey("ResponsibleDoctorId")
@@ -352,8 +334,6 @@ namespace Hospital.Infrastructure.Migrations
                     b.Navigation("DiagnosedIllness");
 
                     b.Navigation("ExaminedPatient");
-
-                    b.Navigation("ProposedTreatment");
 
                     b.Navigation("ResponsibleDoctor");
                 });
@@ -366,24 +346,24 @@ namespace Hospital.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Hospital.Domain.Models.DoctorWorkingHours", "WorkingHours")
-                        .WithOne("Doctor")
-                        .HasForeignKey("Hospital.Domain.Models.Doctor", "WorkingHoursId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.Navigation("Department");
-
-                    b.Navigation("WorkingHours");
                 });
 
             modelBuilder.Entity("Hospital.Domain.Models.DoctorWorkingHours", b =>
                 {
+                    b.HasOne("Hospital.Domain.Models.Doctor", "Doctor")
+                        .WithOne("WorkingHours")
+                        .HasForeignKey("Hospital.Domain.Models.DoctorWorkingHours", "Id")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("Hospital.Domain.Models.WeekDay", "WeekDay")
                         .WithMany()
                         .HasForeignKey("WeekDayId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("Doctor");
 
                     b.Navigation("WeekDay");
                 });
@@ -407,9 +387,24 @@ namespace Hospital.Infrastructure.Migrations
                     b.Navigation("ResponsibleDoctor");
                 });
 
-            modelBuilder.Entity("Hospital.Domain.Models.DoctorWorkingHours", b =>
+            modelBuilder.Entity("Hospital.Domain.Models.Treatment", b =>
                 {
-                    b.Navigation("Doctor")
+                    b.HasOne("Hospital.Domain.Models.DiagnosisMedicalRecord", null)
+                        .WithOne("ProposedTreatment")
+                        .HasForeignKey("Hospital.Domain.Models.Treatment", "Id")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Hospital.Domain.Models.DiagnosisMedicalRecord", b =>
+                {
+                    b.Navigation("ProposedTreatment")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Hospital.Domain.Models.Doctor", b =>
+                {
+                    b.Navigation("WorkingHours")
                         .IsRequired();
                 });
 #pragma warning restore 612, 618

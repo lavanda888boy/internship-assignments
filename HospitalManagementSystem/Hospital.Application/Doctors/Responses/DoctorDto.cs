@@ -10,8 +10,7 @@ namespace Hospital.Application.Doctors.Responses
         public required string Address { get; set; }
         public required string PhoneNumber { get; set; }
         public required Department Department { get; set; }
-        public ICollection<Patient> AssignedPatients { get; set; } = new List<Patient>();
-        public required DoctorWorkingHours WorkingHours { get; set; }
+        public required DoctorSchedule WorkingHours { get; set; }
 
         public static DoctorDto FromDoctor(Doctor doctor)
         {
@@ -23,7 +22,6 @@ namespace Hospital.Application.Doctors.Responses
                 Address = doctor.Address,
                 PhoneNumber = doctor.PhoneNumber,
                 Department = doctor.Department,
-                AssignedPatients = doctor.AssignedPatient,
                 WorkingHours = doctor.WorkingHours
             };
         }

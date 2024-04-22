@@ -34,7 +34,7 @@ namespace Hospital.Application.MedicalRecords.Commands
             {
                 existingRecord.DiagnosedIllness = _illnessRepository.GetById(request.IllnessId);
                 existingRecord.ProposedTreatment.PrescribedMedicine = request.PrescribedMedicine;
-                existingRecord.ProposedTreatment.TreatmentDuration = request.TreatmentDuration;
+                existingRecord.ProposedTreatment.Duration = request.TreatmentDuration;
 
                 _treatmentRepository.Update(existingRecord.ProposedTreatment);
                 _medicalRecordRepository.Update(existingRecord);

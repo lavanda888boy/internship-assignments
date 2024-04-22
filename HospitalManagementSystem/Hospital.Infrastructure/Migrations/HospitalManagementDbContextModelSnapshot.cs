@@ -22,21 +22,6 @@ namespace Hospital.Infrastructure.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("DoctorPatient", b =>
-                {
-                    b.Property<int>("AssignedDoctorId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("AssignedPatientId")
-                        .HasColumnType("int");
-
-                    b.HasKey("AssignedDoctorId", "AssignedPatientId");
-
-                    b.HasIndex("AssignedPatientId");
-
-                    b.ToTable("DoctorPatient");
-                });
-
             modelBuilder.Entity("Hospital.Domain.Models.Department", b =>
                 {
                     b.Property<int>("Id")
@@ -91,9 +76,6 @@ namespace Hospital.Infrastructure.Migrations
 
                     b.HasIndex("ExaminedPatientId");
 
-                    b.HasIndex("ProposedTreatmentId")
-                        .IsUnique();
-
                     b.HasIndex("ResponsibleDoctorId");
 
                     b.ToTable("DiagnosisRecords");
@@ -110,26 +92,26 @@ namespace Hospital.Infrastructure.Migrations
 
                     b.Property<string>("Address")
                         .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<int>("DepartmentId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("PhoneNumber")
                         .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("nvarchar(10)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("Surname")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<int>("WorkingHoursId")
                         .HasColumnType("int");
@@ -138,20 +120,14 @@ namespace Hospital.Infrastructure.Migrations
 
                     b.HasIndex("DepartmentId");
 
-                    b.HasIndex("WorkingHoursId")
-                        .IsUnique();
-
                     b.ToTable("Doctors");
                 });
 
-            modelBuilder.Entity("Hospital.Domain.Models.DoctorWorkingHours", b =>
+            modelBuilder.Entity("Hospital.Domain.Models.DoctorSchedule", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int")
-                        .HasColumnName("DoctorWorkingHoursId");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnName("DoctorScheduleId");
 
                     b.Property<TimeSpan>("EndShift")
                         .HasColumnType("time");
@@ -167,6 +143,21 @@ namespace Hospital.Infrastructure.Migrations
                     b.HasIndex("WeekDayId");
 
                     b.ToTable("DoctorWorkingHours");
+                });
+
+            modelBuilder.Entity("Hospital.Domain.Models.DoctorsPatients", b =>
+                {
+                    b.Property<int>("DoctorId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PatientId")
+                        .HasColumnType("int");
+
+                    b.HasKey("DoctorId", "PatientId");
+
+                    b.HasIndex("PatientId");
+
+                    b.ToTable("DoctorsPatients");
                 });
 
             modelBuilder.Entity("Hospital.Domain.Models.Illness", b =>
@@ -203,8 +194,8 @@ namespace Hospital.Infrastructure.Migrations
 
                     b.Property<string>("Address")
                         .IsRequired()
-                        .HasMaxLength(30)
-                        .HasColumnType("nvarchar(30)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<int>("Age")
                         .HasColumnType("int");
@@ -218,16 +209,16 @@ namespace Hospital.Infrastructure.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("PhoneNumber")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Surname")
                         .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");
 
@@ -269,19 +260,16 @@ namespace Hospital.Infrastructure.Migrations
             modelBuilder.Entity("Hospital.Domain.Models.Treatment", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasColumnName("TreatmentId");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    b.Property<TimeSpan>("Duration")
+                        .HasColumnType("time");
 
                     b.Property<string>("PrescribedMedicine")
                         .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
-
-                    b.Property<TimeSpan>("TreatmentDuration")
-                        .HasColumnType("time");
 
                     b.HasKey("Id");
 
@@ -302,22 +290,7 @@ namespace Hospital.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("WeekDay");
-                });
-
-            modelBuilder.Entity("DoctorPatient", b =>
-                {
-                    b.HasOne("Hospital.Domain.Models.Doctor", null)
-                        .WithMany()
-                        .HasForeignKey("AssignedDoctorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Hospital.Domain.Models.Patient", null)
-                        .WithMany()
-                        .HasForeignKey("AssignedPatientId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.ToTable("Weekdays");
                 });
 
             modelBuilder.Entity("Hospital.Domain.Models.DiagnosisMedicalRecord", b =>
@@ -334,12 +307,6 @@ namespace Hospital.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Hospital.Domain.Models.Treatment", "ProposedTreatment")
-                        .WithOne()
-                        .HasForeignKey("Hospital.Domain.Models.DiagnosisMedicalRecord", "ProposedTreatmentId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.HasOne("Hospital.Domain.Models.Doctor", "ResponsibleDoctor")
                         .WithMany()
                         .HasForeignKey("ResponsibleDoctorId")
@@ -349,8 +316,6 @@ namespace Hospital.Infrastructure.Migrations
                     b.Navigation("DiagnosedIllness");
 
                     b.Navigation("ExaminedPatient");
-
-                    b.Navigation("ProposedTreatment");
 
                     b.Navigation("ResponsibleDoctor");
                 });
@@ -363,26 +328,45 @@ namespace Hospital.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Hospital.Domain.Models.DoctorWorkingHours", "WorkingHours")
-                        .WithOne("Doctor")
-                        .HasForeignKey("Hospital.Domain.Models.Doctor", "WorkingHoursId")
+                    b.Navigation("Department");
+                });
+
+            modelBuilder.Entity("Hospital.Domain.Models.DoctorSchedule", b =>
+                {
+                    b.HasOne("Hospital.Domain.Models.Doctor", "Doctor")
+                        .WithOne("WorkingHours")
+                        .HasForeignKey("Hospital.Domain.Models.DoctorSchedule", "Id")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.Navigation("Department");
-
-                    b.Navigation("WorkingHours");
-                });
-
-            modelBuilder.Entity("Hospital.Domain.Models.DoctorWorkingHours", b =>
-                {
                     b.HasOne("Hospital.Domain.Models.WeekDay", "WeekDay")
                         .WithMany()
                         .HasForeignKey("WeekDayId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.Navigation("Doctor");
+
                     b.Navigation("WeekDay");
+                });
+
+            modelBuilder.Entity("Hospital.Domain.Models.DoctorsPatients", b =>
+                {
+                    b.HasOne("Hospital.Domain.Models.Doctor", "Doctor")
+                        .WithMany("DoctorsPatients")
+                        .HasForeignKey("DoctorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Hospital.Domain.Models.Patient", "Patient")
+                        .WithMany("DoctorsPatients")
+                        .HasForeignKey("PatientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Doctor");
+
+                    b.Navigation("Patient");
                 });
 
             modelBuilder.Entity("Hospital.Domain.Models.RegularMedicalRecord", b =>
@@ -404,10 +388,32 @@ namespace Hospital.Infrastructure.Migrations
                     b.Navigation("ResponsibleDoctor");
                 });
 
-            modelBuilder.Entity("Hospital.Domain.Models.DoctorWorkingHours", b =>
+            modelBuilder.Entity("Hospital.Domain.Models.Treatment", b =>
                 {
-                    b.Navigation("Doctor")
+                    b.HasOne("Hospital.Domain.Models.DiagnosisMedicalRecord", null)
+                        .WithOne("ProposedTreatment")
+                        .HasForeignKey("Hospital.Domain.Models.Treatment", "Id")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Hospital.Domain.Models.DiagnosisMedicalRecord", b =>
+                {
+                    b.Navigation("ProposedTreatment")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Hospital.Domain.Models.Doctor", b =>
+                {
+                    b.Navigation("DoctorsPatients");
+
+                    b.Navigation("WorkingHours")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Hospital.Domain.Models.Patient", b =>
+                {
+                    b.Navigation("DoctorsPatients");
                 });
 #pragma warning restore 612, 618
         }

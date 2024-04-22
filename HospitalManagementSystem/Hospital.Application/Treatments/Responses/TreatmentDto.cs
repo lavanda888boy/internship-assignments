@@ -14,7 +14,7 @@ namespace Hospital.Application.Treatments.Responses
             {
                 Id = treatment.Id,
                 PrescribedMedicine = treatment.PrescribedMedicine,
-                TreatmentDuration = treatment.TreatmentDuration,
+                TreatmentDuration = treatment.Duration,
             };
         }
     }

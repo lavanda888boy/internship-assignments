@@ -2,6 +2,7 @@
 
 namespace Hospital.Domain.Models
 {
+    [Table("Weekdays")]
     public class WeekDay
     {
         [Column("WeekDayId")]

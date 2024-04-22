@@ -2,9 +2,9 @@
 
 namespace Hospital.Domain.Models
 {
-    public class DoctorWorkingHours
+    public class DoctorSchedule
     {
-        [Column("DoctorWorkingHoursId")]
+        [Column("DoctorScheduleId")]
         public required int Id { get; set; }
 
         public required Doctor Doctor { get; set; }
