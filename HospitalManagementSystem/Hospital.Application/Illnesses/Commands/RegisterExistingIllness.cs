@@ -6,29 +6,42 @@ using Hospital.Application.Abstractions;
 
 namespace Hospital.Application.Illnesses.Commands
 {
-    public record RegisterExistingIllness(int Id, string Name, IllnessSeverity IllnessSeverity) 
+    public record RegisterExistingIllness(int Id, string Name, IllnessSeverity Severity) 
         : IRequest<IllnessDto>;
 
     public class RegisterExistingIllnessHandler : IRequestHandler<RegisterExistingIllness, IllnessDto>
     {
-        private readonly IIllnessRepository _illnessRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public RegisterExistingIllnessHandler(IIllnessRepository illnessRepository)
+        public RegisterExistingIllnessHandler(IUnitOfWork unitOfWork)
         {
-            _illnessRepository = illnessRepository;
+            _unitOfWork = unitOfWork;
         }
 
-        public Task<IllnessDto> Handle(RegisterExistingIllness request, CancellationToken cancellationToken)
+        public async Task<IllnessDto> Handle(RegisterExistingIllness request, CancellationToken cancellationToken)
         {
-            var newIllness = new Illness
+            try
             {
-                Id = request.Id,
-                Name = request.Name,
-                IllnessSeverity = request.IllnessSeverity
-            };
+                var illness = new Illness
+                {
+                    Id = request.Id,
+                    Name = request.Name,
+                    Severity = request.Severity
+                };
 
-            var createdIllness = _illnessRepository.Create(newIllness);
-            return Task.FromResult(IllnessDto.FromIllness(createdIllness));
+                await _unitOfWork.BeginTransactionAsync();
+                var newIllness = await _unitOfWork.IllnessRepository.AddAsync(illness);
+                await _unitOfWork.SaveAsync();
+                await _unitOfWork.CommitTransactionAsync();
+
+                return await Task.FromResult(IllnessDto.FromIllness(newIllness));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                await _unitOfWork.RollbackTransactionAsync();
+                throw;
+            }
         }
     }
 }

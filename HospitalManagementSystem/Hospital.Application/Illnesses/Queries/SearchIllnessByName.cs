@@ -9,23 +9,24 @@ namespace Hospital.Application.Illnesses.Queries
 
     public class SearchIllnessByNameHandler : IRequestHandler<SearchIllnessByName, IllnessDto>
     {
-        private readonly IIllnessRepository _illnessRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public SearchIllnessByNameHandler(IIllnessRepository illnessRepository)
+        public SearchIllnessByNameHandler(IUnitOfWork unitOfWork)
         {
-            _illnessRepository = illnessRepository;
+            _unitOfWork = unitOfWork;
         }
 
-        public Task<IllnessDto> Handle(SearchIllnessByName request, CancellationToken cancellationToken)
+        public async Task<IllnessDto> Handle(SearchIllnessByName request, CancellationToken cancellationToken)
         {
-            var illnesses = _illnessRepository.SearchByProperty(i => i.Name == request.IllnessName);
+            var illnesses = await _unitOfWork.IllnessRepository.SearchByPropertyAsync(i => 
+                    i.Name == request.IllnessName);
 
             if (illnesses.Count == 0)
             {
                 throw new NoEntityFoundException("No illness with such name exists");
             }
 
-            return Task.FromResult(IllnessDto.FromIllness(illnesses[0]));
+            return await Task.FromResult(IllnessDto.FromIllness(illnesses[0]));
         }
     }
 }

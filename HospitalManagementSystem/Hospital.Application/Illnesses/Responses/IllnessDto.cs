@@ -15,7 +15,7 @@ namespace Hospital.Application.Illnesses.Responses
             {
                 Id = illness.Id,
                 Name = illness.Name,
-                IllnessSeverity = illness.IllnessSeverity,
+                IllnessSeverity = illness.Severity,
             };
         }
     }

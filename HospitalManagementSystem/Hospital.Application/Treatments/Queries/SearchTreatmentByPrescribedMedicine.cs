@@ -10,23 +10,24 @@ namespace Hospital.Application.Treatments.Queries
     public class SearchTreatmentByPrescribedMedicineHandler 
         : IRequestHandler<SearchTreatmentByPrescribedMedicine, List<TreatmentDto>>
     {
-        private readonly ITreatmentRepository _treatmentRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public SearchTreatmentByPrescribedMedicineHandler(ITreatmentRepository treatmentRepository)
+        public SearchTreatmentByPrescribedMedicineHandler(IUnitOfWork unitOfWork)
         {
-            _treatmentRepository = treatmentRepository;
+            _unitOfWork = unitOfWork;
         }
 
-        public Task<List<TreatmentDto>> Handle(SearchTreatmentByPrescribedMedicine request, CancellationToken cancellationToken)
+        public async Task<List<TreatmentDto>> Handle(SearchTreatmentByPrescribedMedicine request, CancellationToken cancellationToken)
         {
-            var treatments = _treatmentRepository.SearchByProperty(t => t.PrescribedMedicine == request.TreatmentMedicine);
+            var treatments = await _unitOfWork.TreatmentRepository.SearchByPropertyAsync(t => 
+                    t.PrescribedMedicine == request.TreatmentMedicine);
 
             if (treatments.Count == 0)
             {
                 throw new NoEntityFoundException("No treatments with such prescribed medicines exist");
             }
 
-            return Task.FromResult(treatments.Select(TreatmentDto.FromTreatment).ToList());
+            return await Task.FromResult(treatments.Select(TreatmentDto.FromTreatment).ToList());
         }
     }
 }

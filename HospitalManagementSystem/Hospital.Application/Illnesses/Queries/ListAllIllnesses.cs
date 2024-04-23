@@ -8,17 +8,17 @@ namespace Hospital.Application.Illnesses.Queries
 
     public class ListAllIllnessesHandler : IRequestHandler<ListAllIllnesses, List<IllnessDto>>
     {
-        private readonly IIllnessRepository _illnessRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public ListAllIllnessesHandler(IIllnessRepository illnessRepository)
+        public ListAllIllnessesHandler(IUnitOfWork unitOfWork)
         {
-            _illnessRepository = illnessRepository;
+            _unitOfWork = unitOfWork;
         }
 
-        public Task<List<IllnessDto>> Handle(ListAllIllnesses request, CancellationToken cancellationToken)
+        public async Task<List<IllnessDto>> Handle(ListAllIllnesses request, CancellationToken cancellationToken)
         {
-            var illnesses = _illnessRepository.GetAll();
-            return Task.FromResult(illnesses.Select(IllnessDto.FromIllness).ToList());
+            var illnesses = await _unitOfWork.IllnessRepository.GetAllAsync();
+            return await Task.FromResult(illnesses.Select(IllnessDto.FromIllness).ToList());
         }
     }
 }

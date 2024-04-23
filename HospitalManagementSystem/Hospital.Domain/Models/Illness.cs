@@ -14,6 +14,6 @@ namespace Hospital.Domain.Models
         public required string Name { get; set; }
 
         [Column(TypeName = "nvarchar(10)")]
-        public IllnessSeverity IllnessSeverity { get; set; }
+        public IllnessSeverity Severity { get; set; }
     }
 }

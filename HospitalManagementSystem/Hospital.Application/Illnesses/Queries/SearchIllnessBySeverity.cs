@@ -12,23 +12,24 @@ namespace Hospital.Application.Illnesses.Queries
     public class SearchIllnessBySeverityHandler : IRequestHandler<SearchIllnessBySeverity,
         List<IllnessDto>>
     {
-        private readonly IIllnessRepository _illnessRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public SearchIllnessBySeverityHandler(IIllnessRepository illnessRepository)
+        public SearchIllnessBySeverityHandler(IUnitOfWork unitOfWork)
         {
-            _illnessRepository = illnessRepository;
+            _unitOfWork = unitOfWork;
         }
 
-        public Task<List<IllnessDto>> Handle(SearchIllnessBySeverity request, CancellationToken cancellationToken)
+        public async Task<List<IllnessDto>> Handle(SearchIllnessBySeverity request, CancellationToken cancellationToken)
         {
-            var illnesses = _illnessRepository.SearchByProperty(i => i.IllnessSeverity == request.IllnessSeverity);
+            var illnesses = await _unitOfWork.IllnessRepository.SearchByPropertyAsync(i => 
+                    i.Severity == request.IllnessSeverity);
 
             if (illnesses.Count == 0)
             {
                 throw new NoEntityFoundException("No illnesses with such severity exist");
             }
 
-            return Task.FromResult(illnesses.Select(IllnessDto.FromIllness).ToList());
+            return await Task.FromResult(illnesses.Select(IllnessDto.FromIllness).ToList());
         }
     }
 }

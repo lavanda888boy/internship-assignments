@@ -10,29 +10,35 @@ namespace Hospital.Application.Departments.Commands
 
     public class ChangeDepartmentClassificationHandler : IRequestHandler<ChangeDepartmentClassification, DepartmentDto>
     {
-        private readonly IDepartmentRepository _departmentRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public ChangeDepartmentClassificationHandler(IDepartmentRepository departmentRepository)
+        public ChangeDepartmentClassificationHandler(IUnitOfWork unitOfWork)
         {
-            _departmentRepository = departmentRepository;
+            _unitOfWork = unitOfWork;
         }
 
-        public Task<DepartmentDto> Handle(ChangeDepartmentClassification request, CancellationToken cancellationToken)
+        public async Task<DepartmentDto> Handle(ChangeDepartmentClassification request, CancellationToken cancellationToken)
         {
-            var result = _departmentRepository.Update(new Department()
+            try
             {
-                Id = request.Id,
-                Name = request.Name,
-            });
+                var department = new Department()
+                {
+                    Id = request.Id,
+                    Name = request.Name,
+                };
 
-            if (result)
-            {
-                var department = _departmentRepository.GetById(request.Id);
-                return Task.FromResult(DepartmentDto.FromDepartment(department));
+                await _unitOfWork.BeginTransactionAsync();
+                await _unitOfWork.DepartmentRepository.UpdateAsync(department);
+                await _unitOfWork.SaveAsync();
+                await _unitOfWork.CommitTransactionAsync();
+
+                return await Task.FromResult(DepartmentDto.FromDepartment(department));
             }
-            else
+            catch (Exception ex)
             {
-                throw new NoEntityFoundException($"Cannot update non-existing department with id {request.Id}");
+                Console.WriteLine(ex.Message);
+                await _unitOfWork.RollbackTransactionAsync();
+                throw;
             }
         }
     }

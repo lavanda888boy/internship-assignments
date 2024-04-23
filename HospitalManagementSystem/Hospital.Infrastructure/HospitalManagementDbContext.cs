@@ -23,7 +23,7 @@ namespace Hospital.Infrastructure
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            if (!optionsBuilder.IsConfigured())
+            if (!optionsBuilder.IsConfigured)
             {
                 optionsBuilder.UseSqlServer(_dbConnectionString)
                           .LogTo(Console.WriteLine, new[] { DbLoggerCategory.Database.Command.Name }, LogLevel.Information);

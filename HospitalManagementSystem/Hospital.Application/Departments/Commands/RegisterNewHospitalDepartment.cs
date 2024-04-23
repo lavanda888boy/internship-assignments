@@ -9,22 +9,36 @@ namespace Hospital.Application.Departments.Commands
 
     public class RegisterNewHospitalDepartmentHandler : IRequestHandler<RegisterNewHospitalDepartment, DepartmentDto>
     {
-        private readonly IDepartmentRepository _departmentRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public RegisterNewHospitalDepartmentHandler(IDepartmentRepository departmentRepository)
+        public RegisterNewHospitalDepartmentHandler(IUnitOfWork unitOfWork)
         {
-            _departmentRepository = departmentRepository;
+            _unitOfWork = unitOfWork;
         }
 
-        public Task<DepartmentDto> Handle(RegisterNewHospitalDepartment request, CancellationToken cancellationToken)
+        public async Task<DepartmentDto> Handle(RegisterNewHospitalDepartment request, CancellationToken cancellationToken)
         {
-            var department = _departmentRepository.Create(new Department()
+            try
             {
-                Id = request.Id,
-                Name = request.Name,
-            });
+                var department = new Department()
+                {
+                    Id = request.Id,
+                    Name = request.Name,
+                };
 
-            return Task.FromResult(DepartmentDto.FromDepartment(department));
+                await _unitOfWork.BeginTransactionAsync();
+                var newDepartment = await _unitOfWork.DepartmentRepository.AddAsync(department);
+                await _unitOfWork.SaveAsync();
+                await _unitOfWork.CommitTransactionAsync();
+
+                return await Task.FromResult(DepartmentDto.FromDepartment(newDepartment));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                await _unitOfWork.RollbackTransactionAsync();
+                throw;
+            }
         }
     }
 }

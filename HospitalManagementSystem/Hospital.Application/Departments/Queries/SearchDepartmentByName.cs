@@ -9,23 +9,23 @@ namespace Hospital.Application.Departments.Queries
 
     public class SearchDepartmentByNameHandler : IRequestHandler<SearchDepartmentByName, DepartmentDto>
     {
-        private readonly IDepartmentRepository _departmentRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public SearchDepartmentByNameHandler(IDepartmentRepository departmentRepository)
+        public SearchDepartmentByNameHandler(IUnitOfWork unitOfWork)
         {
-            _departmentRepository = departmentRepository;
+            _unitOfWork = unitOfWork;
         }
 
-        public Task<DepartmentDto> Handle(SearchDepartmentByName request, CancellationToken cancellationToken)
+        public async Task<DepartmentDto> Handle(SearchDepartmentByName request, CancellationToken cancellationToken)
         {
-            var departments = _departmentRepository.SearchByProperty(d => d.Name == request.DepartmentName);
+            var departments = await _unitOfWork.DepartmentRepository.SearchByPropertyAsync(d => d.Name == request.DepartmentName);
 
             if (departments.Count == 0)
             {
                 throw new NoEntityFoundException("No department with such name exists");
             }
 
-            return Task.FromResult(DepartmentDto.FromDepartment(departments[0]));
+            return await Task.FromResult(DepartmentDto.FromDepartment(departments[0]));
         }
     }
 }

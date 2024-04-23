@@ -7,17 +7,17 @@ namespace Hospital.Application.Departments.Queries
 
     public class ListAllDepartmentsHandler : IRequestHandler<ListAllDepartments, List<DepartmentDto>>
     {
-        private readonly IDepartmentRepository _departmentRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public ListAllDepartmentsHandler(IDepartmentRepository departmentRepository)
+        public ListAllDepartmentsHandler(IUnitOfWork unitOfWork)
         {
-            _departmentRepository = departmentRepository;
+            _unitOfWork = unitOfWork;
         }
 
-        public Task<List<DepartmentDto>> Handle(ListAllDepartments request, CancellationToken cancellationToken)
+        public async Task<List<DepartmentDto>> Handle(ListAllDepartments request, CancellationToken cancellationToken)
         {
-            var departments = _departmentRepository.GetAll();
-            return Task.FromResult(departments.Select(DepartmentDto.FromDepartment).ToList());
+            var departments = await _unitOfWork.DepartmentRepository.GetAllAsync();
+            return await Task.FromResult(departments.Select(DepartmentDto.FromDepartment).ToList());
         }
     }
 }
