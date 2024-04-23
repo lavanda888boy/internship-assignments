@@ -1,55 +1,62 @@
 ﻿using Hospital.Application.Abstractions;
 using Hospital.Domain.Models;
+using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace Hospital.Infrastructure.Repository
 {
     public class DoctorRepository : IDoctorRepository
     {
-        private List<Doctor> _doctors = new();
+        private readonly HospitalManagementDbContext _context;
 
-        public Doctor Create(Doctor doctor)
+        public DoctorRepository(HospitalManagementDbContext context)
         {
-            _doctors.Add(doctor);
+            _context = context;
+        }
+
+        public async Task<Doctor> AddAsync(Doctor doctor)
+        {
+            _context.Doctors.Add(doctor);
+            await _context.SaveChangesAsync();
             return doctor;
         }
 
-        public bool Delete(int doctorId)
+        public async Task<List<Doctor>> GetAllAsync()
         {
-            var doctorToRemove = GetById(doctorId);
-            if (doctorToRemove is null)
+            return await _context.Doctors.AsNoTracking().ToListAsync();
+        }
+
+        public async Task<Doctor?> GetByIdAsync(int id)
+        {
+            return await _context.Doctors.FirstOrDefaultAsync(d => d.Id == id);
+        }
+
+        public async Task<List<Doctor>> SearchByPropertyAsync
+            (Expression<Func<Doctor, bool>> entityPredicate)
+        {
+            return await _context.Doctors.AsNoTracking()
+                                         .Where(entityPredicate)
+                                         .ToListAsync();
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            var doctor = await _context.Doctors.FirstOrDefaultAsync(d => d.Id == id);
+            if (doctor is not null)
             {
-                return false;
+                _context.Doctors.Remove(doctor);
+                await _context.SaveChangesAsync();
             }
-
-            _doctors.Remove(doctorToRemove);
-            return true;
         }
 
-        public List<Doctor> GetAll()
+        public async Task UpdateAsync(Doctor doctor)
         {
-            return _doctors;
-        }
-
-        public Doctor? GetById(int id)
-        {
-            return _doctors.FirstOrDefault(d => d.Id == id);
-        }
-
-        public List<Doctor> SearchByProperty(Func<Doctor, bool> doctorProperty)
-        {
-            return _doctors.Where(doctorProperty).ToList();
-        }
-
-        public bool Update(Doctor doctor)
-        {
-            var existingDoctor = GetById(doctor.Id);
-            if (existingDoctor != null)
+            var doc = await _context.Doctors.FirstOrDefaultAsync(d => d.Id == doctor.Id);
+            if (doc is not null)
             {
-                int index = _doctors.IndexOf(existingDoctor);
-                _doctors[index] = doctor;
-                return true;
+                _context.Update(doc);
+                await _context.SaveChangesAsync();
             }
-            return false;
         }
     }
 }

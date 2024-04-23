@@ -1,55 +1,62 @@
 ﻿using Hospital.Application.Abstractions;
 using Hospital.Domain.Models;
+using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace Hospital.Infrastructure.Repository
 {
     public class RegularMedicalRecordRepository : IRegularMedicalRecordRepository
     {
-        private List<RegularMedicalRecord> _medicalRecords = new();
+        private readonly HospitalManagementDbContext _context;
 
-        public RegularMedicalRecord Create(RegularMedicalRecord record)
+        public RegularMedicalRecordRepository(HospitalManagementDbContext context)
         {
-            _medicalRecords.Add(record);
+            _context = context;
+        }
+
+        public async Task<RegularMedicalRecord> AddAsync(RegularMedicalRecord record)
+        {
+            _context.RegularRecords.Add(record);
+            await _context.SaveChangesAsync();
             return record;
         }
 
-        public bool Delete(int recordId)
+        public async Task<List<RegularMedicalRecord>> GetAllAsync()
         {
-            var recordToRemove = GetById(recordId);
-            if (recordToRemove is null)
+            return await _context.RegularRecords.AsNoTracking().ToListAsync();
+        }
+
+        public async Task<RegularMedicalRecord?> GetByIdAsync(int id)
+        {
+            return await _context.RegularRecords.FirstOrDefaultAsync(r => r.Id == id);
+        }
+
+        public async Task<List<RegularMedicalRecord>> SearchByPropertyAsync
+            (Expression<Func<RegularMedicalRecord, bool>> entityPredicate)
+        {
+            return await _context.RegularRecords.AsNoTracking()
+                                                .Where(entityPredicate)
+                                                .ToListAsync();
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            var record = await _context.RegularRecords.FirstOrDefaultAsync(r => r.Id == id);
+            if (record is not null)
             {
-                return false;
+                _context.RegularRecords.Remove(record);
+                await _context.SaveChangesAsync();
             }
-
-            _medicalRecords.Remove(recordToRemove);
-            return true;
         }
 
-        public List<RegularMedicalRecord> GetAll()
+        public async Task UpdateAsync(RegularMedicalRecord record)
         {
-            return _medicalRecords;
-        }
-
-        public RegularMedicalRecord? GetById(int id)
-        {
-            return _medicalRecords.FirstOrDefault(mr => mr.Id == id);
-        }
-
-        public List<RegularMedicalRecord> SearchByProperty(Func<RegularMedicalRecord, bool> medicalRecordProperty)
-        {
-            return _medicalRecords.Where(medicalRecordProperty).ToList();
-        }
-
-        public bool Update(RegularMedicalRecord record)
-        {
-            var existingRecord = GetById(record.Id);
-            if (existingRecord != null)
+            var rec = await _context.RegularRecords.FirstOrDefaultAsync(r => r.Id == record.Id);
+            if (rec is not null)
             {
-                int index = _medicalRecords.IndexOf(existingRecord);
-                _medicalRecords[index] = record;
-                return true;
+                _context.Update(rec);
+                await _context.SaveChangesAsync();
             }
-            return false;
         }
     }
 }

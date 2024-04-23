@@ -117,7 +117,7 @@ BEGIN TRY
 								INNER JOIN Purchasing.ProductVendor AS pv
 								ON pv.ProductID = product.ProductID
 								WHERE product.StandardCost <> 0
-							  )
+							   )
 
 	UPDATE Purchasing.PurchaseOrderDetail
 	SET ProductID = @PurchasedProductID,
@@ -125,7 +125,7 @@ BEGIN TRY
 					  SELECT StandardCost 
 					  FROM Production.Product
 					  WHERE ProductID = @PurchasedProductID
-					)
+					 )
 	WHERE PurchaseOrderDetailID = @NewPurchaseOrderDetailID;
 	
 	COMMIT TRANSACTION;

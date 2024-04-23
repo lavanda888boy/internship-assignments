@@ -1,55 +1,62 @@
 ﻿using Hospital.Application.Abstractions;
 using Hospital.Domain.Models;
+using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace Hospital.Infrastructure.Repository
 {
     public class DepartmentRepository : IDepartmentRepository
     {
-        private List<Department> _departments = new();
+        private readonly HospitalManagementDbContext _context;
 
-        public Department Create(Department department)
+        public DepartmentRepository(HospitalManagementDbContext context)
         {
-            _departments.Add(department);
+            _context = context;
+        }
+
+        public async Task<Department> AddAsync(Department department)
+        {
+            _context.Departments.Add(department);
+            await _context.SaveChangesAsync();
             return department;
         }
 
-        public bool Delete(int departmentId)
+        public async Task<List<Department>> GetAllAsync()
         {
-            var departmentToRemove = GetById(departmentId);
-            if (departmentToRemove is null)
+            return await _context.Departments.AsNoTracking().ToListAsync();
+        }
+
+        public async Task<Department?> GetByIdAsync(int id)
+        {
+            return await _context.Departments.FirstOrDefaultAsync(d => d.Id == id);
+        }
+
+        public async Task<List<Department>> SearchByPropertyAsync
+            (Expression<Func<Department, bool>> entityPredicate)
+        {
+            return await _context.Departments.AsNoTracking()
+                                             .Where(entityPredicate)
+                                             .ToListAsync();
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            var department = await _context.Departments.FirstOrDefaultAsync(d => d.Id == id);
+            if (department is not null)
             {
-                return false;
+                _context.Departments.Remove(department);
+                await _context.SaveChangesAsync();
             }
-
-            _departments.Remove(departmentToRemove);
-            return true;
         }
 
-        public List<Department> GetAll()
+        public async Task UpdateAsync(Department department)
         {
-            return _departments;
-        }
-
-        public Department? GetById(int id)
-        {
-            return _departments.FirstOrDefault(d => d.Id == id);
-        }
-
-        public List<Department> SearchByProperty(Func<Department, bool> departmentPredicate)
-        {
-            return _departments.Where(departmentPredicate).ToList();
-        }
-
-        public bool Update(Department department)
-        {
-            var existingDepartment = GetById(department.Id);
-            if (existingDepartment != null)
+            var dep = await _context.Departments.FirstOrDefaultAsync(d => d.Id == department.Id);
+            if (dep is not null)
             {
-                int index = _departments.IndexOf(existingDepartment);
-                _departments[index] = department;
-                return true;
+                _context.Update(dep);
+                await _context.SaveChangesAsync();
             }
-            return false;
         }
     }
 }

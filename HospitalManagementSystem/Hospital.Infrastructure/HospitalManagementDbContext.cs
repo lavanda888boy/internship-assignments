@@ -1,7 +1,6 @@
 ﻿using Hospital.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using System.Diagnostics;
 
 namespace Hospital.Infrastructure
 {
@@ -12,16 +11,23 @@ namespace Hospital.Infrastructure
         public DbSet<Patient> Patients { get; set; } = default!;
         public DbSet<Doctor> Doctors { get; set; } = default!;
         public DbSet<Department> Departments { get; set; } = default!;
-        public DbSet<DoctorSchedule> DoctorWorkingHours { get; set; } = default!;
+        public DbSet<DoctorSchedule> DoctorSchedules { get; set; } = default!;
         public DbSet<RegularMedicalRecord> RegularRecords { get; set; } = default!;
         public DbSet<DiagnosisMedicalRecord> DiagnosisRecords { get; set; } = default!;
         public DbSet<Illness> Illnesses { get; set; } = default!;
         public DbSet<Treatment> Treatments { get; set; } = default!;
 
+        public HospitalManagementDbContext() { }
+
+        public HospitalManagementDbContext(DbContextOptions options) : base(options) { }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(_dbConnectionString)
+            if (!optionsBuilder.IsConfigured())
+            {
+                optionsBuilder.UseSqlServer(_dbConnectionString)
                           .LogTo(Console.WriteLine, new[] { DbLoggerCategory.Database.Command.Name }, LogLevel.Information);
+            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

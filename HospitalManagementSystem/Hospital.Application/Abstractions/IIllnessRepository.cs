@@ -1,14 +1,15 @@
 ﻿using Hospital.Domain.Models;
+using System.Linq.Expressions;
 
 namespace Hospital.Application.Abstractions
 {
     public interface IIllnessRepository
     {
-        Illness Create(Illness entity);
-        bool Update(Illness entity);
-        bool Delete(int id);
-        Illness? GetById(int id);
-        List<Illness> SearchByProperty(Func<Illness, bool> entityPredicate);
-        List<Illness> GetAll();
+        Task<Illness> AddAsync(Illness entity);
+        Task UpdateAsync(Illness entity);
+        Task DeleteAsync(int id);
+        Task<Illness?> GetByIdAsync(int id);
+        Task<List<Illness>> SearchByPropertyAsync(Expression<Func<Illness, bool>> entityPredicate);
+        Task<List<Illness>> GetAllAsync();
     }
 }

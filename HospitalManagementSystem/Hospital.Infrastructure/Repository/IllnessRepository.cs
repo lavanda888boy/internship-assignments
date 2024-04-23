@@ -1,54 +1,62 @@
 ﻿using Hospital.Application.Abstractions;
 using Hospital.Domain.Models;
+using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace Hospital.Infrastructure.Repository
 {
     public class IllnessRepository : IIllnessRepository
     {
-        private List<Illness> _illnesses = new();
-        public Illness Create(Illness illness)
+        private readonly HospitalManagementDbContext _context;
+
+        public IllnessRepository(HospitalManagementDbContext context)
         {
-            _illnesses.Add(illness);
+            _context = context;
+        }
+
+        public async Task<Illness> AddAsync(Illness illness)
+        {
+            _context.Illnesses.Add(illness);
+            await _context.SaveChangesAsync();
             return illness;
         }
 
-        public bool Delete(int illnessId)
+        public async Task<List<Illness>> GetAllAsync()
         {
-            var illnessToRemove = GetById(illnessId);
-            if (illnessToRemove is null)
+            return await _context.Illnesses.AsNoTracking().ToListAsync();
+        }
+
+        public async Task<Illness?> GetByIdAsync(int id)
+        {
+            return await _context.Illnesses.FirstOrDefaultAsync(i => i.Id == id);
+        }
+
+        public async Task<List<Illness>> SearchByPropertyAsync
+            (Expression<Func<Illness, bool>> entityPredicate)
+        {
+            return await _context.Illnesses.AsNoTracking()
+                                           .Where(entityPredicate)
+                                           .ToListAsync();
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            var illness = await _context.Illnesses.FirstOrDefaultAsync(i => i.Id == id);
+            if (illness is not null)
             {
-                return false;
+                _context.Illnesses.Remove(illness);
+                await _context.SaveChangesAsync();
             }
-
-            _illnesses.Remove(illnessToRemove);
-            return true;
         }
 
-        public List<Illness> GetAll()
+        public async Task UpdateAsync(Illness illness)
         {
-            return _illnesses;
-        }
-
-        public Illness? GetById(int id)
-        {
-            return _illnesses.FirstOrDefault(i => i.Id == id);
-        }
-
-        public List<Illness> SearchByProperty(Func<Illness, bool> illnessPredicate)
-        {
-            return _illnesses.Where(illnessPredicate).ToList();
-        }
-
-        public bool Update(Illness illness)
-        {
-            var existingIllness = GetById(illness.Id);
-            if (existingIllness != null)
+            var ill = await _context.Illnesses.FirstOrDefaultAsync(i => i.Id == illness.Id);
+            if (ill is not null)
             {
-                int index = _illnesses.IndexOf(existingIllness);
-                _illnesses[index] = illness;
-                return true;
+                _context.Update(ill);
+                await _context.SaveChangesAsync();
             }
-            return false;
         }
     }
 }

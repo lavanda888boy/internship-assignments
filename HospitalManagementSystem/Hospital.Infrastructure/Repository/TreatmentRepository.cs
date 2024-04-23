@@ -1,55 +1,62 @@
 ﻿using Hospital.Application.Abstractions;
 using Hospital.Domain.Models;
+using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace Hospital.Infrastructure.Repository
 {
     public class TreatmentRepository : ITreatmentRepository
     {
-        private List<Treatment> _treatments = new();
+        private readonly HospitalManagementDbContext _context;
 
-        public Treatment Create(Treatment treatment)
+        public TreatmentRepository(HospitalManagementDbContext context)
         {
-            _treatments.Add(treatment);
+            _context = context;
+        }
+
+        public async Task<Treatment> AddAsync(Treatment treatment)
+        {
+            _context.Treatments.Add(treatment);
+            await _context.SaveChangesAsync();
             return treatment;
         }
 
-        public bool Delete(int treatmentId)
+        public async Task<List<Treatment>> GetAllAsync()
         {
-            var treatmentToRemove = GetById(treatmentId);
-            if (treatmentToRemove is null)
+            return await _context.Treatments.AsNoTracking().ToListAsync();
+        }
+
+        public async Task<Treatment?> GetByIdAsync(int id)
+        {
+            return await _context.Treatments.FirstOrDefaultAsync(t => t.Id == id);
+        }
+
+        public async Task<List<Treatment>> SearchByPropertyAsync
+            (Expression<Func<Treatment, bool>> entityPredicate)
+        {
+            return await _context.Treatments.AsNoTracking()
+                                            .Where(entityPredicate)
+                                            .ToListAsync();
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            var treatment = await _context.Treatments.FirstOrDefaultAsync(t => t.Id == id);
+            if (treatment is not null)
             {
-                return false;
+                _context.Treatments.Remove(treatment);
+                await _context.SaveChangesAsync();
             }
-
-            _treatments.Remove(treatmentToRemove);
-            return true;
         }
 
-        public List<Treatment> GetAll()
+        public async Task UpdateAsync(Treatment treatment)
         {
-            return _treatments;
-        }
-
-        public Treatment? GetById(int id)
-        {
-            return _treatments.FirstOrDefault(t => t.Id == id);
-        }
-
-        public List<Treatment> SearchByProperty(Func<Treatment, bool> treatmentPredicate)
-        {
-            return _treatments.Where(treatmentPredicate).ToList();
-        }
-
-        public bool Update(Treatment treatment)
-        {
-            var existingTreatment = GetById(treatment.Id);
-            if (existingTreatment != null)
+            var treat = await _context.Treatments.FirstOrDefaultAsync(t => t.Id == treatment.Id);
+            if (treat is not null)
             {
-                int index = _treatments.IndexOf(existingTreatment);
-                _treatments[index] = treatment;
-                return true;
+                _context.Update(treat);
+                await _context.SaveChangesAsync();
             }
-            return false;
         }
     }
 }
