@@ -5,10 +5,8 @@ namespace Hospital.Domain.Models
 {
     public class Doctor
     {
-        private int _assignedPatientsLimit = 2;
-
         [Column("DoctorId")]
-        public required int Id { get; set; }
+        public int Id { get; set; }
 
         [MinLength(1)]
         [MaxLength(50)]
@@ -29,7 +27,7 @@ namespace Hospital.Domain.Models
         public required Department Department { get; set; }
         public ICollection<DoctorsPatients> DoctorsPatients { get; set; } = [];
 
-        public required int WorkingHoursId { get; set; }
+        public int WorkingHoursId { get; set; }
         public required DoctorSchedule WorkingHours { get; set; }
     }
 }

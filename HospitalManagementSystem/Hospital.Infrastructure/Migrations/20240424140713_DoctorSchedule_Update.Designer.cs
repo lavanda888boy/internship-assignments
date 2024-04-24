@@ -4,6 +4,7 @@ using Hospital.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hospital.Infrastructure.Migrations
 {
     [DbContext(typeof(HospitalManagementDbContext))]
-    partial class HospitalManagementDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240424140713_DoctorSchedule_Update")]
+    partial class DoctorSchedule_Update
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -340,11 +343,13 @@ namespace Hospital.Infrastructure.Migrations
 
             modelBuilder.Entity("Hospital.Domain.Models.DoctorSchedule", b =>
                 {
-                    b.HasOne("Hospital.Domain.Models.Doctor", null)
+                    b.HasOne("Hospital.Domain.Models.Doctor", "Doctor")
                         .WithOne("WorkingHours")
                         .HasForeignKey("Hospital.Domain.Models.DoctorSchedule", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("Doctor");
                 });
 
             modelBuilder.Entity("Hospital.Domain.Models.DoctorScheduleWeekDay", b =>

@@ -22,7 +22,6 @@ namespace Hospital.Application.Departments.Commands
             {
                 var department = new Department()
                 {
-                    Id = request.Id,
                     Name = request.Name,
                 };
 

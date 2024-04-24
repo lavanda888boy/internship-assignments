@@ -6,7 +6,7 @@ using MediatR;
 
 namespace Hospital.Application.MedicalRecords.Commands
 {
-    public record AddNewDiagnosisMedicalRecord(int Id, int PatientId, int DoctorId, string ExaminationNotes,
+    public record AddNewDiagnosisMedicalRecord(int PatientId, int DoctorId, string ExaminationNotes,
        int IllnessId, int TreatmentId, string PrescribedMedicine, TimeSpan Duration)
        : IRequest<DiagnosisMedicalRecordDto>;
 
@@ -60,7 +60,6 @@ namespace Hospital.Application.MedicalRecords.Commands
 
                     var medicalRecord = new DiagnosisMedicalRecord
                     {
-                        Id = request.Id,
                         ExaminedPatient = examinedPatient,
                         ResponsibleDoctor = responsibleDoctor,
                         DateOfExamination = DateTimeOffset.UtcNow,

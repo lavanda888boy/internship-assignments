@@ -1,47 +1,67 @@
-﻿//using Hospital.Application.Abstractions;
-//using Hospital.Application.Doctors.Responses;
-//using Hospital.Domain.Models;
-//using MediatR;
+﻿using Hospital.Application.Abstractions;
+using Hospital.Application.Doctors.Responses;
+using Hospital.Application.Exceptions;
+using Hospital.Domain.Models;
+using MediatR;
 
-//namespace Hospital.Application.Doctors.Commands
-//{
-//    public record EmployNewDoctor(int Id, string Name, string Surname, string Address, 
-//        string PhoneNumber, int DepartmentId, int WorkingHoursId, TimeSpan StartShift,
-//        TimeSpan EndShift, List<WeekDay> WeekDays) : IRequest<DoctorDto>;
+namespace Hospital.Application.Doctors.Commands
+{
+    public record EmployNewDoctor(string Name, string Surname, string Address, string PhoneNumber, 
+        int DepartmentId, TimeSpan StartShift, TimeSpan EndShift, List<int> WeekDayIds) 
+        : IRequest<DoctorDto>;
 
-//    public class EmployNewDoctorHandler : IRequestHandler<EmployNewDoctor, DoctorDto>
-//    {
-//        private readonly IDoctorRepository _doctorRepository;
-//        private readonly IDepartmentRepository _departmentRepository;
+    public class EmployNewDoctorHandler : IRequestHandler<EmployNewDoctor, DoctorDto>
+    {
+        private readonly IUnitOfWork _unitOfWork;
 
-//        public EmployNewDoctorHandler(IDoctorRepository doctorRepository,
-//            IDepartmentRepository departmentRepository)
-//        {
-//            _doctorRepository = doctorRepository;
-//            _departmentRepository = departmentRepository;
-//        }
+        public EmployNewDoctorHandler(IUnitOfWork unitOfWork)
+        {
+            _unitOfWork = unitOfWork;
+        }
 
-//        public Task<DoctorDto> Handle(EmployNewDoctor request, CancellationToken cancellationToken)
-//        {
-//            var doctor = new Doctor
-//            {
-//                Id = request.Id,
-//                Name = request.Name,
-//                Surname = request.Surname,
-//                Address = request.Address,
-//                PhoneNumber = request.PhoneNumber,
-//                Department = _departmentRepository.GetById(request.DepartmentId),
-//                WorkingHours = new DoctorWorkingHours()
-//                {
-//                    Id = request.WorkingHoursId,
-//                    StartShift = request.StartShift,
-//                    EndShift = request.EndShift,
-//                    WeekDays = request.WeekDays,
-//                }
-//            };
+        public async Task<DoctorDto> Handle(EmployNewDoctor request, CancellationToken cancellationToken)
+        {
+            var department = await _unitOfWork.DepartmentRepository.GetByIdAsync(request.DepartmentId);
+            if (department == null)
+            {
+                throw new NoEntityFoundException($"Cannot employ doctor to a non-existing department with id {request.DepartmentId}");
+            }
 
-//            var createdDoctor = _doctorRepository.Create(doctor);
-//            return Task.FromResult(DoctorDto.FromDoctor(createdDoctor));
-//        }
-//    }
-//}
+            try
+            {
+                var schedule = new DoctorSchedule()
+                {
+                    StartShift = request.StartShift,
+                    EndShift = request.EndShift,
+                    DoctorScheduleWeekDay = request.WeekDayIds.Select(id => new DoctorScheduleWeekDay
+                    {
+                        WeekDayId = id,
+                    }).ToList()
+                };
+
+                var doctor = new Doctor
+                {
+                    Name = request.Name,
+                    Surname = request.Surname,
+                    Address = request.Address,
+                    PhoneNumber = request.PhoneNumber,
+                    Department = department,
+                    WorkingHours = schedule,
+                };
+
+                await _unitOfWork.BeginTransactionAsync();
+                _unitOfWork.DoctorRepository.Add(doctor);
+                await _unitOfWork.SaveAsync();
+                await _unitOfWork.CommitTransactionAsync();
+
+                return await Task.FromResult(DoctorDto.FromDoctor(doctor));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                await _unitOfWork.RollbackTransactionAsync();
+                throw;
+            }
+        }
+    }
+}

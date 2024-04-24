@@ -6,7 +6,7 @@ namespace Hospital.Domain.Models
     public class Department
     {
         [Column("DepartmentId")]
-        public required int Id { get; set; }
+        public int Id { get; set; }
 
         [MinLength(5)]
         [MaxLength(20)]

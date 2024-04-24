@@ -2,10 +2,10 @@
 {
     public class DoctorsPatients
     {
-        public required int DoctorId { get; set; }
-        public required Doctor Doctor { get; set; }
+        public int DoctorId { get; set; }
+        public Doctor Doctor { get; set; } = null!;
 
-        public required int PatientId { get; set;}
-        public required Patient Patient { get; set;}
+        public int PatientId { get; set;}
+        public Patient Patient { get; set; } = null!;
     }
 }

@@ -6,7 +6,7 @@ namespace Hospital.Domain.Models
     public class Treatment
     {
         [Column("TreatmentId")]
-        public required int Id { get; set; }
+        public int Id { get; set; }
 
         [MinLength(5)]
         [MaxLength(20)]

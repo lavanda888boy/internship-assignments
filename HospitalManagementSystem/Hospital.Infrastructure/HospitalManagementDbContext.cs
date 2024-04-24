@@ -53,15 +53,9 @@ namespace Hospital.Infrastructure
 
             modelBuilder.Entity<Doctor>()
                         .HasOne(d => d.WorkingHours)
-                        .WithOne(wh => wh.Doctor)
+                        .WithOne()
                         .HasForeignKey<DoctorSchedule>(wh => wh.Id)
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-            modelBuilder.Entity<DoctorSchedule>()
-                        .HasOne(wh => wh.Doctor)
-                        .WithOne(d => d.WorkingHours)
-                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
             modelBuilder.Entity<RegularMedicalRecord>()
@@ -102,12 +96,18 @@ namespace Hospital.Infrastructure
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-            modelBuilder.Entity<DoctorSchedule>()
-                        .HasOne(wh => wh.WeekDay)
-                        .WithMany()
-                        .HasForeignKey(wh => wh.WeekDayId)
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+            modelBuilder.Entity<DoctorScheduleWeekDay>()
+                        .HasKey(ds => new { ds.DoctorScheduleId, ds.WeekDayId });
+
+            modelBuilder.Entity<DoctorScheduleWeekDay>()
+                        .HasOne(ds => ds.DoctorSchedule)
+                        .WithMany(ds => ds.DoctorScheduleWeekDay)
+                        .HasForeignKey(ds => ds.DoctorScheduleId);
+
+            modelBuilder.Entity<DoctorScheduleWeekDay>()
+                        .HasOne(ds => ds.WeekDay)
+                        .WithMany(wd => wd.DoctorScheduleWeekDay)
+                        .HasForeignKey(ds => ds.WeekDayId);
         }
     }
 }

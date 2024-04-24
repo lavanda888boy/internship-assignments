@@ -6,7 +6,7 @@ using Hospital.Application.Abstractions;
 
 namespace Hospital.Application.Illnesses.Commands
 {
-    public record RegisterExistingIllness(int Id, string Name, IllnessSeverity Severity) 
+    public record RegisterExistingIllness(string Name, IllnessSeverity Severity) 
         : IRequest<IllnessDto>;
 
     public class RegisterExistingIllnessHandler : IRequestHandler<RegisterExistingIllness, IllnessDto>
@@ -24,7 +24,6 @@ namespace Hospital.Application.Illnesses.Commands
             {
                 var illness = new Illness
                 {
-                    Id = request.Id,
                     Name = request.Name,
                     Severity = request.Severity
                 };

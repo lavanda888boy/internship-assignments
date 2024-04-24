@@ -6,7 +6,7 @@ namespace Hospital.Domain.Models
     public class RegularMedicalRecord
     {
         [Column("RecordId")]
-        public required int Id { get; set; }
+        public int Id { get; set; }
 
         public required Patient ExaminedPatient { get; set; }
         public required Doctor ResponsibleDoctor { get; set; }
