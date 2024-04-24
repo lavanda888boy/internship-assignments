@@ -5,7 +5,7 @@ using System.Linq.Expressions;
 
 namespace Hospital.Infrastructure.Repository
 {
-    public class DoctorRepository : IDoctorRepository
+    public class DoctorRepository : IRepository<Doctor>
     {
         private readonly HospitalManagementDbContext _context;
 
@@ -14,10 +14,9 @@ namespace Hospital.Infrastructure.Repository
             _context = context;
         }
 
-        public async Task<Doctor> AddAsync(Doctor doctor)
+        public Doctor Add(Doctor doctor)
         {
             _context.Doctors.Add(doctor);
-            await _context.SaveChangesAsync();
             return doctor;
         }
 
@@ -45,7 +44,6 @@ namespace Hospital.Infrastructure.Repository
             if (doctor is not null)
             {
                 _context.Doctors.Remove(doctor);
-                await _context.SaveChangesAsync();
             }
         }
 
@@ -55,7 +53,6 @@ namespace Hospital.Infrastructure.Repository
             if (doc is not null)
             {
                 _context.Update(doc);
-                await _context.SaveChangesAsync();
             }
         }
     }

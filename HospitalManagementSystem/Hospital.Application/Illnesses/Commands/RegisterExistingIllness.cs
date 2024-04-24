@@ -30,7 +30,7 @@ namespace Hospital.Application.Illnesses.Commands
                 };
 
                 await _unitOfWork.BeginTransactionAsync();
-                var newIllness = await _unitOfWork.IllnessRepository.AddAsync(illness);
+                var newIllness = await _unitOfWork.IllnessRepository.Add(illness);
                 await _unitOfWork.SaveAsync();
                 await _unitOfWork.CommitTransactionAsync();
 

@@ -1,5 +1,6 @@
 ﻿using Hospital.Application.Abstractions;
 using Hospital.Application.Departments.Commands;
+using Hospital.Domain.Models;
 using Hospital.Infrastructure;
 using Hospital.Infrastructure.Repository;
 using MediatR;
@@ -11,13 +12,13 @@ var diContainer = new ServiceCollection()
             options.UseSqlServer("Server=ARTIFICIALBEAUT\\SQL_AMDARIS;Database=Hospital;Trusted_Connection=True;TrustServerCertificate=True;"))
     .AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(RegisterNewHospitalDepartment).Assembly))
     .AddScoped<IUnitOfWork, UnitOfWork>()
-    .AddScoped<IPatientRepository, PatientRepository>()
-    .AddScoped<IDoctorRepository, DoctorRepository>()
-    .AddScoped<IRegularMedicalRecordRepository, RegularMedicalRecordRepository>()
-    .AddScoped<IDiagnosisMedicalRecordRepository, DiagnosisMedicalRecordRepository>()
-    .AddScoped<IDepartmentRepository, DepartmentRepository>()
-    .AddScoped<IIllnessRepository, IllnessRepository>()
-    .AddScoped<ITreatmentRepository, TreatmentRepository>()
+    .AddScoped<IRepository<Patient>, PatientRepository>()
+    .AddScoped<IRepository<Doctor>, DoctorRepository>()
+    .AddScoped<IRepository<RegularMedicalRecord>, RegularMedicalRecordRepository>()
+    .AddScoped<IRepository<DiagnosisMedicalRecord>, DiagnosisMedicalRecordRepository>()
+    .AddScoped<IRepository<Department>, DepartmentRepository>()
+    .AddScoped<IRepository<Illness>, IllnessRepository>()
+    .AddScoped<IRepository<Treatment>, TreatmentRepository>()
     .BuildServiceProvider();
 
 var mediator = diContainer.GetRequiredService<IMediator>();

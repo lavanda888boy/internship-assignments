@@ -1,26 +1,27 @@
 ﻿using Hospital.Application.Abstractions;
+using Hospital.Domain.Models;
 
 namespace Hospital.Infrastructure
 {
     public class UnitOfWork : IUnitOfWork
     {
         private readonly HospitalManagementDbContext _context;
-        public IDepartmentRepository DepartmentRepository { get; private set; }
-        public IDiagnosisMedicalRecordRepository DiagnosisRecordRepository { get; private set; }
-        public IDoctorRepository DoctorRepository { get; private set; }
-        public IIllnessRepository IllnessRepository { get; private set; }
-        public IPatientRepository PatientRepository { get; private set; }
-        public IRegularMedicalRecordRepository RegularRecordRepository { get; private set; }
-        public ITreatmentRepository TreatmentRepository { get; private set; }
+        public IRepository<Department> DepartmentRepository { get; private set; }
+        public IRepository<DiagnosisMedicalRecord> DiagnosisRecordRepository { get; private set; }
+        public IRepository<Doctor> DoctorRepository { get; private set; }
+        public IRepository<Illness> IllnessRepository { get; private set; }
+        public IRepository<Patient> PatientRepository { get; private set; }
+        public IRepository<RegularMedicalRecord> RegularRecordRepository { get; private set; }
+        public IRepository<Treatment> TreatmentRepository { get; private set; }
 
         public UnitOfWork(HospitalManagementDbContext context,
-            IDepartmentRepository departmentRepository,
-            IDiagnosisMedicalRecordRepository diagnosisRecordRepository,
-            IDoctorRepository doctorRepository,
-            IIllnessRepository illnessRepository,
-            IPatientRepository patientRepository,
-            IRegularMedicalRecordRepository regularRecordRepository,
-            ITreatmentRepository treatmentRepository)
+            IRepository<Department> departmentRepository,
+            IRepository<DiagnosisMedicalRecord> diagnosisRecordRepository,
+            IRepository<Doctor> doctorRepository,
+            IRepository<Illness> illnessRepository,
+            IRepository<Patient> patientRepository,
+            IRepository<RegularMedicalRecord> regularRecordRepository,
+            IRepository<Treatment> treatmentRepository)
         {
             _context = context;
             DepartmentRepository = departmentRepository;

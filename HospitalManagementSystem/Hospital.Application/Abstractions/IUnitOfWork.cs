@@ -1,14 +1,16 @@
-﻿namespace Hospital.Application.Abstractions
+﻿using Hospital.Domain.Models;
+
+namespace Hospital.Application.Abstractions
 {
     public interface IUnitOfWork
     {
-        public IDepartmentRepository DepartmentRepository { get; }
-        public IDiagnosisMedicalRecordRepository DiagnosisRecordRepository { get; }
-        public IDoctorRepository DoctorRepository { get; }
-        public IIllnessRepository IllnessRepository { get; }
-        public IPatientRepository PatientRepository { get; }
-        public IRegularMedicalRecordRepository RegularRecordRepository { get; }
-        public ITreatmentRepository TreatmentRepository { get; }
+        public IRepository<Department> DepartmentRepository { get; }
+        public IRepository<DiagnosisMedicalRecord> DiagnosisRecordRepository { get; }
+        public IRepository<Doctor> DoctorRepository { get; }
+        public IRepository<Illness> IllnessRepository { get; }
+        public IRepository<Patient> PatientRepository { get; }
+        public IRepository<RegularMedicalRecord> RegularRecordRepository { get; }
+        public IRepository<Treatment> TreatmentRepository { get; }
         Task SaveAsync();
         Task BeginTransactionAsync();
         Task CommitTransactionAsync();
