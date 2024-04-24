@@ -13,28 +13,28 @@ namespace Hospital.Application.MedicalRecords.Queries
     public class SearchRegularMedicalRecordsByASetPropertiesHandler
         : IRequestHandler<SearchRegularMedicalRecordsByASetProperties, List<RegularMedicalRecordDto>>
     {
-        private readonly IRegularMedicalRecordRepository _medicalRecordRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public SearchRegularMedicalRecordsByASetPropertiesHandler(IRegularMedicalRecordRepository medicalRecordRepository)
+        public SearchRegularMedicalRecordsByASetPropertiesHandler(IUnitOfWork unitOfWork)
         {
-            _medicalRecordRepository = medicalRecordRepository;
+            _unitOfWork = unitOfWork;
         }
 
-        public Task<List<RegularMedicalRecordDto>> Handle(SearchRegularMedicalRecordsByASetProperties request, CancellationToken cancellationToken)
+        public async Task<List<RegularMedicalRecordDto>> Handle(SearchRegularMedicalRecordsByASetProperties request, CancellationToken cancellationToken)
         {
             Expression<Func<RegularMedicalRecord, bool>> predicate = r =>
                 (request.RecordFilters.ExaminedPatientId == 0 || r.ExaminedPatient.Id == request.RecordFilters.ExaminedPatientId) &&
                 (request.RecordFilters.ResponsibleDoctorId == 0 || r.ResponsibleDoctor.Id == request.RecordFilters.ResponsibleDoctorId) &&
                 (!request.RecordFilters.DateOfExamination.HasValue || r.DateOfExamination == request.RecordFilters.DateOfExamination);
 
-            var medicalRecords = _medicalRecordRepository.SearchByProperty(predicate.Compile());
+            var medicalRecords = await _unitOfWork.RegularRecordRepository.SearchByPropertyAsync(predicate);
 
             if (medicalRecords.Count == 0)
             {
                 throw new NoEntityFoundException("No regular medical records with such properties exist");
             }
 
-            return Task.FromResult(medicalRecords.Select(RegularMedicalRecordDto.FromMedicalRecord).ToList());
+            return await Task.FromResult(medicalRecords.Select(RegularMedicalRecordDto.FromMedicalRecord).ToList());
         }
     }
 }

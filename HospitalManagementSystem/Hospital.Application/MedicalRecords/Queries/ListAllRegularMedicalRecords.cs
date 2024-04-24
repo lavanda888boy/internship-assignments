@@ -10,17 +10,17 @@ namespace Hospital.Application.MedicalRecords.Queries
     public class ListAllRegularMedicalRecordsHandler
         : IRequestHandler<ListAllRegularMedicalRecords, List<RegularMedicalRecordDto>>
     {
-        private readonly IRegularMedicalRecordRepository _medicalRecordRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public ListAllRegularMedicalRecordsHandler(IRegularMedicalRecordRepository medicalRecordRepository)
+        public ListAllRegularMedicalRecordsHandler(IUnitOfWork unitOfWork)
         {
-            _medicalRecordRepository = medicalRecordRepository;
+            _unitOfWork = unitOfWork;
         }
 
-        public Task<List<RegularMedicalRecordDto>> Handle(ListAllRegularMedicalRecords request, CancellationToken cancellationToken)
+        public async Task<List<RegularMedicalRecordDto>> Handle(ListAllRegularMedicalRecords request, CancellationToken cancellationToken)
         {
-            var medicalRecords = _medicalRecordRepository.GetAll();
-            return Task.FromResult(medicalRecords.Select(RegularMedicalRecordDto.FromMedicalRecord).ToList());
+            var medicalRecords = await _unitOfWork.RegularRecordRepository.GetAllAsync();
+            return await Task.FromResult(medicalRecords.Select(RegularMedicalRecordDto.FromMedicalRecord).ToList());
         }
     }
 }

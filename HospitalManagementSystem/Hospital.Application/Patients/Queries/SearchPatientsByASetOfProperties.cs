@@ -11,14 +11,14 @@ namespace Hospital.Application.Patients.Queries
 
     public class SearchPatientsByASetOfPropertiesHandler : IRequestHandler<SearchPatientsByASetOfProperties, List<PatientDto>>
     {
-        private readonly IPatientRepository _patientRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public SearchPatientsByASetOfPropertiesHandler(IPatientRepository patientRepository)
+        public SearchPatientsByASetOfPropertiesHandler(IUnitOfWork unitOfWork)
         {
-            _patientRepository = patientRepository;
+            _unitOfWork = unitOfWork;
         }
 
-        public Task<List<PatientDto>> Handle(SearchPatientsByASetOfProperties request, CancellationToken cancellationToken)
+        public async Task<List<PatientDto>> Handle(SearchPatientsByASetOfProperties request, CancellationToken cancellationToken)
         {
             Expression<Func<Patient, bool>> predicate = p =>
                 (string.IsNullOrEmpty(request.PatientFilters.Name) || p.Name == request.PatientFilters.Name) &&
@@ -29,14 +29,14 @@ namespace Hospital.Application.Patients.Queries
                 (string.IsNullOrEmpty(request.PatientFilters.PhoneNumber) || p.PhoneNumber == request.PatientFilters.PhoneNumber) &&
                 (string.IsNullOrEmpty(request.PatientFilters.InsuranceNumber) || p.InsuranceNumber == request.PatientFilters.InsuranceNumber);
 
-            var patients = _patientRepository.SearchByProperty(predicate.Compile());
+            var patients = await _unitOfWork.PatientRepository.SearchByPropertyAsync(predicate);
 
             if (patients.Count == 0)
             {
                 throw new NoEntityFoundException("No patients with such properties exist");
             }
 
-            return Task.FromResult(patients.Select(PatientDto.FromPatient).ToList());
+            return await Task.FromResult(patients.Select(PatientDto.FromPatient).ToList());
         }
     }
 }

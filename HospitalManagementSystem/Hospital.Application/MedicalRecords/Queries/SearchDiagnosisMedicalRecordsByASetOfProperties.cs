@@ -13,14 +13,14 @@ namespace Hospital.Application.MedicalRecords.Queries
     public class SearchDiagnosisMedicalRecordsByASetOfPropertiesHandler
         : IRequestHandler<SearchDiagnosisMedicalRecordsByASetOfProperties, List<DiagnosisMedicalRecordDto>>
     {
-        private readonly IDiagnosisMedicalRecordRepository _medicalRecordRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public SearchDiagnosisMedicalRecordsByASetOfPropertiesHandler(IDiagnosisMedicalRecordRepository medicalRecordRepository)
+        public SearchDiagnosisMedicalRecordsByASetOfPropertiesHandler(IUnitOfWork unitOfWork)
         {
-            _medicalRecordRepository = medicalRecordRepository;
+            _unitOfWork = unitOfWork;
         }
 
-        public Task<List<DiagnosisMedicalRecordDto>> Handle(SearchDiagnosisMedicalRecordsByASetOfProperties request,
+        public async Task<List<DiagnosisMedicalRecordDto>> Handle(SearchDiagnosisMedicalRecordsByASetOfProperties request,
             CancellationToken cancellationToken)
         {
             Expression<Func<DiagnosisMedicalRecord, bool>> predicate = r =>
@@ -30,14 +30,14 @@ namespace Hospital.Application.MedicalRecords.Queries
                 (string.IsNullOrEmpty(request.RecordFilters.DiagnosedIllnessName) || r.DiagnosedIllness.Name == request.RecordFilters.DiagnosedIllnessName) &&
                 (string.IsNullOrEmpty(request.RecordFilters.PrescribedMedicine) || r.ProposedTreatment.PrescribedMedicine == request.RecordFilters.PrescribedMedicine);
 
-            var medicalRecords = _medicalRecordRepository.SearchByProperty(predicate.Compile());
+            var medicalRecords = await _unitOfWork.DiagnosisRecordRepository.SearchByPropertyAsync(predicate);
 
             if (medicalRecords.Count == 0)
             {
                 throw new NoEntityFoundException("No diagnosis medical records with such properties exist");
             }
 
-            return Task.FromResult(medicalRecords.Select(DiagnosisMedicalRecordDto.FromMedicalRecord).ToList());
+            return await Task.FromResult(medicalRecords.Select(DiagnosisMedicalRecordDto.FromMedicalRecord).ToList());
         }
     }
 }
