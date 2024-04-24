@@ -7,35 +7,25 @@ using MediatR;
 namespace Hospital.Application.MedicalRecords.Commands
 {
     public record AddNewDiagnosisMedicalRecord(int Id, int PatientId, int DoctorId, string ExaminationNotes,
-       int IllnessId, int TreatmentId, string PrescribedMedicine, TimeSpan TreatmentDuration)
+       int IllnessId, int TreatmentId, string PrescribedMedicine, TimeSpan Duration)
        : IRequest<DiagnosisMedicalRecordDto>;
 
     public class AddNewDiagnosisMedicalRecordHandler
         : IRequestHandler<AddNewDiagnosisMedicalRecord, DiagnosisMedicalRecordDto>
     {
-        private readonly IDiagnosisMedicalRecordRepository _medicalRecordRepository;
-        private readonly IPatientRepository _patientRepository;
-        private readonly IDoctorRepository _doctorRepository;
-        private readonly IIllnessRepository _illnessRepository;
-        private readonly ITreatmentRepository _treatmentRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public AddNewDiagnosisMedicalRecordHandler(IDiagnosisMedicalRecordRepository medicalRecordRepository,
-            IPatientRepository patientRepository, IDoctorRepository doctorRepository,
-            IIllnessRepository illnessRepository, ITreatmentRepository treatmentRepository)
+        public AddNewDiagnosisMedicalRecordHandler(IUnitOfWork unitOFWork)
         {
-            _medicalRecordRepository = medicalRecordRepository;
-            _patientRepository = patientRepository;
-            _doctorRepository = doctorRepository;
-            _illnessRepository = illnessRepository;
-            _treatmentRepository = treatmentRepository;
+            _unitOfWork = unitOFWork;
         }
 
-        public Task<DiagnosisMedicalRecordDto> Handle(AddNewDiagnosisMedicalRecord request,
+        public async Task<DiagnosisMedicalRecordDto> Handle(AddNewDiagnosisMedicalRecord request,
             CancellationToken cancellationToken)
         {
-            var examinedPatient = _patientRepository.GetById(request.PatientId);
-            var responsibleDoctor = _doctorRepository.GetById(request.DoctorId);
-            var illness = _illnessRepository.GetById(request.IllnessId);
+            var examinedPatient = await _unitOfWork.PatientRepository.GetByIdAsync(request.PatientId);
+            var responsibleDoctor = await _unitOfWork.DoctorRepository.GetByIdAsync(request.DoctorId);
+            var illness = await _unitOfWork.IllnessRepository.GetByIdAsync(request.IllnessId);
 
             if (examinedPatient == null)
             {
@@ -52,30 +42,45 @@ namespace Hospital.Application.MedicalRecords.Commands
                 throw new NoEntityFoundException($"Cannot create diagnosis medical record with a non-existing illness with id {request.IllnessId}");
             }
 
-            bool examinedPatientIsAssignedToTheDoctor = examinedPatient.AssignedDoctors
-                                                                       .Any(d => d.Id == responsibleDoctor.Id);
+            bool examinedPatientIsAssignedToTheDoctor = examinedPatient.DoctorsPatients
+                                                                        .Any(dp => dp.DoctorId == responsibleDoctor.Id);
             if (examinedPatientIsAssignedToTheDoctor)
             {
-                var medicalRecord = new DiagnosisMedicalRecord
+                try
                 {
-                    Id = request.Id,
-                    ExaminedPatient = examinedPatient,
-                    ResponsibleDoctor = responsibleDoctor,
-                    DateOfExamination = DateTimeOffset.UtcNow,
-                    ExaminationNotes = request.ExaminationNotes,
-                    DiagnosedIllness = illness,
-                    ProposedTreatment = new Treatment()
+                    var treatment = new Treatment()
                     {
                         Id = request.TreatmentId,
                         PrescribedMedicine = request.PrescribedMedicine,
-                        TreatmentDuration = request.TreatmentDuration,
-                    }
-                };
+                        Duration = request.Duration,
+                    };
 
-                _treatmentRepository.Create(medicalRecord.ProposedTreatment);
+                    await _unitOfWork.BeginTransactionAsync();
+                    _unitOfWork.TreatmentRepository.Add(treatment);
 
-                var createdRecord = _medicalRecordRepository.Create(medicalRecord);
-                return Task.FromResult(DiagnosisMedicalRecordDto.FromMedicalRecord(createdRecord));
+                    var medicalRecord = new DiagnosisMedicalRecord
+                    {
+                        Id = request.Id,
+                        ExaminedPatient = examinedPatient,
+                        ResponsibleDoctor = responsibleDoctor,
+                        DateOfExamination = DateTimeOffset.UtcNow,
+                        ExaminationNotes = request.ExaminationNotes,
+                        DiagnosedIllness = illness,
+                        ProposedTreatment = treatment
+                    };
+
+                    var createdRecord = _unitOfWork.DiagnosisRecordRepository.Add(medicalRecord);
+                    await _unitOfWork.SaveAsync();
+                    await _unitOfWork.CommitTransactionAsync();
+
+                    return await Task.FromResult(DiagnosisMedicalRecordDto.FromMedicalRecord(createdRecord));
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex.Message);
+                    await _unitOfWork.RollbackTransactionAsync();
+                    throw;
+                }
             }
             else
             {

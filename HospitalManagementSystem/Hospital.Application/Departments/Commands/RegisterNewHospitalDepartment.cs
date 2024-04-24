@@ -27,7 +27,7 @@ namespace Hospital.Application.Departments.Commands
                 };
 
                 await _unitOfWork.BeginTransactionAsync();
-                var newDepartment = await _unitOfWork.DepartmentRepository.Add(department);
+                var newDepartment = _unitOfWork.DepartmentRepository.Add(department);
                 await _unitOfWork.SaveAsync();
                 await _unitOfWork.CommitTransactionAsync();
 

@@ -16,10 +16,9 @@ namespace Hospital.Domain.Models
         [MaxLength(250)]
         public required string ExaminationNotes { get; set; }
 
-        public required int DiagnosedIllnessId { get; set; }
+        public int DiagnosedIllnessId { get; set; }
         public required Illness DiagnosedIllness { get; set; }
 
-        public required int ProposedTreatmentId { get; set; }
         public required Treatment ProposedTreatment { get; set; }
     }
 }

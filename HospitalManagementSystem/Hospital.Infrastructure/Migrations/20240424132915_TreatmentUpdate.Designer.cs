@@ -4,6 +4,7 @@ using Hospital.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hospital.Infrastructure.Migrations
 {
     [DbContext(typeof(HospitalManagementDbContext))]
-    partial class HospitalManagementDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240424132915_TreatmentUpdate")]
+    partial class TreatmentUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -62,6 +65,9 @@ namespace Hospital.Infrastructure.Migrations
                         .HasColumnType("nvarchar(250)");
 
                     b.Property<int>("ExaminedPatientId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProposedTreatmentId")
                         .HasColumnType("int");
 
                     b.Property<int>("ResponsibleDoctorId")

@@ -22,24 +22,24 @@ namespace Hospital.Application.MedicalRecords.Commands
         public async Task<RegularMedicalRecordDto> Handle(AddNewRegularMedicalRecord request,
             CancellationToken cancellationToken)
         {
-            try
+            var examinedPatient = await _unitOfWork.PatientRepository.GetByIdAsync(request.PatientId);
+            var responsibleDoctor = await _unitOfWork.DoctorRepository.GetByIdAsync(request.DoctorId);
+
+            if (examinedPatient == null)
             {
-                var examinedPatient = await _unitOfWork.PatientRepository.GetByIdAsync(request.PatientId);
-                var responsibleDoctor = await _unitOfWork.DoctorRepository.GetByIdAsync(request.DoctorId);
+                throw new NoEntityFoundException($"Cannot create regular medical record of a non-existing patient with id {request.PatientId}");
+            }
 
-                if (examinedPatient == null)
-                {
-                    throw new NoEntityFoundException($"Cannot create regular medical record of a non-existing patient with id {request.PatientId}");
-                }
+            if (responsibleDoctor == null)
+            {
+                throw new NoEntityFoundException($"Cannot create regular medical record for a non-existing doctor with id {request.DoctorId}");
+            }
 
-                if (responsibleDoctor == null)
-                {
-                    throw new NoEntityFoundException($"Cannot create regular medical record for a non-existing doctor with id {request.DoctorId}");
-                }
-
-                bool examinedPatientIsAssignedToTheDoctor = examinedPatient.DoctorsPatients
-                                                                           .Any(dp => dp.DoctorId == responsibleDoctor.Id);
-                if (examinedPatientIsAssignedToTheDoctor)
+            bool examinedPatientIsAssignedToTheDoctor = examinedPatient.DoctorsPatients
+                                                                        .Any(dp => dp.DoctorId == responsibleDoctor.Id);
+            if (examinedPatientIsAssignedToTheDoctor)
+            {
+                try
                 {
                     var medicalRecord = new RegularMedicalRecord
                     {
@@ -51,23 +51,23 @@ namespace Hospital.Application.MedicalRecords.Commands
                     };
 
                     await _unitOfWork.BeginTransactionAsync();
-                    var createdRecord = await _unitOfWork.RegularRecordRepository.Add(medicalRecord);
+                    var createdRecord = _unitOfWork.RegularRecordRepository.Add(medicalRecord);
                     await _unitOfWork.SaveAsync();
                     await _unitOfWork.CommitTransactionAsync();
 
                     return await Task.FromResult(RegularMedicalRecordDto.FromMedicalRecord(createdRecord));
                 }
-                else
+                catch (Exception ex)
                 {
-                    throw new PatientDoctorMisassignationException("Cannot create regular medical record beacuse the patient is not assigned to the doctor");
+                    Console.WriteLine(ex.Message);
+                    await _unitOfWork.RollbackTransactionAsync();
+                    throw;
                 }
             }
-            catch (Exception ex)
+            else
             {
-                Console.WriteLine(ex.Message);
-                await _unitOfWork.RollbackTransactionAsync();
-                throw;
-            }   
+                throw new PatientDoctorMisassignationException("Cannot create regular medical record beacuse the patient is not assigned to the doctor");
+            }
         }
     }
 }

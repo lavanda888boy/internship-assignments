@@ -55,7 +55,7 @@ namespace Hospital.Infrastructure
                         .HasOne(d => d.WorkingHours)
                         .WithOne(wh => wh.Doctor)
                         .HasForeignKey<DoctorSchedule>(wh => wh.Id)
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
             modelBuilder.Entity<DoctorSchedule>()
@@ -92,7 +92,7 @@ namespace Hospital.Infrastructure
                         .HasOne(r => r.ProposedTreatment)
                         .WithOne()
                         .HasForeignKey<Treatment>(t => t.Id)
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
             modelBuilder.Entity<DiagnosisMedicalRecord>()

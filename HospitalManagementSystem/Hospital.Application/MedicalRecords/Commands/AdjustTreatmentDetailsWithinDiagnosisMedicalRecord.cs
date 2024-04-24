@@ -8,38 +8,48 @@ namespace Hospital.Application.MedicalRecords.Commands
     public record AdjustTreatmentDetailsWithinDiagnosisMedicalRecord(int Id, int IllnessId,
        string PrescribedMedicine, TimeSpan TreatmentDuration) : IRequest<DiagnosisMedicalRecordDto>;
 
-    public class AdjustTreatmentDetailsWithinDiagnosisMedicalRecordHandler 
+    public class AdjustTreatmentDetailsWithinDiagnosisMedicalRecordHandler
         : IRequestHandler<AdjustTreatmentDetailsWithinDiagnosisMedicalRecord, DiagnosisMedicalRecordDto>
     {
-        private readonly IDiagnosisMedicalRecordRepository _medicalRecordRepository;
-        private readonly IIllnessRepository _illnessRepository;
-        private readonly ITreatmentRepository _treatmentRepository;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public AdjustTreatmentDetailsWithinDiagnosisMedicalRecordHandler(IDiagnosisMedicalRecordRepository medicalRecordRepository,
-            IIllnessRepository illnessRepository, ITreatmentRepository treatmentRepository)
+        public AdjustTreatmentDetailsWithinDiagnosisMedicalRecordHandler(IUnitOfWork unitOFWork)
         {
-            _medicalRecordRepository = medicalRecordRepository;
-            _illnessRepository = illnessRepository;
-            _treatmentRepository = treatmentRepository;
+            _unitOfWork = unitOFWork;
         }
 
-        public Task<DiagnosisMedicalRecordDto> Handle(AdjustTreatmentDetailsWithinDiagnosisMedicalRecord request, CancellationToken cancellationToken)
+        public async Task<DiagnosisMedicalRecordDto> Handle(AdjustTreatmentDetailsWithinDiagnosisMedicalRecord request, CancellationToken cancellationToken)
         {
-            var existingRecord = _medicalRecordRepository.GetById(request.Id);
+            var existingRecord = await _unitOfWork.DiagnosisRecordRepository.GetByIdAsync(request.Id);
             if (existingRecord == null)
             {
                 throw new NoEntityFoundException($"Cannot update non-existing diagnosis medical record with id {request.Id}");
             }
-            else
+
+            var illness = await _unitOfWork.IllnessRepository.GetByIdAsync(request.IllnessId);
+            if (illness == null)
             {
-                existingRecord.DiagnosedIllness = _illnessRepository.GetById(request.IllnessId);
+                throw new NoEntityFoundException($"Cannot use non-existing illness to update diagnosis medical record with id {request.IllnessId}");
+            }
+
+            try
+            {
+                existingRecord.DiagnosedIllness = illness;
                 existingRecord.ProposedTreatment.PrescribedMedicine = request.PrescribedMedicine;
                 existingRecord.ProposedTreatment.Duration = request.TreatmentDuration;
 
-                _treatmentRepository.Update(existingRecord.ProposedTreatment);
-                _medicalRecordRepository.Update(existingRecord);
+                await _unitOfWork.BeginTransactionAsync();
+                await _unitOfWork.DiagnosisRecordRepository.UpdateAsync(existingRecord);
+                await _unitOfWork.SaveAsync();
+                await _unitOfWork.CommitTransactionAsync();
 
-                return Task.FromResult(DiagnosisMedicalRecordDto.FromMedicalRecord(existingRecord));
+                return await Task.FromResult(DiagnosisMedicalRecordDto.FromMedicalRecord(existingRecord));
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                await _unitOfWork.RollbackTransactionAsync();
+                throw;
             }
         }
     }
