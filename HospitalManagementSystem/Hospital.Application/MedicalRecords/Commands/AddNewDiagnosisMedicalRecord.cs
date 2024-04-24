@@ -46,40 +46,28 @@ namespace Hospital.Application.MedicalRecords.Commands
                                                                         .Any(dp => dp.DoctorId == responsibleDoctor.Id);
             if (examinedPatientIsAssignedToTheDoctor)
             {
-                try
+                var treatment = new Treatment()
                 {
-                    var treatment = new Treatment()
-                    {
-                        Id = request.TreatmentId,
-                        PrescribedMedicine = request.PrescribedMedicine,
-                        Duration = request.Duration,
-                    };
+                    Id = request.TreatmentId,
+                    PrescribedMedicine = request.PrescribedMedicine,
+                    Duration = request.Duration,
+                };
 
-                    await _unitOfWork.BeginTransactionAsync();
-                    _unitOfWork.TreatmentRepository.Add(treatment);
+                await _unitOfWork.TreatmentRepository.AddAsync(treatment);
 
-                    var medicalRecord = new DiagnosisMedicalRecord
-                    {
-                        ExaminedPatient = examinedPatient,
-                        ResponsibleDoctor = responsibleDoctor,
-                        DateOfExamination = DateTimeOffset.UtcNow,
-                        ExaminationNotes = request.ExaminationNotes,
-                        DiagnosedIllness = illness,
-                        ProposedTreatment = treatment
-                    };
-
-                    var createdRecord = _unitOfWork.DiagnosisRecordRepository.Add(medicalRecord);
-                    await _unitOfWork.SaveAsync();
-                    await _unitOfWork.CommitTransactionAsync();
-
-                    return await Task.FromResult(DiagnosisMedicalRecordDto.FromMedicalRecord(createdRecord));
-                }
-                catch (Exception ex)
+                var medicalRecord = new DiagnosisMedicalRecord
                 {
-                    Console.WriteLine(ex.Message);
-                    await _unitOfWork.RollbackTransactionAsync();
-                    throw;
-                }
+                    ExaminedPatient = examinedPatient,
+                    ResponsibleDoctor = responsibleDoctor,
+                    DateOfExamination = DateTimeOffset.UtcNow,
+                    ExaminationNotes = request.ExaminationNotes,
+                    DiagnosedIllness = illness,
+                    ProposedTreatment = treatment
+                };
+
+                var createdRecord = await _unitOfWork.DiagnosisRecordRepository.AddAsync(medicalRecord);
+
+                return await Task.FromResult(DiagnosisMedicalRecordDto.FromMedicalRecord(createdRecord));
             }
             else
             {

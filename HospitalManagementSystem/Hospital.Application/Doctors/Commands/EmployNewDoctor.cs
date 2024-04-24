@@ -27,41 +27,29 @@ namespace Hospital.Application.Doctors.Commands
                 throw new NoEntityFoundException($"Cannot employ doctor to a non-existing department with id {request.DepartmentId}");
             }
 
-            try
+            var schedule = new DoctorSchedule()
             {
-                var schedule = new DoctorSchedule()
+                StartShift = request.StartShift,
+                EndShift = request.EndShift,
+                DoctorScheduleWeekDay = request.WeekDayIds.Select(id => new DoctorScheduleWeekDay
                 {
-                    StartShift = request.StartShift,
-                    EndShift = request.EndShift,
-                    DoctorScheduleWeekDay = request.WeekDayIds.Select(id => new DoctorScheduleWeekDay
-                    {
-                        WeekDayId = id,
-                    }).ToList()
-                };
+                    WeekDayId = id,
+                }).ToList()
+            };
 
-                var doctor = new Doctor
-                {
-                    Name = request.Name,
-                    Surname = request.Surname,
-                    Address = request.Address,
-                    PhoneNumber = request.PhoneNumber,
-                    Department = department,
-                    WorkingHours = schedule,
-                };
-
-                await _unitOfWork.BeginTransactionAsync();
-                _unitOfWork.DoctorRepository.Add(doctor);
-                await _unitOfWork.SaveAsync();
-                await _unitOfWork.CommitTransactionAsync();
-
-                return await Task.FromResult(DoctorDto.FromDoctor(doctor));
-            }
-            catch (Exception ex)
+            var doctor = new Doctor
             {
-                Console.WriteLine(ex.Message);
-                await _unitOfWork.RollbackTransactionAsync();
-                throw;
-            }
+                Name = request.Name,
+                Surname = request.Surname,
+                Address = request.Address,
+                PhoneNumber = request.PhoneNumber,
+                Department = department,
+                WorkingHours = schedule,
+            };
+
+            await _unitOfWork.DoctorRepository.AddAsync(doctor);
+
+            return await Task.FromResult(DoctorDto.FromDoctor(doctor));
         }
     }
 }

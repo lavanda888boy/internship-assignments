@@ -26,23 +26,10 @@ namespace Hospital.Application.MedicalRecords.Commands
                 throw new NoEntityFoundException($"Cannot update non-existing regular medical record with id {request.Id}");
             }
 
-            try
-            {
-                existingRecord.ExaminationNotes = request.ExaminationNotes;
-                    
-                await _unitOfWork.BeginTransactionAsync();
-                await _unitOfWork.RegularRecordRepository.UpdateAsync(existingRecord);
-                await _unitOfWork.SaveAsync();
-                await _unitOfWork.CommitTransactionAsync();
+            existingRecord.ExaminationNotes = request.ExaminationNotes;
+            await _unitOfWork.RegularRecordRepository.UpdateAsync(existingRecord);
 
-                return await Task.FromResult(RegularMedicalRecordDto.FromMedicalRecord(existingRecord));
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                await _unitOfWork.RollbackTransactionAsync();
-                throw;
-            }
+            return await Task.FromResult(RegularMedicalRecordDto.FromMedicalRecord(existingRecord));
         }
     }
 }

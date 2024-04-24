@@ -39,29 +39,17 @@ namespace Hospital.Application.MedicalRecords.Commands
                                                                         .Any(dp => dp.DoctorId == responsibleDoctor.Id);
             if (examinedPatientIsAssignedToTheDoctor)
             {
-                try
+                var medicalRecord = new RegularMedicalRecord
                 {
-                    var medicalRecord = new RegularMedicalRecord
-                    {
-                        ExaminedPatient = examinedPatient,
-                        ResponsibleDoctor = responsibleDoctor,
-                        DateOfExamination = DateTimeOffset.UtcNow,
-                        ExaminationNotes = request.ExaminationNotes
-                    };
+                    ExaminedPatient = examinedPatient,
+                    ResponsibleDoctor = responsibleDoctor,
+                    DateOfExamination = DateTimeOffset.UtcNow,
+                    ExaminationNotes = request.ExaminationNotes
+                };
 
-                    await _unitOfWork.BeginTransactionAsync();
-                    var createdRecord = _unitOfWork.RegularRecordRepository.Add(medicalRecord);
-                    await _unitOfWork.SaveAsync();
-                    await _unitOfWork.CommitTransactionAsync();
+                var createdRecord = await _unitOfWork.RegularRecordRepository.AddAsync(medicalRecord);
 
-                    return await Task.FromResult(RegularMedicalRecordDto.FromMedicalRecord(createdRecord));
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex.Message);
-                    await _unitOfWork.RollbackTransactionAsync();
-                    throw;
-                }
+                return await Task.FromResult(RegularMedicalRecordDto.FromMedicalRecord(createdRecord));
             }
             else
             {

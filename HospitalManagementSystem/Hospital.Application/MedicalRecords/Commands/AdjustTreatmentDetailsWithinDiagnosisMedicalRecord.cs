@@ -32,25 +32,12 @@ namespace Hospital.Application.MedicalRecords.Commands
                 throw new NoEntityFoundException($"Cannot use non-existing illness to update diagnosis medical record with id {request.IllnessId}");
             }
 
-            try
-            {
-                existingRecord.DiagnosedIllness = illness;
-                existingRecord.ProposedTreatment.PrescribedMedicine = request.PrescribedMedicine;
-                existingRecord.ProposedTreatment.Duration = request.TreatmentDuration;
+            existingRecord.DiagnosedIllness = illness;
+            existingRecord.ProposedTreatment.PrescribedMedicine = request.PrescribedMedicine;
+            existingRecord.ProposedTreatment.Duration = request.TreatmentDuration;
+            await _unitOfWork.DiagnosisRecordRepository.UpdateAsync(existingRecord);
 
-                await _unitOfWork.BeginTransactionAsync();
-                await _unitOfWork.DiagnosisRecordRepository.UpdateAsync(existingRecord);
-                await _unitOfWork.SaveAsync();
-                await _unitOfWork.CommitTransactionAsync();
-
-                return await Task.FromResult(DiagnosisMedicalRecordDto.FromMedicalRecord(existingRecord));
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                await _unitOfWork.RollbackTransactionAsync();
-                throw;
-            }
+            return await Task.FromResult(DiagnosisMedicalRecordDto.FromMedicalRecord(existingRecord));
         }
     }
 }

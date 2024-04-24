@@ -19,27 +19,15 @@ namespace Hospital.Application.Departments.Commands
 
         public async Task<DepartmentDto> Handle(ChangeDepartmentClassification request, CancellationToken cancellationToken)
         {
-            try
+            var department = new Department()
             {
-                var department = new Department()
-                {
-                    Id = request.Id,
-                    Name = request.Name,
-                };
+                Id = request.Id,
+                Name = request.Name,
+            };
 
-                await _unitOfWork.BeginTransactionAsync();
-                await _unitOfWork.DepartmentRepository.UpdateAsync(department);
-                await _unitOfWork.SaveAsync();
-                await _unitOfWork.CommitTransactionAsync();
+            await _unitOfWork.DepartmentRepository.UpdateAsync(department);
 
-                return await Task.FromResult(DepartmentDto.FromDepartment(department));
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                await _unitOfWork.RollbackTransactionAsync();
-                throw;
-            }
+            return await Task.FromResult(DepartmentDto.FromDepartment(department));
         }
     }
 }

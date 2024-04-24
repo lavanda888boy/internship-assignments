@@ -11,9 +11,5 @@ namespace Hospital.Application.Abstractions
         public IRepository<Patient> PatientRepository { get; }
         public IRepository<RegularMedicalRecord> RegularRecordRepository { get; }
         public IRepository<Treatment> TreatmentRepository { get; }
-        Task SaveAsync();
-        Task BeginTransactionAsync();
-        Task CommitTransactionAsync();
-        Task RollbackTransactionAsync();
     }
 }

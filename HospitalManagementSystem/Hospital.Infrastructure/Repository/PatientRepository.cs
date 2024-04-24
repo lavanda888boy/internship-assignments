@@ -14,9 +14,10 @@ namespace Hospital.Infrastructure.Repository
             _context = context;
         }
 
-        public Patient Add(Patient patient)
+        public async Task<Patient> AddAsync(Patient patient)
         {
             _context.Patients.Add(patient);
+            await _context.SaveChangesAsync();
             return patient;
         }
 
@@ -38,22 +39,16 @@ namespace Hospital.Infrastructure.Repository
                                           .ToListAsync();
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task DeleteAsync(Patient patient)
         {
-            var patient = await _context.Patients.FirstOrDefaultAsync(p => p.Id == id);
-            if (patient is not null)
-            {
-                _context.Patients.Remove(patient);
-            }
+            _context.Patients.Remove(patient);
+            await _context.SaveChangesAsync();
         }
 
         public async Task UpdateAsync(Patient patient)
         {
-            var pat = await _context.Patients.FirstOrDefaultAsync(p => p.Id == patient.Id);
-            if (pat is not null)
-            {
-                _context.Update(pat);
-            }
+            _context.Update(patient);
+            await _context.SaveChangesAsync();
         }
     }
 }

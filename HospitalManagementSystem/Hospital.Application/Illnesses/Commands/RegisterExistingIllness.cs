@@ -20,27 +20,15 @@ namespace Hospital.Application.Illnesses.Commands
 
         public async Task<IllnessDto> Handle(RegisterExistingIllness request, CancellationToken cancellationToken)
         {
-            try
+            var illness = new Illness
             {
-                var illness = new Illness
-                {
-                    Name = request.Name,
-                    Severity = request.Severity
-                };
+                Name = request.Name,
+                Severity = request.Severity
+            };
 
-                await _unitOfWork.BeginTransactionAsync();
-                var newIllness = _unitOfWork.IllnessRepository.Add(illness);
-                await _unitOfWork.SaveAsync();
-                await _unitOfWork.CommitTransactionAsync();
+            var newIllness = await _unitOfWork.IllnessRepository.AddAsync(illness);
 
-                return await Task.FromResult(IllnessDto.FromIllness(newIllness));
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                await _unitOfWork.RollbackTransactionAsync();
-                throw;
-            }
+            return await Task.FromResult(IllnessDto.FromIllness(newIllness));
         }
     }
 }

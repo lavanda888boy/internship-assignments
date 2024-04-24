@@ -28,10 +28,7 @@ namespace Hospital.Application.Doctors.Commands
                     PatientId = patientId
                 }).ToList();
 
-                await _unitOfWork.BeginTransactionAsync();
                 await _unitOfWork.DoctorRepository.UpdateAsync(existingDoctor);
-                await _unitOfWork.SaveAsync();
-                await _unitOfWork.CommitTransactionAsync();
 
                 return await Task.FromResult(DoctorDto.FromDoctor(existingDoctor));
             }

@@ -30,43 +30,31 @@ namespace Hospital.Application.Doctors.Commands
             var existingDoctor = await _unitOfWork.DoctorRepository.GetByIdAsync(request.Id);
             if (existingDoctor != null)
             {
-                try
+                var schedule = new DoctorSchedule()
                 {
-                    var schedule = new DoctorSchedule()
-                    {
-                        StartShift = request.StartShift,
-                        EndShift = request.EndShift,
-                        DoctorScheduleWeekDay = request.WeekDayIds.Select(id => new DoctorScheduleWeekDay
-                        {
-                            WeekDayId = id,
-                        }).ToList()
-                    };
-
-                    existingDoctor.Name = request.Name;
-                    existingDoctor.Surname = request.Surname;
-                    existingDoctor.Address = request.Address;
-                    existingDoctor.PhoneNumber = request.PhoneNumber;
-                    existingDoctor.Department = department;
-                    existingDoctor.WorkingHours.StartShift = request.StartShift;
-                    existingDoctor.WorkingHours.EndShift = request.EndShift;
-                    existingDoctor.WorkingHours.DoctorScheduleWeekDay = request.WeekDayIds.Select(id => new DoctorScheduleWeekDay
+                    StartShift = request.StartShift,
+                    EndShift = request.EndShift,
+                    DoctorScheduleWeekDay = request.WeekDayIds.Select(id => new DoctorScheduleWeekDay
                     {
                         WeekDayId = id,
-                    }).ToList();
+                    }).ToList()
+                };
 
-                    await _unitOfWork.BeginTransactionAsync();
-                    await _unitOfWork.DoctorRepository.UpdateAsync(existingDoctor);
-                    await _unitOfWork.SaveAsync();
-                    await _unitOfWork.CommitTransactionAsync();
-
-                    return await Task.FromResult(DoctorDto.FromDoctor(existingDoctor));
-                }
-                catch (Exception ex)
+                existingDoctor.Name = request.Name;
+                existingDoctor.Surname = request.Surname;
+                existingDoctor.Address = request.Address;
+                existingDoctor.PhoneNumber = request.PhoneNumber;
+                existingDoctor.Department = department;
+                existingDoctor.WorkingHours.StartShift = request.StartShift;
+                existingDoctor.WorkingHours.EndShift = request.EndShift;
+                existingDoctor.WorkingHours.DoctorScheduleWeekDay = request.WeekDayIds.Select(id => new DoctorScheduleWeekDay
                 {
-                    Console.WriteLine(ex.Message);
-                    await _unitOfWork.RollbackTransactionAsync();
-                    throw;
-                }
+                    WeekDayId = id,
+                }).ToList();
+
+                await _unitOfWork.DoctorRepository.UpdateAsync(existingDoctor);
+
+                return await Task.FromResult(DoctorDto.FromDoctor(existingDoctor));
             }
             else
             {

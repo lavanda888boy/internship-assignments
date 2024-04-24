@@ -14,9 +14,10 @@ namespace Hospital.Infrastructure.Repository
             _context = context;
         }
 
-        public Department Add(Department department)
+        public async Task<Department> AddAsync(Department department)
         {
             _context.Departments.Add(department);
+            await _context.SaveChangesAsync();
             return department;
         }
 
@@ -38,22 +39,16 @@ namespace Hospital.Infrastructure.Repository
                                              .ToListAsync();
         }
 
-        public async Task DeleteAsync(int id)
+        public async Task DeleteAsync(Department department)
         {
-            var department = await _context.Departments.FirstOrDefaultAsync(d => d.Id == id);
-            if (department is not null)
-            {
-                _context.Departments.Remove(department);
-            }
+            _context.Departments.Remove(department);
+            await _context.SaveChangesAsync();
         }
 
         public async Task UpdateAsync(Department department)
         {
-            var dep = await _context.Departments.FirstOrDefaultAsync(d => d.Id == department.Id);
-            if (dep is not null)
-            {
-                _context.Update(dep);
-            }
+            _context.Update(department);
+            await _context.SaveChangesAsync();
         }
     }
 }
