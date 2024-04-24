@@ -7,7 +7,7 @@ using MediatR;
 namespace Hospital.Application.Doctors.Commands
 {
     public record UpdateDoctorPersonalInfo(int Id, string Name, string Surname, string Address,
-        string PhoneNumber, int DepartmentId, TimeSpan StartShift, TimeSpan EndShift, int ScheduleId, 
+        string PhoneNumber, int DepartmentId, TimeSpan StartShift, TimeSpan EndShift, 
         List<int> WeekDayIds) : IRequest<DoctorDto>;
 
     public class UpdateDoctorPersonalInfoHandler : IRequestHandler<UpdateDoctorPersonalInfo, DoctorDto>
@@ -30,16 +30,6 @@ namespace Hospital.Application.Doctors.Commands
             var existingDoctor = await _unitOfWork.DoctorRepository.GetByIdAsync(request.Id);
             if (existingDoctor != null)
             {
-                var schedule = new DoctorSchedule()
-                {
-                    StartShift = request.StartShift,
-                    EndShift = request.EndShift,
-                    DoctorScheduleWeekDay = request.WeekDayIds.Select(id => new DoctorScheduleWeekDay
-                    {
-                        WeekDayId = id,
-                    }).ToList()
-                };
-
                 existingDoctor.Name = request.Name;
                 existingDoctor.Surname = request.Surname;
                 existingDoctor.Address = request.Address;
@@ -47,6 +37,7 @@ namespace Hospital.Application.Doctors.Commands
                 existingDoctor.Department = department;
                 existingDoctor.WorkingHours.StartShift = request.StartShift;
                 existingDoctor.WorkingHours.EndShift = request.EndShift;
+
                 existingDoctor.WorkingHours.DoctorScheduleWeekDay = request.WeekDayIds.Select(id => new DoctorScheduleWeekDay
                 {
                     WeekDayId = id,

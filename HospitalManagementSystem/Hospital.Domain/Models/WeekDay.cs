@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Hospital.Domain.Models
 {
@@ -8,7 +9,9 @@ namespace Hospital.Domain.Models
         [Column("WeekDayId")]
         public int Id { get; set; }
 
-        public required DayOfWeek DayOfWeek { get; set; }
+        [MaxLength(10)]
+        public required string DayOfWeek { get; set; }
+
         public ICollection<DoctorScheduleWeekDay> DoctorScheduleWeekDay { get; set; } = [];
     }
 }

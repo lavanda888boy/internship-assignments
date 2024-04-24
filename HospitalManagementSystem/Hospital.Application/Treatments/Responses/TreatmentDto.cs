@@ -6,7 +6,7 @@ namespace Hospital.Application.Treatments.Responses
     {
         public required int Id { get; set; }
         public required string PrescribedMedicine { get; set; }
-        public TimeSpan TreatmentDuration { get; set; }
+        public int TreatmentDuration { get; set; }
 
         public static TreatmentDto FromTreatment(Treatment treatment)
         {
@@ -14,7 +14,7 @@ namespace Hospital.Application.Treatments.Responses
             {
                 Id = treatment.Id,
                 PrescribedMedicine = treatment.PrescribedMedicine,
-                TreatmentDuration = treatment.Duration,
+                TreatmentDuration = treatment.DurationInDays,
             };
         }
     }

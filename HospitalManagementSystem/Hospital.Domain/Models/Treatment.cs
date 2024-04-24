@@ -11,6 +11,6 @@ namespace Hospital.Domain.Models
         [MinLength(5)]
         [MaxLength(20)]
         public required string PrescribedMedicine { get; set; }
-        public required TimeSpan Duration { get; set; }
+        public required int DurationInDays { get; set; }
     }
 }

@@ -39,13 +39,13 @@ namespace Hospital.Application.Patients.Commands
             }
 
             Random r = new Random();
-            int doctorId = r.Next(1, doctors.Count);
+            int doctorIndex = r.Next(0, doctors.Count);
 
             patient.DoctorsPatients = new List<DoctorsPatients>()
             {
                 new DoctorsPatients()
                 {
-                    DoctorId = doctorId,
+                    DoctorId = doctors[doctorIndex].Id,
                 }
             };
 

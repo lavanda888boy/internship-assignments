@@ -5,7 +5,7 @@ using MediatR;
 
 namespace Hospital.Application.Departments.Commands
 {
-    public record RegisterNewHospitalDepartment(int Id, string Name) : IRequest<DepartmentDto>;
+    public record RegisterNewHospitalDepartment(string Name) : IRequest<DepartmentDto>;
 
     public class RegisterNewHospitalDepartmentHandler : IRequestHandler<RegisterNewHospitalDepartment, DepartmentDto>
     {

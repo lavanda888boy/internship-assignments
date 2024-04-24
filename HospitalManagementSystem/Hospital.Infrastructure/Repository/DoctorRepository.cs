@@ -28,7 +28,9 @@ namespace Hospital.Infrastructure.Repository
 
         public async Task<Doctor?> GetByIdAsync(int id)
         {
-            return await _context.Doctors.FirstOrDefaultAsync(d => d.Id == id);
+            return await _context.Doctors
+                                 .Include(d => d.WorkingHours)
+                                 .FirstOrDefaultAsync(d => d.Id == id);
         }
 
         public async Task<List<Doctor>> SearchByPropertyAsync

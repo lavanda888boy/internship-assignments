@@ -6,7 +6,7 @@ using MediatR;
 namespace Hospital.Application.MedicalRecords.Commands
 {
     public record AdjustTreatmentDetailsWithinDiagnosisMedicalRecord(int Id, int IllnessId,
-       string PrescribedMedicine, TimeSpan TreatmentDuration) : IRequest<DiagnosisMedicalRecordDto>;
+       string PrescribedMedicine, int Duration) : IRequest<DiagnosisMedicalRecordDto>;
 
     public class AdjustTreatmentDetailsWithinDiagnosisMedicalRecordHandler
         : IRequestHandler<AdjustTreatmentDetailsWithinDiagnosisMedicalRecord, DiagnosisMedicalRecordDto>
@@ -34,7 +34,7 @@ namespace Hospital.Application.MedicalRecords.Commands
 
             existingRecord.DiagnosedIllness = illness;
             existingRecord.ProposedTreatment.PrescribedMedicine = request.PrescribedMedicine;
-            existingRecord.ProposedTreatment.Duration = request.TreatmentDuration;
+            existingRecord.ProposedTreatment.DurationInDays = request.Duration;
             await _unitOfWork.DiagnosisRecordRepository.UpdateAsync(existingRecord);
 
             return await Task.FromResult(DiagnosisMedicalRecordDto.FromMedicalRecord(existingRecord));

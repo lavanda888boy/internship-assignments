@@ -4,6 +4,7 @@ using Hospital.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Hospital.Infrastructure.Migrations
 {
     [DbContext(typeof(HospitalManagementDbContext))]
-    partial class HospitalManagementDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240424210348_Treatment_Update")]
+    partial class Treatment_Update
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -38,7 +41,7 @@ namespace Hospital.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Departments", (string)null);
+                    b.ToTable("Departments");
                 });
 
             modelBuilder.Entity("Hospital.Domain.Models.DiagnosisMedicalRecord", b =>
@@ -75,7 +78,7 @@ namespace Hospital.Infrastructure.Migrations
 
                     b.HasIndex("ResponsibleDoctorId");
 
-                    b.ToTable("DiagnosisRecords", (string)null);
+                    b.ToTable("DiagnosisRecords");
                 });
 
             modelBuilder.Entity("Hospital.Domain.Models.Doctor", b =>
@@ -114,7 +117,7 @@ namespace Hospital.Infrastructure.Migrations
 
                     b.HasIndex("DepartmentId");
 
-                    b.ToTable("Doctors", (string)null);
+                    b.ToTable("Doctors");
                 });
 
             modelBuilder.Entity("Hospital.Domain.Models.DoctorSchedule", b =>
@@ -131,7 +134,7 @@ namespace Hospital.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("DoctorSchedules", (string)null);
+                    b.ToTable("DoctorSchedules");
                 });
 
             modelBuilder.Entity("Hospital.Domain.Models.DoctorScheduleWeekDay", b =>
@@ -146,7 +149,7 @@ namespace Hospital.Infrastructure.Migrations
 
                     b.HasIndex("WeekDayId");
 
-                    b.ToTable("DoctorScheduleWeekDay", (string)null);
+                    b.ToTable("DoctorScheduleWeekDay");
                 });
 
             modelBuilder.Entity("Hospital.Domain.Models.DoctorsPatients", b =>
@@ -161,7 +164,7 @@ namespace Hospital.Infrastructure.Migrations
 
                     b.HasIndex("PatientId");
 
-                    b.ToTable("DoctorsPatients", (string)null);
+                    b.ToTable("DoctorsPatients");
                 });
 
             modelBuilder.Entity("Hospital.Domain.Models.Illness", b =>
@@ -184,7 +187,7 @@ namespace Hospital.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Illnesses", (string)null);
+                    b.ToTable("Illnesses");
                 });
 
             modelBuilder.Entity("Hospital.Domain.Models.Patient", b =>
@@ -226,7 +229,7 @@ namespace Hospital.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Patients", (string)null);
+                    b.ToTable("Patients");
                 });
 
             modelBuilder.Entity("Hospital.Domain.Models.RegularMedicalRecord", b =>
@@ -258,7 +261,7 @@ namespace Hospital.Infrastructure.Migrations
 
                     b.HasIndex("ResponsibleDoctorId");
 
-                    b.ToTable("RegularRecords", (string)null);
+                    b.ToTable("RegularRecords");
                 });
 
             modelBuilder.Entity("Hospital.Domain.Models.Treatment", b =>
@@ -277,7 +280,7 @@ namespace Hospital.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Treatments", (string)null);
+                    b.ToTable("Treatments");
                 });
 
             modelBuilder.Entity("Hospital.Domain.Models.WeekDay", b =>
@@ -296,7 +299,7 @@ namespace Hospital.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Weekdays", (string)null);
+                    b.ToTable("Weekdays");
                 });
 
             modelBuilder.Entity("Hospital.Domain.Models.DiagnosisMedicalRecord", b =>

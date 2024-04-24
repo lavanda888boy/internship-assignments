@@ -7,7 +7,7 @@ using MediatR;
 namespace Hospital.Application.MedicalRecords.Commands
 {
     public record AddNewDiagnosisMedicalRecord(int PatientId, int DoctorId, string ExaminationNotes,
-       int IllnessId, int TreatmentId, string PrescribedMedicine, TimeSpan Duration)
+       int IllnessId, string PrescribedMedicine, int Duration)
        : IRequest<DiagnosisMedicalRecordDto>;
 
     public class AddNewDiagnosisMedicalRecordHandler
@@ -48,12 +48,9 @@ namespace Hospital.Application.MedicalRecords.Commands
             {
                 var treatment = new Treatment()
                 {
-                    Id = request.TreatmentId,
                     PrescribedMedicine = request.PrescribedMedicine,
-                    Duration = request.Duration,
+                    DurationInDays = request.Duration,
                 };
-
-                await _unitOfWork.TreatmentRepository.AddAsync(treatment);
 
                 var medicalRecord = new DiagnosisMedicalRecord
                 {

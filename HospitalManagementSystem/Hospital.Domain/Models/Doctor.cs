@@ -27,7 +27,6 @@ namespace Hospital.Domain.Models
         public required Department Department { get; set; }
         public ICollection<DoctorsPatients> DoctorsPatients { get; set; } = [];
 
-        public int WorkingHoursId { get; set; }
         public required DoctorSchedule WorkingHours { get; set; }
     }
 }
