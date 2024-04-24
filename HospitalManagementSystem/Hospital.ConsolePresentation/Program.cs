@@ -42,19 +42,22 @@ var mediator = diContainer.GetRequiredService<IMediator>();
 //command = new RegisterExistingIllness("Arrhythmia", IllnessSeverity.LOW);
 //await mediator.Send(command);
 
-//var command = new EmployNewDoctor("Steve", "Denver", "175 Aroyo Vista, Albukerke", "068745123", 1, 
-//    new TimeSpan(9, 0, 0), new TimeSpan(19, 0, 0), new List<int>() { 1, 2, 3, 6, 7 });
+//var command = new EmployNewDoctor("Stanley", "Cooper", "Los Pollos Hermanos, Albukerke", "069245123", 1,
+//    new TimeSpan(9, 0, 0), new TimeSpan(19, 0, 0), new List<int>() { 1, 2, 6, 7 });
 //await mediator.Send(command);
 
-var command = new UpdateDoctorPersonalInfo(2, "Mike", "Denver", "175 Aroyo Vista, Albukerke", "068745123", 1,
-    new TimeSpan(10, 0, 0), new TimeSpan(19, 0, 0), new List<int>() { 1, 2, 6, 7 });
-await mediator.Send(command);
+//var command = new UpdateDoctorPersonalInfo(2, "Mike", "Denver", "175 Aroyo Vista, Albukerke", "068745123", 1,
+//    new TimeSpan(10, 0, 0), new TimeSpan(19, 0, 0), new List<int>() { 1, 2, 6, 7 });
+//await mediator.Send(command);
 
 //var command = new RegisterNewPatient("Chris", "Bale", 27, "M", "256 Beverly Hills, Los Angleles", 
 //    "078945623", "AB17845289");
 //await mediator.Send(command);
 
-//var command = new UpdatePatientAssignedDoctors(4, new List<int>() { 2 });
+//var command = new UpdatePatientAssignedDoctors(4, new List<int>() { 2, 3 });
+//await mediator.Send(command);
+
+//var command = new UpdateDoctorAssignedPatients(3, new List<int>() { });
 //await mediator.Send(command);
 
 //var command = new AddNewDiagnosisMedicalRecord(4, 2, "Patient is a little ill", 3, "Corvalment", 5);

@@ -29,7 +29,8 @@ namespace Hospital.Infrastructure.Repository
         public async Task<Doctor?> GetByIdAsync(int id)
         {
             return await _context.Doctors
-                                 .Include(d => d.WorkingHours)
+                                 .Include(d => d.DoctorsPatients)
+                                 .Include(d => d.WorkingHours.DoctorScheduleWeekDay)
                                  .FirstOrDefaultAsync(d => d.Id == id);
         }
 

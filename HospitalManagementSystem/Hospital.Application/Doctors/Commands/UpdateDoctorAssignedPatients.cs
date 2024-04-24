@@ -22,6 +22,8 @@ namespace Hospital.Application.Doctors.Commands
             var existingDoctor = await _unitOfWork.DoctorRepository.GetByIdAsync(request.Id);
             if (existingDoctor != null)
             {
+                existingDoctor.DoctorsPatients.Clear();
+
                 existingDoctor.DoctorsPatients = request.PatientIds.Select(patientId => new DoctorsPatients()
                 {
                     DoctorId = existingDoctor.Id,

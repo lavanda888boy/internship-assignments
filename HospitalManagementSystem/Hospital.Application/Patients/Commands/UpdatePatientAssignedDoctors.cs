@@ -22,9 +22,10 @@ namespace Hospital.Application.Patients.Commands
         public async Task<PatientDto> Handle(UpdatePatientAssignedDoctors request, CancellationToken cancellationToken)
         {
             var existingPatient = await _unitOfWork.PatientRepository.GetByIdAsync(request.Id);
-
             if (existingPatient != null)
             {
+                existingPatient.DoctorsPatients.Clear();
+
                 existingPatient.DoctorsPatients = request.DoctorIds.Select(doctorId => new DoctorsPatients()
                 {
                     DoctorId = doctorId,
