@@ -1,5 +1,6 @@
 ﻿using Hospital.Application.Abstractions;
 using Hospital.Application.Illnesses.Responses;
+using Hospital.Domain.Models;
 using MediatR;
 
 namespace Hospital.Application.Illnesses.Queries
@@ -8,16 +9,16 @@ namespace Hospital.Application.Illnesses.Queries
 
     public class ListAllIllnessesHandler : IRequestHandler<ListAllIllnesses, List<IllnessDto>>
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IRepository<Illness> _illnessRepository;
 
-        public ListAllIllnessesHandler(IUnitOfWork unitOfWork)
+        public ListAllIllnessesHandler(IRepository<Illness> illnessRepository)
         {
-            _unitOfWork = unitOfWork;
+            _illnessRepository = illnessRepository;
         }
 
         public async Task<List<IllnessDto>> Handle(ListAllIllnesses request, CancellationToken cancellationToken)
         {
-            var illnesses = await _unitOfWork.IllnessRepository.GetAllAsync();
+            var illnesses = await _illnessRepository.GetAllAsync();
             return await Task.FromResult(illnesses.Select(IllnessDto.FromIllness).ToList());
         }
     }

@@ -12,18 +12,24 @@ namespace Hospital.Application.MedicalRecords.Commands
     public class AddNewRegularMedicalRecordHandler
         : IRequestHandler<AddNewRegularMedicalRecord, RegularMedicalRecordDto>
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IRepository<Patient> _patientRepository;
+        private readonly IRepository<Doctor> _doctorRepository;
+        private readonly IRepository<RegularMedicalRecord> _recordRepository;
 
-        public AddNewRegularMedicalRecordHandler(IUnitOfWork unitOFWork)
+        public AddNewRegularMedicalRecordHandler(IRepository<Patient> patientRepository, 
+            IRepository<Doctor> doctorRepository,
+            IRepository<RegularMedicalRecord> recordRepository)
         {
-            _unitOfWork = unitOFWork;
+            _patientRepository = patientRepository;
+            _doctorRepository = doctorRepository;
+            _recordRepository = recordRepository;
         }
 
         public async Task<RegularMedicalRecordDto> Handle(AddNewRegularMedicalRecord request,
             CancellationToken cancellationToken)
         {
-            var examinedPatient = await _unitOfWork.PatientRepository.GetByIdAsync(request.PatientId);
-            var responsibleDoctor = await _unitOfWork.DoctorRepository.GetByIdAsync(request.DoctorId);
+            var examinedPatient = await _patientRepository.GetByIdAsync(request.PatientId);
+            var responsibleDoctor = await _doctorRepository.GetByIdAsync(request.DoctorId);
 
             if (examinedPatient == null)
             {
@@ -47,7 +53,7 @@ namespace Hospital.Application.MedicalRecords.Commands
                     ExaminationNotes = request.ExaminationNotes
                 };
 
-                var createdRecord = await _unitOfWork.RegularRecordRepository.AddAsync(medicalRecord);
+                var createdRecord = await _recordRepository.AddAsync(medicalRecord);
 
                 return await Task.FromResult(RegularMedicalRecordDto.FromMedicalRecord(createdRecord));
             }

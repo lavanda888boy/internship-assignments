@@ -13,11 +13,11 @@ namespace Hospital.Application.MedicalRecords.Queries
     public class SearchDiagnosisMedicalRecordsByASetOfPropertiesHandler
         : IRequestHandler<SearchDiagnosisMedicalRecordsByASetOfProperties, List<DiagnosisMedicalRecordDto>>
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IRepository<DiagnosisMedicalRecord> _recordRepository;
 
-        public SearchDiagnosisMedicalRecordsByASetOfPropertiesHandler(IUnitOfWork unitOfWork)
+        public SearchDiagnosisMedicalRecordsByASetOfPropertiesHandler(IRepository<DiagnosisMedicalRecord> recordRepository)
         {
-            _unitOfWork = unitOfWork;
+            _recordRepository = recordRepository;
         }
 
         public async Task<List<DiagnosisMedicalRecordDto>> Handle(SearchDiagnosisMedicalRecordsByASetOfProperties request,
@@ -30,7 +30,7 @@ namespace Hospital.Application.MedicalRecords.Queries
                 (string.IsNullOrEmpty(request.RecordFilters.DiagnosedIllnessName) || r.DiagnosedIllness.Name == request.RecordFilters.DiagnosedIllnessName) &&
                 (string.IsNullOrEmpty(request.RecordFilters.PrescribedMedicine) || r.ProposedTreatment.PrescribedMedicine == request.RecordFilters.PrescribedMedicine);
 
-            var medicalRecords = await _unitOfWork.DiagnosisRecordRepository.SearchByPropertyAsync(predicate);
+            var medicalRecords = await _recordRepository.SearchByPropertyAsync(predicate);
 
             if (medicalRecords.Count == 0)
             {

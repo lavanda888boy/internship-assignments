@@ -1,6 +1,7 @@
 ﻿using Hospital.Application.Abstractions;
 using Hospital.Application.Exceptions;
 using Hospital.Application.Illnesses.Responses;
+using Hospital.Domain.Models;
 using Hospital.Domain.Models.Utility;
 using MediatR;
 
@@ -12,16 +13,16 @@ namespace Hospital.Application.Illnesses.Queries
     public class SearchIllnessBySeverityHandler : IRequestHandler<SearchIllnessBySeverity,
         List<IllnessDto>>
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IRepository<Illness> _illnessRepository;
 
-        public SearchIllnessBySeverityHandler(IUnitOfWork unitOfWork)
+        public SearchIllnessBySeverityHandler(IRepository<Illness> illnessRepository)
         {
-            _unitOfWork = unitOfWork;
+            _illnessRepository = illnessRepository;
         }
 
         public async Task<List<IllnessDto>> Handle(SearchIllnessBySeverity request, CancellationToken cancellationToken)
         {
-            var illnesses = await _unitOfWork.IllnessRepository.SearchByPropertyAsync(i => 
+            var illnesses = await _illnessRepository.SearchByPropertyAsync(i => 
                     i.Severity == request.IllnessSeverity);
 
             if (illnesses.Count == 0)

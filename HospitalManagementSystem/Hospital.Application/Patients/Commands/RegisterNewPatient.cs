@@ -11,11 +11,11 @@ namespace Hospital.Application.Patients.Commands
 
     public class RegisterNewPatientHandler : IRequestHandler<RegisterNewPatient, PatientDto>
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IRepository<Patient> _patientRepository;
 
-        public RegisterNewPatientHandler(IUnitOfWork unitOfWork)
+        public RegisterNewPatientHandler(IRepository<Patient> patientRepository)
         {
-            _unitOfWork = unitOfWork;
+            _patientRepository = patientRepository;
         }
 
         public async Task<PatientDto> Handle(RegisterNewPatient request, CancellationToken cancellationToken)
@@ -31,7 +31,7 @@ namespace Hospital.Application.Patients.Commands
                 InsuranceNumber = request.InsuranceNumber
             };
 
-            var doctors = await _unitOfWork.DoctorRepository.GetAllAsync();
+            var doctors = await _patientRepository.GetAllAsync();
 
             if (doctors.Count == 0)
             {
@@ -49,7 +49,7 @@ namespace Hospital.Application.Patients.Commands
                 }
             };
 
-            await _unitOfWork.PatientRepository.AddAsync(patient);
+            await _patientRepository.AddAsync(patient);
             return await Task.FromResult(PatientDto.FromPatient(patient));
         }
     }

@@ -1,6 +1,7 @@
 ﻿using Hospital.Application.Abstractions;
 using Hospital.Application.Departments.Responses;
 using Hospital.Application.Exceptions;
+using Hospital.Domain.Models;
 using MediatR;
 
 namespace Hospital.Application.Departments.Queries
@@ -9,16 +10,16 @@ namespace Hospital.Application.Departments.Queries
 
     public class SearchDepartmentByNameHandler : IRequestHandler<SearchDepartmentByName, DepartmentDto>
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IRepository<Department> _departmentRepository;
 
-        public SearchDepartmentByNameHandler(IUnitOfWork unitOfWork)
+        public SearchDepartmentByNameHandler(IRepository<Department> departmentRepository)
         {
-            _unitOfWork = unitOfWork;
+            _departmentRepository = departmentRepository;
         }
 
         public async Task<DepartmentDto> Handle(SearchDepartmentByName request, CancellationToken cancellationToken)
         {
-            var departments = await _unitOfWork.DepartmentRepository.SearchByPropertyAsync(d => d.Name == request.DepartmentName);
+            var departments = await _departmentRepository.SearchByPropertyAsync(d => d.Name == request.DepartmentName);
 
             if (departments.Count == 0)
             {

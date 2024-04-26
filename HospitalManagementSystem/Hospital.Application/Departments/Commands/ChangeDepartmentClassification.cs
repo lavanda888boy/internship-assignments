@@ -10,11 +10,11 @@ namespace Hospital.Application.Departments.Commands
 
     public class ChangeDepartmentClassificationHandler : IRequestHandler<ChangeDepartmentClassification, DepartmentDto>
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IRepository<Department> _departmentRepository;
 
-        public ChangeDepartmentClassificationHandler(IUnitOfWork unitOfWork)
+        public ChangeDepartmentClassificationHandler(IRepository<Department> departmentRepository)
         {
-            _unitOfWork = unitOfWork;
+            _departmentRepository = departmentRepository;
         }
 
         public async Task<DepartmentDto> Handle(ChangeDepartmentClassification request, CancellationToken cancellationToken)
@@ -25,7 +25,7 @@ namespace Hospital.Application.Departments.Commands
                 Name = request.Name,
             };
 
-            await _unitOfWork.DepartmentRepository.UpdateAsync(department);
+            await _departmentRepository.UpdateAsync(department);
 
             return await Task.FromResult(DepartmentDto.FromDepartment(department));
         }

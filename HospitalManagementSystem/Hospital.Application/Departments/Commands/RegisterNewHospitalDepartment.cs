@@ -9,11 +9,11 @@ namespace Hospital.Application.Departments.Commands
 
     public class RegisterNewHospitalDepartmentHandler : IRequestHandler<RegisterNewHospitalDepartment, DepartmentDto>
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IRepository<Department> _departmentRepository;
 
-        public RegisterNewHospitalDepartmentHandler(IUnitOfWork unitOfWork)
+        public RegisterNewHospitalDepartmentHandler(IRepository<Department> departmentRepository)
         {
-            _unitOfWork = unitOfWork;
+            _departmentRepository = departmentRepository;
         }
 
         public async Task<DepartmentDto> Handle(RegisterNewHospitalDepartment request, CancellationToken cancellationToken)
@@ -23,7 +23,7 @@ namespace Hospital.Application.Departments.Commands
                 Name = request.Name,
             };
 
-            var newDepartment = await _unitOfWork.DepartmentRepository.AddAsync(department);
+            var newDepartment = await _departmentRepository.AddAsync(department);
 
             return await Task.FromResult(DepartmentDto.FromDepartment(newDepartment));
         }

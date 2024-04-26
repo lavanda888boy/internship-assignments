@@ -12,22 +12,25 @@ namespace Hospital.Application.Doctors.Commands
 
     public class UpdateDoctorPersonalInfoHandler : IRequestHandler<UpdateDoctorPersonalInfo, DoctorDto>
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IRepository<Doctor> _doctorRepository;
+        private readonly IRepository<Department> _departmentRepository;
 
-        public UpdateDoctorPersonalInfoHandler(IUnitOfWork unitOfWork)
+        public UpdateDoctorPersonalInfoHandler(IRepository<Doctor> doctorRepository,
+            IRepository<Department> departmentRepository)
         {
-            _unitOfWork = unitOfWork;
+            _doctorRepository = doctorRepository;
+            _departmentRepository = departmentRepository;
         }
 
         public async Task<DoctorDto> Handle(UpdateDoctorPersonalInfo request, CancellationToken cancellationToken)
         {
-            var department = await _unitOfWork.DepartmentRepository.GetByIdAsync(request.DepartmentId);
+            var department = await _departmentRepository.GetByIdAsync(request.DepartmentId);
             if (department == null)
             {
                 throw new NoEntityFoundException($"Cannot update doctor with a non-existing department with id {request.DepartmentId}");
             }
 
-            var existingDoctor = await _unitOfWork.DoctorRepository.GetByIdAsync(request.Id);
+            var existingDoctor = await _doctorRepository.GetByIdAsync(request.Id);
             if (existingDoctor != null)
             {
                 existingDoctor.Name = request.Name;
@@ -43,7 +46,7 @@ namespace Hospital.Application.Doctors.Commands
                     WeekDayId = id,
                 }).ToList();
 
-                await _unitOfWork.DoctorRepository.UpdateAsync(existingDoctor);
+                await _doctorRepository.UpdateAsync(existingDoctor);
 
                 return await Task.FromResult(DoctorDto.FromDoctor(existingDoctor));
             }

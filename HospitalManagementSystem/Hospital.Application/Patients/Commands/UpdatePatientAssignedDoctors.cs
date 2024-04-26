@@ -12,16 +12,16 @@ namespace Hospital.Application.Patients.Commands
     public class UpdatePatientAssignedDoctorsHandler
         : IRequestHandler<UpdatePatientAssignedDoctors, PatientDto>
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IRepository<Patient> _patientRepository;
 
-        public UpdatePatientAssignedDoctorsHandler(IUnitOfWork unitOfWork)
+        public UpdatePatientAssignedDoctorsHandler(IRepository<Patient> patientRepository)
         {
-            _unitOfWork = unitOfWork;
+            _patientRepository = patientRepository;
         }
 
         public async Task<PatientDto> Handle(UpdatePatientAssignedDoctors request, CancellationToken cancellationToken)
         {
-            var existingPatient = await _unitOfWork.PatientRepository.GetByIdAsync(request.Id);
+            var existingPatient = await _patientRepository.GetByIdAsync(request.Id);
             if (existingPatient != null)
             {
                 existingPatient.DoctorsPatients.Clear();
@@ -32,7 +32,7 @@ namespace Hospital.Application.Patients.Commands
                     PatientId = existingPatient.Id,
                 }).ToList();
 
-                await _unitOfWork.PatientRepository.UpdateAsync(existingPatient);
+                await _patientRepository.UpdateAsync(existingPatient);
 
                 return await Task.FromResult(PatientDto.FromPatient(existingPatient));
             }

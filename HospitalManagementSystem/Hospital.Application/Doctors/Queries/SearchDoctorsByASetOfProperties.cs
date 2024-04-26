@@ -11,11 +11,11 @@ namespace Hospital.Application.Doctors.Queries
 
     public class SearchDoctorsByASetOfPropertiesHandler : IRequestHandler<SearchDoctorsByASetOfProperties, List<DoctorDto>>
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IRepository<Doctor> _doctorRepository;
 
-        public SearchDoctorsByASetOfPropertiesHandler(IUnitOfWork unitOfWork)
+        public SearchDoctorsByASetOfPropertiesHandler(IRepository<Doctor> doctorRepository)
         {
-            _unitOfWork = unitOfWork;
+            _doctorRepository = doctorRepository;
         }
 
         public async Task<List<DoctorDto>> Handle(SearchDoctorsByASetOfProperties request, CancellationToken cancellationToken)
@@ -27,7 +27,7 @@ namespace Hospital.Application.Doctors.Queries
                 (string.IsNullOrEmpty(request.DoctorFilters.PhoneNumber) || d.PhoneNumber == request.DoctorFilters.PhoneNumber) &&
                 (string.IsNullOrEmpty(request.DoctorFilters.DepartmentName) || d.Department.Name == request.DoctorFilters.DepartmentName);
 
-            var doctors = await _unitOfWork.DoctorRepository.SearchByPropertyAsync(predicate);
+            var doctors = await _doctorRepository.SearchByPropertyAsync(predicate);
 
             if (doctors.Count == 0)
             {

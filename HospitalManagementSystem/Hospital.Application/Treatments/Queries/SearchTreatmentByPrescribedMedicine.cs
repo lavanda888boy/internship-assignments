@@ -1,6 +1,7 @@
 ﻿using Hospital.Application.Abstractions;
 using Hospital.Application.Exceptions;
 using Hospital.Application.Treatments.Responses;
+using Hospital.Domain.Models;
 using MediatR;
 
 namespace Hospital.Application.Treatments.Queries
@@ -10,16 +11,16 @@ namespace Hospital.Application.Treatments.Queries
     public class SearchTreatmentByPrescribedMedicineHandler 
         : IRequestHandler<SearchTreatmentByPrescribedMedicine, List<TreatmentDto>>
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IRepository<Treatment> _treatmentRepository;
 
-        public SearchTreatmentByPrescribedMedicineHandler(IUnitOfWork unitOfWork)
+        public SearchTreatmentByPrescribedMedicineHandler(IRepository<Treatment> treatmentRepository)
         {
-            _unitOfWork = unitOfWork;
+            _treatmentRepository = treatmentRepository;
         }
 
         public async Task<List<TreatmentDto>> Handle(SearchTreatmentByPrescribedMedicine request, CancellationToken cancellationToken)
         {
-            var treatments = await _unitOfWork.TreatmentRepository.SearchByPropertyAsync(t => 
+            var treatments = await _treatmentRepository.SearchByPropertyAsync(t => 
                     t.PrescribedMedicine == request.TreatmentMedicine);
 
             if (treatments.Count == 0)

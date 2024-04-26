@@ -12,16 +12,19 @@ namespace Hospital.Application.Doctors.Commands
 
     public class EmployNewDoctorHandler : IRequestHandler<EmployNewDoctor, DoctorDto>
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IRepository<Doctor> _doctorRepository;
+        private readonly IRepository<Department> _departmentRepository;
 
-        public EmployNewDoctorHandler(IUnitOfWork unitOfWork)
+        public EmployNewDoctorHandler(IRepository<Doctor> doctorRepository, 
+            IRepository<Department> departmentRepository)
         {
-            _unitOfWork = unitOfWork;
+            _doctorRepository = doctorRepository;
+            _departmentRepository = departmentRepository;
         }
 
         public async Task<DoctorDto> Handle(EmployNewDoctor request, CancellationToken cancellationToken)
         {
-            var department = await _unitOfWork.DepartmentRepository.GetByIdAsync(request.DepartmentId);
+            var department = await _departmentRepository.GetByIdAsync(request.DepartmentId);
             if (department == null)
             {
                 throw new NoEntityFoundException($"Cannot employ doctor to a non-existing department with id {request.DepartmentId}");
@@ -47,7 +50,7 @@ namespace Hospital.Application.Doctors.Commands
                 WorkingHours = schedule,
             };
 
-            await _unitOfWork.DoctorRepository.AddAsync(doctor);
+            await _doctorRepository.AddAsync(doctor);
 
             return await Task.FromResult(DoctorDto.FromDoctor(doctor));
         }

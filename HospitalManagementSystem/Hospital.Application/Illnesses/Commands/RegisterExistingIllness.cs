@@ -11,11 +11,11 @@ namespace Hospital.Application.Illnesses.Commands
 
     public class RegisterExistingIllnessHandler : IRequestHandler<RegisterExistingIllness, IllnessDto>
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IRepository<Illness> _illnessRepository;
 
-        public RegisterExistingIllnessHandler(IUnitOfWork unitOfWork)
+        public RegisterExistingIllnessHandler(IRepository<Illness> illnessRepository)
         {
-            _unitOfWork = unitOfWork;
+            _illnessRepository = illnessRepository;
         }
 
         public async Task<IllnessDto> Handle(RegisterExistingIllness request, CancellationToken cancellationToken)
@@ -26,7 +26,7 @@ namespace Hospital.Application.Illnesses.Commands
                 Severity = request.Severity
             };
 
-            var newIllness = await _unitOfWork.IllnessRepository.AddAsync(illness);
+            var newIllness = await _illnessRepository.AddAsync(illness);
 
             return await Task.FromResult(IllnessDto.FromIllness(newIllness));
         }

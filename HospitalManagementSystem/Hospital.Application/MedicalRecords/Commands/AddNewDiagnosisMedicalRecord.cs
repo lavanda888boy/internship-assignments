@@ -13,19 +13,28 @@ namespace Hospital.Application.MedicalRecords.Commands
     public class AddNewDiagnosisMedicalRecordHandler
         : IRequestHandler<AddNewDiagnosisMedicalRecord, DiagnosisMedicalRecordDto>
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IRepository<Patient> _patientRepository;
+        private readonly IRepository<Doctor> _doctorRepository;
+        private readonly IRepository<Illness> _illnessRepository;
+        private readonly IRepository<DiagnosisMedicalRecord> _recordRepository;
 
-        public AddNewDiagnosisMedicalRecordHandler(IUnitOfWork unitOFWork)
+        public AddNewDiagnosisMedicalRecordHandler(IRepository<Patient> patientRepository,
+            IRepository<Doctor> doctorRepository,
+            IRepository<Illness> illnessRepository,
+            IRepository<DiagnosisMedicalRecord> recordRepository)
         {
-            _unitOfWork = unitOFWork;
+            _patientRepository = patientRepository;
+            _doctorRepository = doctorRepository;
+            _illnessRepository = illnessRepository;
+            _recordRepository = recordRepository;
         }
 
         public async Task<DiagnosisMedicalRecordDto> Handle(AddNewDiagnosisMedicalRecord request,
             CancellationToken cancellationToken)
         {
-            var examinedPatient = await _unitOfWork.PatientRepository.GetByIdAsync(request.PatientId);
-            var responsibleDoctor = await _unitOfWork.DoctorRepository.GetByIdAsync(request.DoctorId);
-            var illness = await _unitOfWork.IllnessRepository.GetByIdAsync(request.IllnessId);
+            var examinedPatient = await _patientRepository.GetByIdAsync(request.PatientId);
+            var responsibleDoctor = await _doctorRepository.GetByIdAsync(request.DoctorId);
+            var illness = await _illnessRepository.GetByIdAsync(request.IllnessId);
 
             if (examinedPatient == null)
             {
@@ -62,7 +71,7 @@ namespace Hospital.Application.MedicalRecords.Commands
                     ProposedTreatment = treatment
                 };
 
-                var createdRecord = await _unitOfWork.DiagnosisRecordRepository.AddAsync(medicalRecord);
+                var createdRecord = await _recordRepository.AddAsync(medicalRecord);
 
                 return await Task.FromResult(DiagnosisMedicalRecordDto.FromMedicalRecord(createdRecord));
             }

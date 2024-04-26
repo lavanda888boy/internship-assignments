@@ -1,6 +1,7 @@
 ﻿using Hospital.Application.Abstractions;
 using Hospital.Application.Exceptions;
 using Hospital.Application.MedicalRecords.Responses;
+using Hospital.Domain.Models;
 using MediatR;
 
 namespace Hospital.Application.MedicalRecords.Commands
@@ -11,25 +12,24 @@ namespace Hospital.Application.MedicalRecords.Commands
     public class AdjustDiagnosisMedicalRecordExaminationNotesHandler
         : IRequestHandler<AdjustDiagnosisMedicalRecordExaminationNotes, DiagnosisMedicalRecordDto>
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IRepository<DiagnosisMedicalRecord> _recordRepository;
 
-        public AdjustDiagnosisMedicalRecordExaminationNotesHandler(IUnitOfWork unitOFWork)
+        public AdjustDiagnosisMedicalRecordExaminationNotesHandler(IRepository<DiagnosisMedicalRecord> recordRepository)
         {
-            _unitOfWork = unitOFWork;
+            _recordRepository = recordRepository;
         }
 
         public async Task<DiagnosisMedicalRecordDto> Handle(AdjustDiagnosisMedicalRecordExaminationNotes request, CancellationToken cancellationToken)
         {
-            var existingRecord = await _unitOfWork.DiagnosisRecordRepository.GetByIdAsync(request.Id);
+            var existingRecord = await _recordRepository.GetByIdAsync(request.Id);
             if (existingRecord == null)
             {
                 throw new NoEntityFoundException($"Cannot update non-existing diagnosis medical record with id {request.Id}");
             }
 
             existingRecord.ExaminationNotes = request.ExaminationNotes;
-            await _unitOfWork.DiagnosisRecordRepository.UpdateAsync(existingRecord);
+            await _recordRepository.UpdateAsync(existingRecord);
 
-            await _unitOfWork.DiagnosisRecordRepository.UpdateAsync(existingRecord);
             return await Task.FromResult(DiagnosisMedicalRecordDto.FromMedicalRecord(existingRecord));
         }
     }

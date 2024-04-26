@@ -1,6 +1,7 @@
 ﻿using Hospital.Application.Abstractions;
 using Hospital.Application.Exceptions;
 using Hospital.Application.Patients.Responses;
+using Hospital.Domain.Models;
 using MediatR;
 
 namespace Hospital.Application.Patients.Commands
@@ -11,16 +12,16 @@ namespace Hospital.Application.Patients.Commands
     public class UpdatePatientPersonalInfoHandler
         : IRequestHandler<UpdatePatientPersonalInfo, PatientDto>
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IRepository<Patient> _patientRepository;
 
-        public UpdatePatientPersonalInfoHandler(IUnitOfWork unitOfWork)
+        public UpdatePatientPersonalInfoHandler(IRepository<Patient> patientRepository)
         {
-            _unitOfWork = unitOfWork;
+            _patientRepository = patientRepository;
         }
 
         public async Task<PatientDto> Handle(UpdatePatientPersonalInfo request, CancellationToken cancellationToken)
         {
-            var existingPatient = await _unitOfWork.PatientRepository.GetByIdAsync(request.Id);
+            var existingPatient = await _patientRepository.GetByIdAsync(request.Id);
 
             if (existingPatient != null)
             {
@@ -32,7 +33,7 @@ namespace Hospital.Application.Patients.Commands
                 existingPatient.PhoneNumber = request.PhoneNumber;
                 existingPatient.InsuranceNumber = request.InsuranceNumber;
 
-                await _unitOfWork.PatientRepository.UpdateAsync(existingPatient);
+                await _patientRepository.UpdateAsync(existingPatient);
 
                 return await Task.FromResult(PatientDto.FromPatient(existingPatient));
             }

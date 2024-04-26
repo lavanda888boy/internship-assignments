@@ -1,5 +1,6 @@
 ﻿using Hospital.Application.Abstractions;
 using Hospital.Application.MedicalRecords.Responses;
+using Hospital.Domain.Models;
 using MediatR;
 
 namespace Hospital.Application.MedicalRecords.Queries
@@ -9,17 +10,17 @@ namespace Hospital.Application.MedicalRecords.Queries
     public class ListAllDiagnosisMedicalRecordsHandler 
         : IRequestHandler<ListAllDiagnosisMedicalRecords, List<DiagnosisMedicalRecordDto>>
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IRepository<DiagnosisMedicalRecord> _recordRepository;
 
-        public ListAllDiagnosisMedicalRecordsHandler(IUnitOfWork unitOfWork)
+        public ListAllDiagnosisMedicalRecordsHandler(IRepository<DiagnosisMedicalRecord> recordRepository)
         {
-            _unitOfWork = unitOfWork;
+            _recordRepository = recordRepository;
         }
 
         public async Task<List<DiagnosisMedicalRecordDto>> Handle(ListAllDiagnosisMedicalRecords request,
             CancellationToken cancellationToken)
         {
-            var medicalRecords = await _unitOfWork.DiagnosisRecordRepository.GetAllAsync();
+            var medicalRecords = await _recordRepository.GetAllAsync();
             return await Task.FromResult(medicalRecords.Select(DiagnosisMedicalRecordDto.FromMedicalRecord).ToList());
         }
     }

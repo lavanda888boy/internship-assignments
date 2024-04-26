@@ -17,7 +17,6 @@ var diContainer = new ServiceCollection()
     .AddDbContext<HospitalManagementDbContext>(options => 
             options.UseSqlServer("Server=ARTIFICIALBEAUT\\SQL_AMDARIS;Database=Hospital;Trusted_Connection=True;TrustServerCertificate=True;"))
     .AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(RegisterNewHospitalDepartment).Assembly))
-    .AddScoped<IUnitOfWork, UnitOfWork>()
     .AddScoped<IRepository<Patient>, PatientRepository>()
     .AddScoped<IRepository<Doctor>, DoctorRepository>()
     .AddScoped<IRepository<RegularMedicalRecord>, RegularMedicalRecordRepository>()
