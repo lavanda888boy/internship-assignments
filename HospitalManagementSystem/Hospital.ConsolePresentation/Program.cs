@@ -59,8 +59,14 @@ var mediator = diContainer.GetRequiredService<IMediator>();
 //var command = new UpdateDoctorAssignedPatients(3, new List<int>() { });
 //await mediator.Send(command);
 
-//var command = new AddNewDiagnosisMedicalRecord(4, 2, "Patient is a little ill", 3, "Corvalment", 5);
+//var command = new AddNewDiagnosisMedicalRecord(5, 3, "Patient is a ill", 3, "Valocordin", 5);
 //await mediator.Send(command);
+
+//var command1 = new AddNewRegularMedicalRecord(5, 3, "Regular examination");
+//await mediator.Send(command1);
+
+//var command2 = new AddNewRegularMedicalRecord(4, 2, "Another regular examination");
+//await mediator.Send(command2);
 
 //var command = new AdjustTreatmentDetailsWithinDiagnosisMedicalRecord(2, 3, "Valocordin", 3);
 //await mediator.Send(command);

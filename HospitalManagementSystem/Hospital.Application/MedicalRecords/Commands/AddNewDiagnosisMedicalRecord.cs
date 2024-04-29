@@ -77,7 +77,7 @@ namespace Hospital.Application.MedicalRecords.Commands
             }
             else
             {
-                throw new PatientDoctorMisassignationException("Cannot create diagnosis medical record beacuse the patient is not assigned to the doctor");
+                throw new PatientDoctorMisassignationException("Cannot create diagnosis medical record because the patient is not assigned to the doctor");
             }
         }
     }

@@ -59,7 +59,7 @@ namespace Hospital.Application.MedicalRecords.Commands
             }
             else
             {
-                throw new PatientDoctorMisassignationException("Cannot create regular medical record beacuse the patient is not assigned to the doctor");
+                throw new PatientDoctorMisassignationException("Cannot create regular medical record because the patient is not assigned to the doctor");
             }
         }
     }

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Hospital.Presentation.Dto
+namespace Hospital.Presentation.Dto.Patient
 {
     public class PatientDto
     {
