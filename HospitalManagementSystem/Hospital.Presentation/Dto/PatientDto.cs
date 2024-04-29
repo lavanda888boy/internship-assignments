@@ -26,6 +26,7 @@ namespace Hospital.Presentation.Dto
         public required string Gender { get; set; }
 
         [Required]
+        [MinLength(5)]
         public required string Address { get; set; }
 
         [Phone]
