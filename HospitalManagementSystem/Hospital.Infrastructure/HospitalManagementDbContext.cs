@@ -6,7 +6,7 @@ namespace Hospital.Infrastructure
 {
     public class HospitalManagementDbContext : DbContext
     {
-        private string _dbConnectionString = "Server=ARTIFICIALBEAUT\\SQL_AMDARIS;Database=Hospital;Trusted_Connection=True;TrustServerCertificate=True;";
+        private readonly string _dbConnectionString = "Server=ARTIFICIALBEAUT\\SQL_AMDARIS;Database=Hospital;Trusted_Connection=True;TrustServerCertificate=True;";
 
         public DbSet<Patient> Patients { get; set; } = default!;
         public DbSet<Doctor> Doctors { get; set; } = default!;
@@ -26,7 +26,7 @@ namespace Hospital.Infrastructure
             if (!optionsBuilder.IsConfigured)
             {
                 optionsBuilder.UseSqlServer(_dbConnectionString)
-                          .LogTo(Console.WriteLine, new[] { DbLoggerCategory.Database.Command.Name }, LogLevel.Information);
+                              .LogTo(Console.WriteLine, new[] { DbLoggerCategory.Database.Command.Name }, LogLevel.Information);
             }
         }
 
