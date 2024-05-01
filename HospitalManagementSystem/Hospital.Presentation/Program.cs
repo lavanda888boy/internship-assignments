@@ -1,4 +1,6 @@
 
+using Hospital.Presentation.Middleware;
+
 namespace Hospital.Presentation
 {
     public class Program
@@ -19,10 +21,11 @@ namespace Hospital.Presentation
                 app.UseSwaggerUI();
             }
 
+            app.UseMiddleware<RequestTimingMiddleware>();
+
             app.UseHttpsRedirection();
 
             app.UseAuthorization();
-
 
             app.MapControllers();
 
