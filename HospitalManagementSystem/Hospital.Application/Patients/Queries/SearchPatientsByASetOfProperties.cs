@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 
 namespace Hospital.Application.Patients.Queries
 {
-    public record SearchPatientsByASetOfProperties(PatientFilterDto PatientFilters) : IRequest<List<PatientDto>>;
+    public record SearchPatientsByASetOfProperties(PatientFilters PatientFilters) : IRequest<List<PatientDto>>;
 
     public class SearchPatientsByASetOfPropertiesHandler : IRequestHandler<SearchPatientsByASetOfProperties, List<PatientDto>>
     {
@@ -24,7 +24,7 @@ namespace Hospital.Application.Patients.Queries
                 (string.IsNullOrEmpty(request.PatientFilters.Name) || p.Name == request.PatientFilters.Name) &&
                 (string.IsNullOrEmpty(request.PatientFilters.Surname) || p.Surname == request.PatientFilters.Surname) &&
                 (request.PatientFilters.Age == 0  || p.Age == request.PatientFilters.Age) &&
-                //(string.IsNullOrEmpty(request.PatientFilters.Gender) || p.Gender == request.PatientFilters.Gender) &&
+                (request.PatientFilters.Gender == 0 || p.Gender == request.PatientFilters.Gender) &&
                 (string.IsNullOrEmpty(request.PatientFilters.Address) || p.Address == request.PatientFilters.Address) &&
                 (string.IsNullOrEmpty(request.PatientFilters.PhoneNumber) || p.PhoneNumber == request.PatientFilters.PhoneNumber) &&
                 (string.IsNullOrEmpty(request.PatientFilters.InsuranceNumber) || p.InsuranceNumber == request.PatientFilters.InsuranceNumber);

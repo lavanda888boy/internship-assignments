@@ -13,10 +13,13 @@ namespace Hospital.Application.Patients.Commands
     public class RegisterNewPatientHandler : IRequestHandler<RegisterNewPatient, PatientDto>
     {
         private readonly IRepository<Patient> _patientRepository;
+        private readonly IRepository<Doctor> _doctorRepository;
 
-        public RegisterNewPatientHandler(IRepository<Patient> patientRepository)
+        public RegisterNewPatientHandler(IRepository<Patient> patientRepository, 
+            IRepository<Doctor> doctorRepository)
         {
             _patientRepository = patientRepository;
+            _doctorRepository = doctorRepository;
         }
 
         public async Task<PatientDto> Handle(RegisterNewPatient request, CancellationToken cancellationToken)
@@ -32,7 +35,7 @@ namespace Hospital.Application.Patients.Commands
                 InsuranceNumber = request.InsuranceNumber
             };
 
-            var doctors = await _patientRepository.GetAllAsync();
+            var doctors = await _doctorRepository.GetAllAsync();
 
             if (doctors.Count == 0)
             {

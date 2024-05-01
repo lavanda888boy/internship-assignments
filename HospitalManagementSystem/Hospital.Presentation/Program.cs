@@ -1,4 +1,3 @@
-
 using Hospital.Application.Abstractions;
 using Hospital.Application.Departments.Commands;
 using Hospital.Domain.Models;
