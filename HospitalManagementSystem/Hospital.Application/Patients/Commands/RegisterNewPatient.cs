@@ -2,11 +2,12 @@
 using Hospital.Application.Exceptions;
 using Hospital.Application.Patients.Responses;
 using Hospital.Domain.Models;
+using Hospital.Domain.Models.Utility;
 using MediatR;
 
 namespace Hospital.Application.Patients.Commands
 {
-    public record RegisterNewPatient(string Name, string Surname, int Age, string Gender,
+    public record RegisterNewPatient(string Name, string Surname, int Age, Gender Gender,
         string Address, string? PhoneNumber, string? InsuranceNumber) : IRequest<PatientDto>;
 
     public class RegisterNewPatientHandler : IRequestHandler<RegisterNewPatient, PatientDto>

@@ -2,11 +2,12 @@
 using Hospital.Application.Exceptions;
 using Hospital.Application.Patients.Responses;
 using Hospital.Domain.Models;
+using Hospital.Domain.Models.Utility;
 using MediatR;
 
 namespace Hospital.Application.Patients.Commands
 {
-    public record UpdatePatientPersonalInfo(int Id, string Name, string Surname, int Age, string Gender,
+    public record UpdatePatientPersonalInfo(int Id, string Name, string Surname, int Age, Gender Gender,
         string Address, string? PhoneNumber, string? InsuranceNumber) : IRequest<PatientDto>;
 
     public class UpdatePatientPersonalInfoHandler

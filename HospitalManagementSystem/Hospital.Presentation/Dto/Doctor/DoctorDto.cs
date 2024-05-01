@@ -29,10 +29,12 @@ namespace Hospital.Presentation.Dto.Doctor
         public required int DepartmentId { get; set; }
 
         [Required]
-        public required TimeSpan StartShift { get; set; }
+        [RegularExpression(@"^(\d+\.?\d*):(\d+\.?\d*):(\d+\.?\d*)$")]
+        public required string StartShift { get; set; }
 
         [Required]
-        public required TimeSpan EndShift { get; set; }
+        [RegularExpression(@"^(\d+\.?\d*):(\d+\.?\d*):(\d+\.?\d*)$")]
+        public required string EndShift { get; set; }
 
         [Required]
         [MinLength(1)]

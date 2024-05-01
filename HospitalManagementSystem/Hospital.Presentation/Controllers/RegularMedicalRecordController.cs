@@ -34,19 +34,6 @@ namespace Hospital.Presentation.Controllers
             return Ok(record);
         }
 
-        //[HttpPost]
-        //public async Task<IActionResult> SearchRegularMedicalRecordsByASetOfProperties(RegularMedicalRecordFilterDto recordFilter)
-        //{
-        //    Expression<Func<RegularMedicalRecord, bool>> predicate = r =>
-        //        (recordFilter.ExaminedPatientId == 0 || r.ExaminedPatient.Id == recordFilter.ExaminedPatientId) &&
-        //        (recordFilter.ResponsibleDoctorId == 0 || r.ResponsibleDoctor.Id == recordFilter.ResponsibleDoctorId) &&
-        //        (!recordFilter.DateOfExamination.HasValue || r.DateOfExamination == recordFilter.DateOfExamination);
-
-        //    var records = _context.RegularRecords.Where(predicate.Compile());
-
-        //    return Ok(records);
-        //}
-
         [HttpPost]
         public async Task<IActionResult> AddRegularMedicalRecord(RegularMedicalRecordDto record)
         {
@@ -56,6 +43,19 @@ namespace Hospital.Presentation.Controllers
             }
 
             return Ok(record);
+        }
+
+        [HttpPost("search")]
+        public async Task<IActionResult> SearchRegularMedicalRecordsByASetOfProperties(RegularMedicalRecordFilterDto recordFilter)
+        {
+            Expression<Func<RegularMedicalRecord, bool>> predicate = r =>
+                (recordFilter.ExaminedPatientId == 0 || r.ExaminedPatient.Id == recordFilter.ExaminedPatientId) &&
+                (recordFilter.ResponsibleDoctorId == 0 || r.ResponsibleDoctor.Id == recordFilter.ResponsibleDoctorId) &&
+                (!recordFilter.DateOfExamination.HasValue || r.DateOfExamination == recordFilter.DateOfExamination);
+
+            var records = _context.RegularRecords.Where(predicate.Compile());
+
+            return Ok(records);
         }
 
         [HttpPut("{id}")]

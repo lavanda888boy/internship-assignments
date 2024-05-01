@@ -21,7 +21,7 @@ namespace Hospital.Application.Patients.Responses
                 Name = patient.Name,
                 Surname = patient.Surname,
                 Age = patient.Age,
-                Gender = patient.Gender,
+                Gender = patient.Gender.ToString(),
                 Address = patient.Address,
                 PhoneNumber = patient.PhoneNumber,
                 InsuranceNumber = patient.InsuranceNumber,

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Hospital.Domain.Models.Utility;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Hospital.Domain.Models
@@ -19,8 +20,8 @@ namespace Hospital.Domain.Models
         [Range(1, 150)]
         public required int Age { get; set; }
 
-        [Column(TypeName = "nvarchar(2)")]
-        public required string Gender { get; set; }
+        [Column(TypeName = "nvarchar(5)")]
+        public required Gender Gender { get; set; }
 
         [MinLength(10)]
         [MaxLength(100)]

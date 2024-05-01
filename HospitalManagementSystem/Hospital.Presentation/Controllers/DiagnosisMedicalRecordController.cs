@@ -36,21 +36,6 @@ namespace Hospital.Presentation.Controllers
             return Ok(record);
         }
 
-        //[HttpPost]
-        //public async Task<IActionResult> SearchDiagnosisMedicalRecordsByASetOfProperties(DiagnosisMedicalRecordFilterDto recordFilter)
-        //{
-        //    Expression<Func<DiagnosisMedicalRecord, bool>> predicate = r =>
-        //        (recordFilter.ExaminedPatientId == 0 || r.ExaminedPatient.Id == recordFilter.ExaminedPatientId) &&
-        //        (recordFilter.ResponsibleDoctorId == 0 || r.ResponsibleDoctor.Id == recordFilter.ResponsibleDoctorId) &&
-        //        (!recordFilter.DateOfExamination.HasValue || r.DateOfExamination == recordFilter.DateOfExamination) &&
-        //        (string.IsNullOrEmpty(recordFilter.DiagnosedIllnessName) || r.DiagnosedIllness.Name == recordFilter.DiagnosedIllnessName) &&
-        //        (string.IsNullOrEmpty(recordFilter.PrescribedMedicine) || r.ProposedTreatment.PrescribedMedicine == recordFilter.PrescribedMedicine);
-
-        //    var records = _context.DiagnosisRecords.Where(predicate.Compile());
-
-        //    return Ok(records);
-        //}
-
         [HttpPost]
         public async Task<IActionResult> AddDiagnosisMedicalRecord(DiagnosisMedicalRecordDto record)
         {
@@ -60,6 +45,21 @@ namespace Hospital.Presentation.Controllers
             }
 
             return Ok(record);
+        }
+
+        [HttpPost("search")]
+        public async Task<IActionResult> SearchDiagnosisMedicalRecordsByASetOfProperties(DiagnosisMedicalRecordFilterDto recordFilter)
+        {
+            Expression<Func<DiagnosisMedicalRecord, bool>> predicate = r =>
+                (recordFilter.ExaminedPatientId == 0 || r.ExaminedPatient.Id == recordFilter.ExaminedPatientId) &&
+                (recordFilter.ResponsibleDoctorId == 0 || r.ResponsibleDoctor.Id == recordFilter.ResponsibleDoctorId) &&
+                (!recordFilter.DateOfExamination.HasValue || r.DateOfExamination == recordFilter.DateOfExamination) &&
+                (string.IsNullOrEmpty(recordFilter.DiagnosedIllnessName) || r.DiagnosedIllness.Name == recordFilter.DiagnosedIllnessName) &&
+                (string.IsNullOrEmpty(recordFilter.PrescribedMedicine) || r.ProposedTreatment.PrescribedMedicine == recordFilter.PrescribedMedicine);
+
+            var records = _context.DiagnosisRecords.Where(predicate.Compile());
+
+            return Ok(records);
         }
 
         [HttpPut("{id}")]

@@ -3,7 +3,10 @@ using Hospital.Infrastructure;
 using Hospital.Presentation.Dto.Doctor;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace Hospital.Presentation.Controllers
 {
@@ -22,10 +25,10 @@ namespace Hospital.Presentation.Controllers
                 Name = d.Name,
                 Surname = d.Surname,
                 Department = d.Department.Name,
-                Doctors = d.DoctorsPatients.Select(dp => dp.Patient.Name)
+                Patients = d.DoctorsPatients.Select(dp => dp.Patient.Name)
                                            .ToList()
             }).ToListAsync();
-
+            
             return Ok(doctors);
         }
 
@@ -36,21 +39,6 @@ namespace Hospital.Presentation.Controllers
             return Ok(doctor);
         }
 
-        //[HttpPost]
-        //public async Task<IActionResult> SearchDoctorsByASetOfProperties(DoctorFilterDto doctorFilter)
-        //{
-        //    Expression<Func<Doctor, bool>> predicate = d =>
-        //        (string.IsNullOrEmpty(doctorFilter.Name) || d.Name == doctorFilter.Name) &&
-        //        (string.IsNullOrEmpty(doctorFilter.Surname) || d.Surname == doctorFilter.Surname) &&
-        //        (string.IsNullOrEmpty(doctorFilter.Address) || d.Address == doctorFilter.Address) &&
-        //        (string.IsNullOrEmpty(doctorFilter.PhoneNumber) || d.PhoneNumber == doctorFilter.PhoneNumber) &&
-        //        (string.IsNullOrEmpty(doctorFilter.DepartmentName) || d.Department.Name == doctorFilter.DepartmentName);
-
-        //    var doctors = _context.Doctors.Where(predicate.Compile());
-
-        //    return Ok();
-        //}
-
         [HttpPost]
         public async Task<IActionResult> AddDoctor(DoctorDto doctor)
         {
@@ -60,6 +48,21 @@ namespace Hospital.Presentation.Controllers
             }
 
             return Ok(doctor);
+        }
+
+        [HttpPost("search")]
+        public async Task<IActionResult> SearchDoctorsByASetOfProperties(DoctorFilterDto doctorFilter)
+        {
+            Expression<Func<Doctor, bool>> predicate = d =>
+                (string.IsNullOrEmpty(doctorFilter.Name) || d.Name == doctorFilter.Name) &&
+                (string.IsNullOrEmpty(doctorFilter.Surname) || d.Surname == doctorFilter.Surname) &&
+                (string.IsNullOrEmpty(doctorFilter.Address) || d.Address == doctorFilter.Address) &&
+                (string.IsNullOrEmpty(doctorFilter.PhoneNumber) || d.PhoneNumber == doctorFilter.PhoneNumber) &&
+                (string.IsNullOrEmpty(doctorFilter.DepartmentName) || d.Department.Name == doctorFilter.DepartmentName);
+
+            var doctors = _context.Doctors.Where(predicate.Compile());
+
+            return Ok(doctors);
         }
 
         [HttpPut("{id}")]

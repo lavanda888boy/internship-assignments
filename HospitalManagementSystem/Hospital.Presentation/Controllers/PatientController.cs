@@ -1,7 +1,9 @@
-﻿using Hospital.Infrastructure;
+﻿using Hospital.Domain.Models;
+using Hospital.Infrastructure;
 using Hospital.Presentation.Dto.Patient;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace Hospital.Presentation.Controllers
 {
@@ -34,23 +36,6 @@ namespace Hospital.Presentation.Controllers
             return Ok(patient);
         }
 
-        //[HttpPost]
-        //public async Task<IActionResult> SearchPatientsByASetOfProperties(PatientFilterDto patientFilter)
-        //{
-        //    Expression<Func<Patient, bool>> predicate = p =>
-        //        (string.IsNullOrEmpty(patientFilter.Name) || p.Name == patientFilter.Name) &&
-        //        (string.IsNullOrEmpty(patientFilter.Surname) || p.Surname == patientFilter.Surname) &&
-        //        (patientFilter.Age == 0 || p.Age == patientFilter.Age) &&
-        //        (string.IsNullOrEmpty(patientFilter.Gender) || p.Gender == patientFilter.Gender) &&
-        //        (string.IsNullOrEmpty(patientFilter.Address) || p.Address == patientFilter.Address) &&
-        //        (string.IsNullOrEmpty(patientFilter.PhoneNumber) || p.PhoneNumber == patientFilter.PhoneNumber) &&
-        //        (string.IsNullOrEmpty(patientFilter.InsuranceNumber) || p.InsuranceNumber == patientFilter.InsuranceNumber);
-
-        //    var patients = _context.Patients.Where(predicate.Compile());
-
-        //    return Ok(patients);
-        //}
-
         [HttpPost]
         public async Task<IActionResult> AddPatient(PatientDto patient)
         {
@@ -60,6 +45,14 @@ namespace Hospital.Presentation.Controllers
             }
 
             return Ok(patient);
+        }
+
+        [HttpPost("search")]
+        public async Task<IActionResult> SearchPatientsByASetOfProperties(PatientFilterDto patientFilter)
+        {
+            
+
+            return Ok();
         }
 
         [HttpPut("{id}")]
