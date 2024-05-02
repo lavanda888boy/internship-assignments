@@ -1,12 +1,12 @@
-﻿using Hospital.Domain.Models;
-using Hospital.Infrastructure;
+﻿using Hospital.Application.Doctors.Commands;
+using Hospital.Application.Doctors.Queries;
+using Hospital.Application.Doctors.Responses;
+using Hospital.Application.Exceptions;
 using Hospital.Presentation.Dto.Doctor;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.ComponentModel;
-using System.ComponentModel.DataAnnotations;
-using System.Linq.Expressions;
-using System.Reflection;
+using System.Data.Common;
+using DoctorDto = Hospital.Presentation.Dto.Doctor.DoctorDto;
 
 namespace Hospital.Presentation.Controllers
 {
@@ -14,29 +14,55 @@ namespace Hospital.Presentation.Controllers
     [Route("api/[controller]")]
     public class DoctorController : ControllerBase
     {
-        private readonly HospitalManagementDbContext _context = new HospitalManagementDbContext();
+        private readonly IMediator _mediator;
+
+        public DoctorController(IMediator mediator)
+        {
+            _mediator = mediator;
+        }
 
         [HttpGet]
         public async Task<IActionResult> GetAllDoctors()
         {
-            var doctors = await _context.Doctors.Select(d => new
+            var command = new ListAllDoctors();
+
+            try
             {
-                Id = d.Id,
-                Name = d.Name,
-                Surname = d.Surname,
-                Department = d.Department.Name,
-                Patients = d.DoctorsPatients.Select(dp => dp.Patient.Name)
-                                           .ToList()
-            }).ToListAsync();
-            
-            return Ok(doctors);
+                var doctors = await _mediator.Send(command);
+                return Ok(doctors);
+            }
+            catch (DbException ex)
+            {
+                return StatusCode(500, $"Error in the database:\n{ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetDoctorById(int id)
         {
-            var doctor = await _context.Doctors.SingleOrDefaultAsync(d => d.Id == id);
-            return Ok(doctor);
+            var command = new GetDoctorById(id);
+
+            try
+            {
+                var doctor = await _mediator.Send(command);
+                return Ok(doctor);
+            }
+            catch (DbException ex)
+            {
+                return StatusCode(500, $"Error in the database:\n{ex.Message}");
+            }
+            catch (NoEntityFoundException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
 
         [HttpPost]
@@ -47,46 +73,136 @@ namespace Hospital.Presentation.Controllers
                 return BadRequest("Doctor data for creation is invalid");
             }
 
-            return Ok(doctor);
+            var command = new EmployNewDoctor(doctor.Name, doctor.Surname, doctor.Address, doctor.PhoneNumber, doctor.DepartmentId,
+                TimeSpan.Parse(doctor.StartShift), TimeSpan.Parse(doctor.EndShift), doctor.WeekDayIds);
+
+            try
+            {
+                var newDoctor = await _mediator.Send(command);
+                return StatusCode(201, newDoctor);
+            }
+            catch (DbException ex)
+            {
+                return StatusCode(500, $"Error in the database:\n{ex.Message}");
+            }
+            catch (NoEntityFoundException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
 
         [HttpPost("search")]
         public async Task<IActionResult> SearchDoctorsByASetOfProperties(DoctorFilterDto doctorFilter)
         {
-            Expression<Func<Doctor, bool>> predicate = d =>
-                (string.IsNullOrEmpty(doctorFilter.Name) || d.Name == doctorFilter.Name) &&
-                (string.IsNullOrEmpty(doctorFilter.Surname) || d.Surname == doctorFilter.Surname) &&
-                (string.IsNullOrEmpty(doctorFilter.Address) || d.Address == doctorFilter.Address) &&
-                (string.IsNullOrEmpty(doctorFilter.PhoneNumber) || d.PhoneNumber == doctorFilter.PhoneNumber) &&
-                (string.IsNullOrEmpty(doctorFilter.DepartmentName) || d.Department.Name == doctorFilter.DepartmentName);
+            DoctorFilters df = new DoctorFilters()
+            {
+                Name = doctorFilter.Name,
+                Surname = doctorFilter.Surname,
+                Address = doctorFilter.Address,
+                PhoneNumber = doctorFilter.PhoneNumber,
+                DepartmentName = doctorFilter.DepartmentName
+            };
+            var command = new SearchDoctorsByASetOfProperties(df);
 
-            var doctors = _context.Doctors.Where(predicate.Compile());
-
-            return Ok(doctors);
+            try
+            {
+                var doctors = await _mediator.Send(command);
+                return Ok(doctors);
+            }
+            catch (DbException ex)
+            {
+                return StatusCode(500, $"Error in the database:\n{ex.Message}");
+            }
+            catch (NoEntityFoundException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateDoctor(int id, DoctorDto doctor)
+        public async Task<IActionResult> UpdateDoctorPersonalInfo(int id, DoctorDto doctor)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest("Doctor data for update is invalid");
             }
 
-            return Ok(doctor);
+            var command = new UpdateDoctorPersonalInfo(id, doctor.Name, doctor.Surname, doctor.Address, doctor.PhoneNumber,
+                doctor.DepartmentId, TimeSpan.Parse(doctor.StartShift), TimeSpan.Parse(doctor.EndShift), doctor.WeekDayIds);
+
+            try
+            {
+                var updatedDoctor = await _mediator.Send(command);
+                return Ok(updatedDoctor);
+            }
+            catch (DbException ex)
+            {
+                return StatusCode(500, $"Error in the database:\n{ex.Message}");
+            }
+            catch (NoEntityFoundException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpPut("patients/{id}")]
+        public async Task<IActionResult> UpdateDoctorAssignedPatients(int id, [FromQuery] List<int> patientIds)
+        {
+            var command = new UpdateDoctorAssignedPatients(id, patientIds);
+
+            try
+            {
+                var updatedDoctor = await _mediator.Send(command);
+                return Ok(updatedDoctor);
+            }
+            catch (DbException ex)
+            {
+                return StatusCode(500, $"Error in the database:\n{ex.Message}");
+            }
+            catch (NoEntityFoundException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteDoctor(int id)
         {
-            var doctorToDelete = await _context.Doctors.SingleOrDefaultAsync(d => d.Id == id);
+            var command = new RemoveWronglyEmployedDoctor(id);
 
-            if (doctorToDelete != null)
+            try
             {
-                return Ok(doctorToDelete);
+                var deletedDoctor = await _mediator.Send(command);
+                return Ok(deletedDoctor);
             }
-
-            return BadRequest($"There is no doctor with id {id} to delete");
+            catch (DbException ex)
+            {
+                return StatusCode(500, $"Error in the database:\n{ex.Message}");
+            }
+            catch (NoEntityFoundException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
     }
 }

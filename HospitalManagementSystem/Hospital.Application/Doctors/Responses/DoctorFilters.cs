@@ -1,6 +1,6 @@
 ﻿namespace Hospital.Application.Doctors.Responses
 {
-    public class DoctorFilterDto
+    public class DoctorFilters
     {
         public string? Name { get; set; }
         public string? Surname { get; set; }
