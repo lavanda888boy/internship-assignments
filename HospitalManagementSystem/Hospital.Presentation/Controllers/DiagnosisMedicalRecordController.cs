@@ -1,9 +1,12 @@
-﻿using Hospital.Domain.Models;
-using Hospital.Infrastructure;
+﻿using Hospital.Application.Exceptions;
+using Hospital.Application.MedicalRecords.Commands;
+using Hospital.Application.MedicalRecords.Queries;
+using Hospital.Application.MedicalRecords.Responses;
 using Hospital.Presentation.Dto.Record;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
+using System.Data.Common;
+using DiagnosisMedicalRecordDto = Hospital.Presentation.Dto.Record.DiagnosisMedicalRecordDto;
 
 namespace Hospital.Presentation.Controllers
 {
@@ -11,29 +14,55 @@ namespace Hospital.Presentation.Controllers
     [Route("api/[controller]")]
     public class DiagnosisMedicalRecordController : ControllerBase
     {
-        private readonly HospitalManagementDbContext _context = new HospitalManagementDbContext();
+        private readonly IMediator _mediator;
+
+        public DiagnosisMedicalRecordController(IMediator mediator)
+        {
+            _mediator = mediator;
+        }
 
         [HttpGet]
         public async Task<IActionResult> GetAllDiagnosisMedicalRecords()
         {
-            var records = await _context.DiagnosisRecords.Select(r => new
-            {
-                Id = r.Id,
-                Patient = r.ExaminedPatient,
-                Doctor = r.ResponsibleDoctor,
-                Notes = r.ExaminationNotes,
-                Illness = r.DiagnosedIllness.Name,
-                Treatment = r.ProposedTreatment.PrescribedMedicine,
-            }).ToListAsync();
+            var command = new ListAllDiagnosisMedicalRecords();
 
-            return Ok(records);
+            try
+            {
+                var records = await _mediator.Send(command);
+                return Ok(records);
+            }
+            catch (DbException ex)
+            {
+                return StatusCode(500, $"Error in the database:\n{ex.Message}");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetDiagnosisMedicalRecordById(int id)
         {
-            var record = await _context.DiagnosisRecords.SingleOrDefaultAsync(r => r.Id == id);
-            return Ok(record);
+            var command = new GetDiagnosisMedicalRecordById(id);
+
+            try
+            {
+                var record = await _mediator.Send(command);
+                return Ok(record);
+            }
+            catch (DbException ex)
+            {
+                return StatusCode(500, $"Error in the database:\n{ex.Message}");
+            }
+            catch (NoEntityFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
 
         [HttpPost]
@@ -41,49 +70,139 @@ namespace Hospital.Presentation.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest("Diagnosis record data for creation is invalid");
+                return BadRequest("Diagnosis medical record data for creation is invalid");
             }
 
-            return Ok(record);
+            var command = new AddNewDiagnosisMedicalRecord(record.PatientId, record.DoctorId, record.ExaminationNotes,
+                record.IllnessId, record.PrescribedMedicine, record.Duration);
+
+            try
+            {
+                var newRecord = await _mediator.Send(command);
+                return StatusCode(201, newRecord);
+            }
+            catch (DbException ex)
+            {
+                return StatusCode(500, $"Error in the database:\n{ex.Message}");
+            }
+            catch (NoEntityFoundException ex)
+            {
+                return BadRequest(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
 
         [HttpPost("search")]
         public async Task<IActionResult> SearchDiagnosisMedicalRecordsByASetOfProperties(DiagnosisMedicalRecordFilterDto recordFilter)
         {
-            Expression<Func<DiagnosisMedicalRecord, bool>> predicate = r =>
-                (recordFilter.ExaminedPatientId == 0 || r.ExaminedPatient.Id == recordFilter.ExaminedPatientId) &&
-                (recordFilter.ResponsibleDoctorId == 0 || r.ResponsibleDoctor.Id == recordFilter.ResponsibleDoctorId) &&
-                (!recordFilter.DateOfExamination.HasValue || r.DateOfExamination == recordFilter.DateOfExamination) &&
-                (string.IsNullOrEmpty(recordFilter.DiagnosedIllnessName) || r.DiagnosedIllness.Name == recordFilter.DiagnosedIllnessName) &&
-                (string.IsNullOrEmpty(recordFilter.PrescribedMedicine) || r.ProposedTreatment.PrescribedMedicine == recordFilter.PrescribedMedicine);
+            DiagnosisMedicalRecordFilters df = new DiagnosisMedicalRecordFilters()
+            {
+                ExaminedPatientId = recordFilter.ExaminedPatientId,
+                ResponsibleDoctorId = recordFilter.ResponsibleDoctorId,
+                DateOfExamination = recordFilter.DateOfExamination,
+                DiagnosedIllnessName = recordFilter.DiagnosedIllnessName,
+                PrescribedMedicine = recordFilter.PrescribedMedicine
+            };
+            var command = new SearchDiagnosisMedicalRecordsByASetOfProperties(df);
 
-            var records = _context.DiagnosisRecords.Where(predicate.Compile());
-
-            return Ok(records);
+            try
+            {
+                var records = await _mediator.Send(command);
+                return Ok(records);
+            }
+            catch (DbException ex)
+            {
+                return StatusCode(500, $"Error in the database:\n{ex.Message}");
+            }
+            catch (NoEntityFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateDiagnosisMedicalRecord(int id, DiagnosisMedicalRecordDto record)
+        public async Task<IActionResult> UpdateDiagnosisMedicalRecordExaminationNotes(int id, [FromQuery] string notes)
+        {
+            var command = new AdjustDiagnosisMedicalRecordExaminationNotes(id, notes);
+
+            try
+            {
+                var updatedRecord = await _mediator.Send(command);
+                return Ok(updatedRecord);
+            }
+            catch (DbException ex)
+            {
+                return StatusCode(500, $"Error in the database:\n{ex.Message}");
+            }
+            catch (NoEntityFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
+        }
+
+        [HttpPut("treatment/{id}")]
+        public async Task<IActionResult> UpdateDiagnosisMedicalRecordTreatmentDetails(int id, TreatmentDto treatment)
         {
             if (!ModelState.IsValid)
             {
-                return BadRequest("Diagnosis record data for update is invalid");
+                return BadRequest("Treatment data for diagnosis medical record update is invalid");
             }
 
-            return Ok(record);
+            var command = new AdjustTreatmentDetailsWithinDiagnosisMedicalRecord(id, treatment.IllnessId,
+                treatment.PrescribedMedicine, treatment.Duration);
+
+            try
+            {
+                var updatedRecord = await _mediator.Send(command);
+                return Ok(updatedRecord);
+            }
+            catch (DbException ex)
+            {
+                return StatusCode(500, $"Error in the database:\n{ex.Message}");
+            }
+            catch (NoEntityFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteDiagnosisMedicalRecord(int id)
         {
-            var recordToDelete = await _context.DiagnosisRecords.SingleOrDefaultAsync(r => r.Id == id);
+            var command = new RemoveWronglyAddedDiagnosisMedicalRecord(id);
 
-            if (recordToDelete != null)
+            try
             {
-                return Ok(recordToDelete);
+                var deletedRecord = await _mediator.Send(command);
+                return Ok(deletedRecord);
             }
-
-            return BadRequest($"There is no diagnosis record with id {id} to delete");
+            catch (DbException ex)
+            {
+                return StatusCode(500, $"Error in the database:\n{ex.Message}");
+            }
+            catch (NoEntityFoundException ex)
+            {
+                return NotFound(ex.Message);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, ex.Message);
+            }
         }
     }
 }

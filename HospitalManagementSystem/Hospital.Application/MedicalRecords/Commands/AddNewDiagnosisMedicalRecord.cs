@@ -52,7 +52,7 @@ namespace Hospital.Application.MedicalRecords.Commands
             }
 
             bool examinedPatientIsAssignedToTheDoctor = examinedPatient.DoctorsPatients
-                                                                        .Any(dp => dp.DoctorId == responsibleDoctor.Id);
+                                                                       .Any(dp => dp.DoctorId == responsibleDoctor.Id);
             if (examinedPatientIsAssignedToTheDoctor)
             {
                 var treatment = new Treatment()
@@ -61,11 +61,13 @@ namespace Hospital.Application.MedicalRecords.Commands
                     DurationInDays = request.Duration,
                 };
 
+                DateTimeOffset now = DateTimeOffset.UtcNow;
+
                 var medicalRecord = new DiagnosisMedicalRecord
                 {
                     ExaminedPatient = examinedPatient,
                     ResponsibleDoctor = responsibleDoctor,
-                    DateOfExamination = DateTimeOffset.UtcNow,
+                    DateOfExamination = new DateTimeOffset(now.Year, now.Month, now.Day, now.Hour, now.Minute, 0, now.Offset),
                     ExaminationNotes = request.ExaminationNotes,
                     DiagnosedIllness = illness,
                     ProposedTreatment = treatment

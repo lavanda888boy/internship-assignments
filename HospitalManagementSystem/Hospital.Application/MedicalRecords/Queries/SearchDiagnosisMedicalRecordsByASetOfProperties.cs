@@ -7,7 +7,7 @@ using System.Linq.Expressions;
 
 namespace Hospital.Application.MedicalRecords.Queries
 {
-    public record SearchDiagnosisMedicalRecordsByASetOfProperties(DiagnosisMedicalRecordFilterDto RecordFilters)
+    public record SearchDiagnosisMedicalRecordsByASetOfProperties(DiagnosisMedicalRecordFilters RecordFilters)
         : IRequest<List<DiagnosisMedicalRecordDto>>;
 
     public class SearchDiagnosisMedicalRecordsByASetOfPropertiesHandler
