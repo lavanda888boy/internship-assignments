@@ -23,18 +23,31 @@ namespace Hospital.Infrastructure.Repository
 
         public async Task<List<RegularMedicalRecord>> GetAllAsync()
         {
-            return await _context.RegularRecords.AsNoTracking().ToListAsync();
+            return await _context.RegularRecords.AsNoTracking()
+                                                .Include(r => r.ExaminedPatient)
+                                                .ThenInclude(p => p.DoctorsPatients)
+                                                .Include(r => r.ResponsibleDoctor)
+                                                .ThenInclude(d => d.DoctorsPatients)
+                                                .ToListAsync();
         }
 
         public async Task<RegularMedicalRecord?> GetByIdAsync(int id)
         {
-            return await _context.RegularRecords.FirstOrDefaultAsync(r => r.Id == id);
+            return await _context.RegularRecords.AsNoTracking()
+                                                .Include(r => r.ExaminedPatient)
+                                                .ThenInclude(p => p.DoctorsPatients)
+                                                .Include(r => r.ResponsibleDoctor)
+                                                .FirstOrDefaultAsync(r => r.Id == id);
         }
 
         public async Task<List<RegularMedicalRecord>> SearchByPropertyAsync
             (Expression<Func<RegularMedicalRecord, bool>> entityPredicate)
         {
             return await _context.RegularRecords.AsNoTracking()
+                                                .Include(r => r.ExaminedPatient)
+                                                .ThenInclude(p => p.DoctorsPatients)
+                                                .Include(r => r.ResponsibleDoctor)
+                                                .ThenInclude(d => d.DoctorsPatients)
                                                 .Where(entityPredicate)
                                                 .ToListAsync();
         }

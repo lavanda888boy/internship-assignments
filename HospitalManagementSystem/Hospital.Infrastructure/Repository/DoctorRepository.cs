@@ -23,21 +23,29 @@ namespace Hospital.Infrastructure.Repository
 
         public async Task<List<Doctor>> GetAllAsync()
         {
-            return await _context.Doctors.AsNoTracking().ToListAsync();
+            return await _context.Doctors.AsNoTracking()
+                                         .Include(d => d.Department)
+                                         .Include(d => d.WorkingHours)
+                                         .ThenInclude(wh => wh.DoctorScheduleWeekDay)
+                                         .ToListAsync();
         }
 
         public async Task<Doctor?> GetByIdAsync(int id)
         {
-            return await _context.Doctors
-                                 .Include(d => d.DoctorsPatients)
-                                 .Include(d => d.WorkingHours.DoctorScheduleWeekDay)
-                                 .FirstOrDefaultAsync(d => d.Id == id);
+            return await _context.Doctors.AsNoTracking()
+                                         .Include(d => d.Department)
+                                         .Include(d => d.WorkingHours)
+                                         .ThenInclude(wh => wh.DoctorScheduleWeekDay)
+                                         .FirstOrDefaultAsync(d => d.Id == id);
         }
 
         public async Task<List<Doctor>> SearchByPropertyAsync
             (Expression<Func<Doctor, bool>> entityPredicate)
         {
             return await _context.Doctors.AsNoTracking()
+                                         .Include(d => d.Department)
+                                         .Include(d => d.WorkingHours)
+                                         .ThenInclude(wh => wh.DoctorScheduleWeekDay)
                                          .Where(entityPredicate)
                                          .ToListAsync();
         }

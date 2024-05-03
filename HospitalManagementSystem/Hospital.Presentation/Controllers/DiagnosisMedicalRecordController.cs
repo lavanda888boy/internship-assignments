@@ -95,7 +95,7 @@ namespace Hospital.Presentation.Controllers
             }
         }
 
-        [HttpPost("search")]
+        [HttpPost("Search")]
         public async Task<IActionResult> SearchDiagnosisMedicalRecordsByASetOfProperties(DiagnosisMedicalRecordFilterDto recordFilter)
         {
             DiagnosisMedicalRecordFilters df = new DiagnosisMedicalRecordFilters()
@@ -127,7 +127,7 @@ namespace Hospital.Presentation.Controllers
             }
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("ExaminationNotes/{id}")]
         public async Task<IActionResult> UpdateDiagnosisMedicalRecordExaminationNotes(int id, [FromQuery] string notes)
         {
             var command = new AdjustDiagnosisMedicalRecordExaminationNotes(id, notes);
@@ -151,7 +151,7 @@ namespace Hospital.Presentation.Controllers
             }
         }
 
-        [HttpPut("treatment/{id}")]
+        [HttpPut("Treatment/{id}")]
         public async Task<IActionResult> UpdateDiagnosisMedicalRecordTreatmentDetails(int id, TreatmentDto treatment)
         {
             if (!ModelState.IsValid)

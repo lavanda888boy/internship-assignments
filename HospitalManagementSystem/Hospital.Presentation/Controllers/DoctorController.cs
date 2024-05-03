@@ -95,7 +95,7 @@ namespace Hospital.Presentation.Controllers
             }
         }
 
-        [HttpPost("search")]
+        [HttpPost("Search")]
         public async Task<IActionResult> SearchDoctorsByASetOfProperties(DoctorFilterDto doctorFilter)
         {
             DoctorFilters df = new DoctorFilters()
@@ -127,7 +127,7 @@ namespace Hospital.Presentation.Controllers
             }
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("Info/{id}")]
         public async Task<IActionResult> UpdateDoctorPersonalInfo(int id, DoctorDto doctor)
         {
             if (!ModelState.IsValid)
@@ -157,7 +157,7 @@ namespace Hospital.Presentation.Controllers
             }
         }
 
-        [HttpPut("patients/{id}")]
+        [HttpPut("Patients/{id}")]
         public async Task<IActionResult> UpdateDoctorAssignedPatients(int id, [FromQuery] List<int> patientIds)
         {
             var command = new UpdateDoctorAssignedPatients(id, patientIds);

@@ -94,7 +94,7 @@ namespace Hospital.Presentation.Controllers
             }
         }
 
-        [HttpPost("search")]
+        [HttpPost("Search")]
         public async Task<IActionResult> SearchRegularMedicalRecordsByASetOfProperties(RegularMedicalRecordFilterDto recordFilter)
         {
             RegularMedicalRecordFilters rf = new RegularMedicalRecordFilters()

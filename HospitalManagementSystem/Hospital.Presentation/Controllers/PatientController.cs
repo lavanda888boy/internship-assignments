@@ -102,7 +102,7 @@ namespace Hospital.Presentation.Controllers
             }
         }
 
-        [HttpPost("search")]
+        [HttpPost("Search")]
         public async Task<IActionResult> SearchPatientsByASetOfProperties(PatientFilterDto patientFilter)
         {
             var result = Enum.TryParse(patientFilter.Gender, out Gender patientGender);
@@ -142,7 +142,7 @@ namespace Hospital.Presentation.Controllers
             }
         }
 
-        [HttpPut("{id}")]
+        [HttpPut("Info/{id}")]
         public async Task<IActionResult> UpdatePatientPersonalInfo(int id, PatientDto patient)
         {
             if (!ModelState.IsValid)
@@ -178,7 +178,7 @@ namespace Hospital.Presentation.Controllers
             }
         }
 
-        [HttpPut("doctors/{id}")]
+        [HttpPut("Doctors/{id}")]
         public async Task<IActionResult> UpdatePatientAssignedDoctors(int id, [FromQuery] List<int> doctorIds)
         {
             var command = new UpdatePatientAssignedDoctors(id, doctorIds);

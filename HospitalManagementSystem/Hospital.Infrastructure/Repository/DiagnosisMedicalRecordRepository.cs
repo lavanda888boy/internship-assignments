@@ -23,20 +23,36 @@ namespace Hospital.Infrastructure.Repository
 
         public async Task<List<DiagnosisMedicalRecord>> GetAllAsync()
         {
-            return await _context.DiagnosisRecords.AsNoTracking().ToListAsync();
+            return await _context.DiagnosisRecords.AsNoTracking()
+                                                  .Include(r => r.ExaminedPatient)
+                                                  .ThenInclude(p => p.DoctorsPatients)
+                                                  .Include(r => r.ResponsibleDoctor)
+                                                  .ThenInclude(d => d.DoctorsPatients)
+                                                  .Include(r => r.DiagnosedIllness)
+                                                  .Include(r => r.ProposedTreatment)
+                                                  .ToListAsync();
         }
 
         public async Task<DiagnosisMedicalRecord?> GetByIdAsync(int id)
         {
-            return await _context.DiagnosisRecords
-                                 .Include(r => r.ProposedTreatment)
-                                 .FirstOrDefaultAsync(r => r.Id == id);
+            return await _context.DiagnosisRecords.AsNoTracking()
+                                                  .Include(r => r.ExaminedPatient)
+                                                  .ThenInclude(p => p.DoctorsPatients)
+                                                  .Include(r => r.ResponsibleDoctor)
+                                                  .ThenInclude(d => d.DoctorsPatients)
+                                                  .Include(r => r.DiagnosedIllness)
+                                                  .Include(r => r.ProposedTreatment)
+                                                  .FirstOrDefaultAsync(r => r.Id == id);
         }
 
         public async Task<List<DiagnosisMedicalRecord>> SearchByPropertyAsync
             (Expression<Func<DiagnosisMedicalRecord, bool>> entityPredicate)
         {
             return await _context.DiagnosisRecords.AsNoTracking()
+                                                  .Include(r => r.ExaminedPatient)
+                                                  .ThenInclude(p => p.DoctorsPatients)
+                                                  .Include(r => r.ResponsibleDoctor)
+                                                  .ThenInclude(d => d.DoctorsPatients)
                                                   .Where(entityPredicate)
                                                   .ToListAsync();
         }

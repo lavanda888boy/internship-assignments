@@ -23,7 +23,9 @@ namespace Hospital.Infrastructure.Repository
 
         public async Task<List<Patient>> GetAllAsync()
         {
-            return await _context.Patients.AsNoTracking().ToListAsync();
+            return await _context.Patients.AsNoTracking()
+                                          .Include(p => p.DoctorsPatients)
+                                          .ToListAsync();
         }
 
         public async Task<Patient?> GetByIdAsync(int id)
@@ -37,6 +39,7 @@ namespace Hospital.Infrastructure.Repository
             (Expression<Func<Patient, bool>> entityPredicate)
         {
             return await _context.Patients.AsNoTracking()
+                                          .Include(p => p.DoctorsPatients)
                                           .Where(entityPredicate)
                                           .ToListAsync();
         }
