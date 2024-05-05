@@ -16,8 +16,4 @@
     <ProjectReference Include="..\Hospital.Infrastructure\Hospital.Infrastructure.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Exceptions\" />
-  </ItemGroup>
-
 </Project>

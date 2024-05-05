@@ -21,6 +21,7 @@ namespace Hospital.Presentation.Dto.Patient
         [Required]
         [MinLength(1)]
         [MaxLength(5)]
+        [GenderValidation]
         public required string Gender { get; set; }
 
         [Required]

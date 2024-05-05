@@ -3,6 +3,7 @@ using Hospital.Application.Departments.Commands;
 using Hospital.Domain.Models;
 using Hospital.Infrastructure;
 using Hospital.Infrastructure.Repository;
+using Hospital.Presentation.Filters;
 using Hospital.Presentation.Middleware;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,15 +15,17 @@ namespace Hospital.Presentation
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            builder.Services.AddControllers();
+            builder.Services.AddControllers(options =>
+                options.Filters.Add<HospitalManagementExceptionHandler>()
+            );
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
             builder.Services.AddDbContext<HospitalManagementDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 
-            builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(RegisterNewHospitalDepartment).Assembly))
-                            .AddScoped<IRepository<Patient>, PatientRepository>()
+            builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(RegisterNewHospitalDepartment).Assembly));
+            builder.Services.AddScoped<IRepository<Patient>, PatientRepository>()
                             .AddScoped<IRepository<Doctor>, DoctorRepository>()
                             .AddScoped<IRepository<RegularMedicalRecord>, RegularMedicalRecordRepository>()
                             .AddScoped<IRepository<DiagnosisMedicalRecord>, DiagnosisMedicalRecordRepository>()

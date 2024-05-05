@@ -1,11 +1,10 @@
 ﻿using Hospital.Application.Doctors.Commands;
 using Hospital.Application.Doctors.Queries;
 using Hospital.Application.Doctors.Responses;
-using Hospital.Application.Exceptions;
 using Hospital.Presentation.Dto.Doctor;
+using Hospital.Presentation.Filters;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using System.Data.Common;
 using DoctorDto = Hospital.Presentation.Dto.Doctor.DoctorDto;
 
 namespace Hospital.Presentation.Controllers
@@ -25,74 +24,27 @@ namespace Hospital.Presentation.Controllers
         public async Task<IActionResult> GetAllDoctors()
         {
             var command = new ListAllDoctors();
-
-            try
-            {
-                var doctors = await _mediator.Send(command);
-                return Ok(doctors);
-            }
-            catch (DbException ex)
-            {
-                return StatusCode(500, $"Error in the database:\n{ex.Message}");
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
+            var doctors = await _mediator.Send(command);
+            return Ok(doctors);
         }
 
         [HttpGet("{id}")]
         public async Task<IActionResult> GetDoctorById(int id)
         {
             var command = new GetDoctorById(id);
-
-            try
-            {
-                var doctor = await _mediator.Send(command);
-                return Ok(doctor);
-            }
-            catch (DbException ex)
-            {
-                return StatusCode(500, $"Error in the database:\n{ex.Message}");
-            }
-            catch (NoEntityFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
+            var doctor = await _mediator.Send(command);
+            return Ok(doctor);
         }
 
         [HttpPost]
+        [ValidateModel]
         public async Task<IActionResult> AddDoctor(DoctorDto doctor)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest("Doctor data for creation is invalid");
-            }
-
             var command = new EmployNewDoctor(doctor.Name, doctor.Surname, doctor.Address, doctor.PhoneNumber, doctor.DepartmentId,
                 TimeSpan.Parse(doctor.StartShift), TimeSpan.Parse(doctor.EndShift), doctor.WeekDayIds);
 
-            try
-            {
-                var newDoctor = await _mediator.Send(command);
-                return StatusCode(201, newDoctor);
-            }
-            catch (DbException ex)
-            {
-                return StatusCode(500, $"Error in the database:\n{ex.Message}");
-            }
-            catch (NoEntityFoundException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
+            var newDoctor = await _mediator.Send(command);
+            return StatusCode(201, newDoctor);
         }
 
         [HttpPost("Search")]
@@ -108,101 +60,35 @@ namespace Hospital.Presentation.Controllers
             };
             var command = new SearchDoctorsByASetOfProperties(df);
 
-            try
-            {
-                var doctors = await _mediator.Send(command);
-                return Ok(doctors);
-            }
-            catch (DbException ex)
-            {
-                return StatusCode(500, $"Error in the database:\n{ex.Message}");
-            }
-            catch (NoEntityFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
+            var doctors = await _mediator.Send(command);
+            return Ok(doctors);
         }
 
         [HttpPut("Info/{id}")]
+        [ValidateModel]
         public async Task<IActionResult> UpdateDoctorPersonalInfo(int id, DoctorDto doctor)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest("Doctor data for update is invalid");
-            }
-
             var command = new UpdateDoctorPersonalInfo(id, doctor.Name, doctor.Surname, doctor.Address, doctor.PhoneNumber,
                 doctor.DepartmentId, TimeSpan.Parse(doctor.StartShift), TimeSpan.Parse(doctor.EndShift), doctor.WeekDayIds);
 
-            try
-            {
-                var updatedDoctor = await _mediator.Send(command);
-                return Ok(updatedDoctor);
-            }
-            catch (DbException ex)
-            {
-                return StatusCode(500, $"Error in the database:\n{ex.Message}");
-            }
-            catch (NoEntityFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
+            var updatedDoctor = await _mediator.Send(command);
+            return Ok(updatedDoctor);
         }
 
         [HttpPut("Patients/{id}")]
         public async Task<IActionResult> UpdateDoctorAssignedPatients(int id, [FromQuery] List<int> patientIds)
         {
             var command = new UpdateDoctorAssignedPatients(id, patientIds);
-
-            try
-            {
-                var updatedDoctor = await _mediator.Send(command);
-                return Ok(updatedDoctor);
-            }
-            catch (DbException ex)
-            {
-                return StatusCode(500, $"Error in the database:\n{ex.Message}");
-            }
-            catch (NoEntityFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
+            var updatedDoctor = await _mediator.Send(command);
+            return Ok(updatedDoctor);
         }
 
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteDoctor(int id)
         {
             var command = new RemoveWronglyEmployedDoctor(id);
-
-            try
-            {
-                var deletedDoctor = await _mediator.Send(command);
-                return Ok(deletedDoctor);
-            }
-            catch (DbException ex)
-            {
-                return StatusCode(500, $"Error in the database:\n{ex.Message}");
-            }
-            catch (NoEntityFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
+            var deletedDoctor = await _mediator.Send(command);
+            return Ok(deletedDoctor);
         }
     }
 }
