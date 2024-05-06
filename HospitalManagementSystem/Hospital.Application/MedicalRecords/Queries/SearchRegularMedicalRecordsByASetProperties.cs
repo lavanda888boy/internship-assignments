@@ -8,8 +8,8 @@ using System.Linq.Expressions;
 
 namespace Hospital.Application.MedicalRecords.Queries
 {
-    public record SearchRegularMedicalRecordsByASetProperties(RegularMedicalRecordFilters RecordFilters)
-        : IRequest<List<RegularMedicalRecordDto>>;
+    public record SearchRegularMedicalRecordsByASetProperties(int? ExaminedPatientId, int? ResponsibleDoctorId,
+        DateTimeOffset? DateOfExamination) : IRequest<List<RegularMedicalRecordDto>>;
 
     public class SearchRegularMedicalRecordsByASetPropertiesHandler
         : IRequestHandler<SearchRegularMedicalRecordsByASetProperties, List<RegularMedicalRecordDto>>
@@ -27,9 +27,9 @@ namespace Hospital.Application.MedicalRecords.Queries
         public async Task<List<RegularMedicalRecordDto>> Handle(SearchRegularMedicalRecordsByASetProperties request, CancellationToken cancellationToken)
         {
             Expression<Func<RegularMedicalRecord, bool>> predicate = r =>
-                (request.RecordFilters.ExaminedPatientId == 0 || r.ExaminedPatient.Id == request.RecordFilters.ExaminedPatientId) &&
-                (request.RecordFilters.ResponsibleDoctorId == 0 || r.ResponsibleDoctor.Id == request.RecordFilters.ResponsibleDoctorId) &&
-                (!request.RecordFilters.DateOfExamination.HasValue || r.DateOfExamination == request.RecordFilters.DateOfExamination);
+                (request.ExaminedPatientId == 0 || r.ExaminedPatient.Id == request.ExaminedPatientId) &&
+                (request.ResponsibleDoctorId == 0 || r.ResponsibleDoctor.Id == request.ResponsibleDoctorId) &&
+                (!request.DateOfExamination.HasValue || r.DateOfExamination == request.DateOfExamination);
 
             var medicalRecords = await _recordRepository.SearchByPropertyAsync(predicate);
 

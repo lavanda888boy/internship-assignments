@@ -1,11 +1,9 @@
 ﻿using Hospital.Application.Doctors.Commands;
 using Hospital.Application.Doctors.Queries;
-using Hospital.Application.Doctors.Responses;
 using Hospital.Presentation.Dto.Doctor;
 using Hospital.Presentation.Filters;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using DoctorDto = Hospital.Presentation.Dto.Doctor.DoctorDto;
 
 namespace Hospital.Presentation.Controllers
 {
@@ -50,7 +48,7 @@ namespace Hospital.Presentation.Controllers
 
         [HttpPost]
         [ValidateModel]
-        public async Task<IActionResult> AddDoctor(DoctorDto doctor)
+        public async Task<IActionResult> AddDoctor(DoctorRequestDto doctor)
         {
             _logger.LogInformation("Adding new doctor: {Name} {Surname}...", doctor.Name, doctor.Surname);
 
@@ -64,19 +62,12 @@ namespace Hospital.Presentation.Controllers
         }
 
         [HttpPost("Search")]
-        public async Task<IActionResult> SearchDoctorsByASetOfProperties(DoctorFilterDto doctorFilter)
+        public async Task<IActionResult> SearchDoctorsByASetOfProperties(DoctorFilterRequestDto doctorFilter)
         {
             _logger.LogInformation("Searching doctors by a set of properties...");
 
-            DoctorFilters df = new DoctorFilters()
-            {
-                Name = doctorFilter.Name,
-                Surname = doctorFilter.Surname,
-                Address = doctorFilter.Address,
-                PhoneNumber = doctorFilter.PhoneNumber,
-                DepartmentName = doctorFilter.DepartmentName
-            };
-            var command = new SearchDoctorsByASetOfProperties(df);
+            var command = new SearchDoctorsByASetOfProperties(doctorFilter.Name, doctorFilter.Surname,
+                doctorFilter.Address, doctorFilter.PhoneNumber, doctorFilter.DepartmentName);
 
             var doctors = await _mediator.Send(command);
             _logger.LogInformation("Doctors with such properties were found. List count: {Count}", doctors.Count);
@@ -86,7 +77,7 @@ namespace Hospital.Presentation.Controllers
 
         [HttpPut("Info/{id}")]
         [ValidateModel]
-        public async Task<IActionResult> UpdateDoctorPersonalInfo(int id, DoctorDto doctor)
+        public async Task<IActionResult> UpdateDoctorPersonalInfo(int id, DoctorRequestDto doctor)
         {
             _logger.LogInformation("Updating doctor's (id = {Id}) personal info...", id);
 

@@ -1,11 +1,9 @@
 ﻿using Hospital.Application.MedicalRecords.Commands;
 using Hospital.Application.MedicalRecords.Queries;
-using Hospital.Application.MedicalRecords.Responses;
 using Hospital.Presentation.Dto.Record;
 using Hospital.Presentation.Filters;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using DiagnosisMedicalRecordDto = Hospital.Presentation.Dto.Record.DiagnosisMedicalRecordDto;
 
 namespace Hospital.Presentation.Controllers
 {
@@ -50,7 +48,7 @@ namespace Hospital.Presentation.Controllers
 
         [HttpPost]
         [ValidateModel]
-        public async Task<IActionResult> AddDiagnosisMedicalRecord(DiagnosisMedicalRecordDto record)
+        public async Task<IActionResult> AddDiagnosisMedicalRecord(DiagnosisMedicalRecordRequestDto record)
         {
             _logger.LogInformation("Adding new diagnosis record: DoctorId = {Doctor}, PatientId = {Patient}...",
                 record.DoctorId, record.PatientId);
@@ -66,19 +64,13 @@ namespace Hospital.Presentation.Controllers
         }
 
         [HttpPost("Search")]
-        public async Task<IActionResult> SearchDiagnosisMedicalRecordsByASetOfProperties(DiagnosisMedicalRecordFilterDto recordFilter)
+        public async Task<IActionResult> SearchDiagnosisMedicalRecordsByASetOfProperties(DiagnosisMedicalRecordFilterRequestDto recordFilter)
         {
             _logger.LogInformation("Searching diagnosis records by a set of properties...");
 
-            DiagnosisMedicalRecordFilters df = new DiagnosisMedicalRecordFilters()
-            {
-                ExaminedPatientId = recordFilter.ExaminedPatientId,
-                ResponsibleDoctorId = recordFilter.ResponsibleDoctorId,
-                DateOfExamination = recordFilter.DateOfExamination,
-                DiagnosedIllnessName = recordFilter.DiagnosedIllnessName,
-                PrescribedMedicine = recordFilter.PrescribedMedicine
-            };
-            var command = new SearchDiagnosisMedicalRecordsByASetOfProperties(df);
+            var command = new SearchDiagnosisMedicalRecordsByASetOfProperties(recordFilter.ExaminedPatientId,
+                recordFilter.ResponsibleDoctorId, recordFilter.DateOfExamination, recordFilter.DiagnosedIllnessName,
+                recordFilter.PrescribedMedicine);
 
             var records = await _mediator.Send(command);
             _logger.LogInformation("Diagnosis records with such properties were found. List count: {Count}", records.Count);

@@ -3,12 +3,14 @@ using Hospital.Application.Abstractions;
 using Hospital.Application.Exceptions;
 using Hospital.Application.Patients.Responses;
 using Hospital.Domain.Models;
+using Hospital.Domain.Models.Utility;
 using MediatR;
 using System.Linq.Expressions;
 
 namespace Hospital.Application.Patients.Queries
 {
-    public record SearchPatientsByASetOfProperties(PatientFilters PatientFilters) : IRequest<List<PatientDto>>;
+    public record SearchPatientsByASetOfProperties(string? Name, string? Surname, int? Age, string? Gender,
+        string? Address, string? PhoneNumber, string? InsuranceNumber) : IRequest<List<PatientDto>>;
 
     public class SearchPatientsByASetOfPropertiesHandler : IRequestHandler<SearchPatientsByASetOfProperties, List<PatientDto>>
     {
@@ -24,13 +26,13 @@ namespace Hospital.Application.Patients.Queries
         public async Task<List<PatientDto>> Handle(SearchPatientsByASetOfProperties request, CancellationToken cancellationToken)
         {
             Expression<Func<Patient, bool>> predicate = p =>
-                (string.IsNullOrEmpty(request.PatientFilters.Name) || p.Name == request.PatientFilters.Name) &&
-                (string.IsNullOrEmpty(request.PatientFilters.Surname) || p.Surname == request.PatientFilters.Surname) &&
-                (request.PatientFilters.Age == 0  || p.Age == request.PatientFilters.Age) &&
-                (request.PatientFilters.Gender == 0 || p.Gender == request.PatientFilters.Gender) &&
-                (string.IsNullOrEmpty(request.PatientFilters.Address) || p.Address == request.PatientFilters.Address) &&
-                (string.IsNullOrEmpty(request.PatientFilters.PhoneNumber) || p.PhoneNumber == request.PatientFilters.PhoneNumber) &&
-                (string.IsNullOrEmpty(request.PatientFilters.InsuranceNumber) || p.InsuranceNumber == request.PatientFilters.InsuranceNumber);
+                (string.IsNullOrEmpty(request.Name) || p.Name == request.Name) &&
+                (string.IsNullOrEmpty(request.Surname) || p.Surname == request.Surname) &&
+                (request.Age == 0  || p.Age == request.Age) &&
+                (string.IsNullOrEmpty(request.Gender) || p.Gender == Enum.Parse<Gender>(request.Gender)) &&
+                (string.IsNullOrEmpty(request.Address) || p.Address == request.Address) &&
+                (string.IsNullOrEmpty(request.PhoneNumber) || p.PhoneNumber == request.PhoneNumber) &&
+                (string.IsNullOrEmpty(request.InsuranceNumber) || p.InsuranceNumber == request.InsuranceNumber);
 
             var patients = await _patientRepository.SearchByPropertyAsync(predicate);
 

@@ -6,7 +6,6 @@ using Hospital.Presentation.Dto.Patient;
 using Hospital.Presentation.Filters;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using PatientDto = Hospital.Presentation.Dto.Patient.PatientDto;
 
 namespace Hospital.Presentation.Controllers
 {
@@ -51,7 +50,7 @@ namespace Hospital.Presentation.Controllers
 
         [HttpPost]
         [ValidateModel]
-        public async Task<IActionResult> AddPatient(PatientDto patient)
+        public async Task<IActionResult> AddPatient(PatientRequestDto patient)
         {
             _logger.LogInformation("Adding new patient: {Name} {Surname}...", patient.Name, patient.Surname);
 
@@ -71,7 +70,7 @@ namespace Hospital.Presentation.Controllers
         }
 
         [HttpPost("Search")]
-        public async Task<IActionResult> SearchPatientsByASetOfProperties(PatientFilterDto patientFilter)
+        public async Task<IActionResult> SearchPatientsByASetOfProperties(PatientFilterRequestDto patientFilter)
         {
             _logger.LogInformation("Searching patients by a set of properties...");
 
@@ -81,17 +80,9 @@ namespace Hospital.Presentation.Controllers
                 return BadRequest("Invalid gender value for the patient provided");
             }
 
-            PatientFilters pf = new PatientFilters()
-            {
-                Name = patientFilter.Name,
-                Surname = patientFilter.Surname,
-                Age = patientFilter.Age,
-                Gender = patientGender,
-                Address = patientFilter.Address,
-                PhoneNumber = patientFilter.PhoneNumber,
-                InsuranceNumber = patientFilter.InsuranceNumber
-            };
-            var command = new SearchPatientsByASetOfProperties(pf);
+            var command = new SearchPatientsByASetOfProperties(patientFilter.Name, patientFilter.Surname,
+                patientFilter.Age, patientFilter.Gender, patientFilter.Address, patientFilter.PhoneNumber,
+                patientFilter.InsuranceNumber);
 
             var patients = await _mediator.Send(command);
             _logger.LogInformation("Patients with such properties were found. List count: {Id}", patients.Count);
@@ -101,7 +92,7 @@ namespace Hospital.Presentation.Controllers
 
         [HttpPut("Info/{id}")]
         [ValidateModel]
-        public async Task<IActionResult> UpdatePatientPersonalInfo(int id, PatientDto patient)
+        public async Task<IActionResult> UpdatePatientPersonalInfo(int id, PatientRequestDto patient)
         {
             _logger.LogInformation("Updating patient's (id = {Id}) personal info...", id);
 

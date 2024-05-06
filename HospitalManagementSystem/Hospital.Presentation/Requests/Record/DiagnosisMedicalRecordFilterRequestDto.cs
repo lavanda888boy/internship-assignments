@@ -1,6 +1,6 @@
-﻿namespace Hospital.Application.MedicalRecords.Responses
+﻿namespace Hospital.Presentation.Dto.Record
 {
-    public class DiagnosisMedicalRecordFilters
+    public class DiagnosisMedicalRecordFilterRequestDto
     {
         public int ExaminedPatientId { get; set; }
         public int ResponsibleDoctorId { get; set; }

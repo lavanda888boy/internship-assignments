@@ -1,11 +1,9 @@
 ﻿using Hospital.Application.MedicalRecords.Commands;
 using Hospital.Application.MedicalRecords.Queries;
-using Hospital.Application.MedicalRecords.Responses;
 using Hospital.Presentation.Dto.Record;
 using Hospital.Presentation.Filters;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using RegularMedicalRecordDto = Hospital.Presentation.Dto.Record.RegularMedicalRecordDto;
 
 namespace Hospital.Presentation.Controllers
 {
@@ -50,7 +48,7 @@ namespace Hospital.Presentation.Controllers
 
         [HttpPost]
         [ValidateModel]
-        public async Task<IActionResult> AddRegularMedicalRecord(RegularMedicalRecordDto record)
+        public async Task<IActionResult> AddRegularMedicalRecord(RegularMedicalRecordRequestDto record)
         {
             _logger.LogInformation("Adding new regular record: DoctorId = {Doctor}, PatientId = {Patient}...",
                 record.DoctorId, record.PatientId);
@@ -66,17 +64,12 @@ namespace Hospital.Presentation.Controllers
         }
 
         [HttpPost("Search")]
-        public async Task<IActionResult> SearchRegularMedicalRecordsByASetOfProperties(RegularMedicalRecordFilterDto recordFilter)
+        public async Task<IActionResult> SearchRegularMedicalRecordsByASetOfProperties(RegularMedicalRecordFilterRequestDto recordFilter)
         {
             _logger.LogInformation("Searching regular records by a set of properties...");
 
-            RegularMedicalRecordFilters rf = new RegularMedicalRecordFilters()
-            {
-                ExaminedPatientId = recordFilter.ExaminedPatientId,
-                ResponsibleDoctorId = recordFilter.ResponsibleDoctorId,
-                DateOfExamination = recordFilter.DateOfExamination
-            };
-            var command = new SearchRegularMedicalRecordsByASetProperties(rf);
+            var command = new SearchRegularMedicalRecordsByASetProperties(recordFilter.ExaminedPatientId,
+                recordFilter.ResponsibleDoctorId, recordFilter.DateOfExamination);
 
             var records = await _mediator.Send(command);
             _logger.LogInformation("Regular records with such properties were found. List count: {Count}", records.Count);

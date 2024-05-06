@@ -50,6 +50,8 @@ namespace Hospital.Infrastructure.Repository
                                                   .Include(r => r.ExaminedPatient)
                                                   .Include(r => r.ResponsibleDoctor)
                                                   .ThenInclude(d => d.Department)
+                                                  .Include(r => r.DiagnosedIllness)
+                                                  .Include(r => r.ProposedTreatment)
                                                   .Where(entityPredicate)
                                                   .ToListAsync();
         }

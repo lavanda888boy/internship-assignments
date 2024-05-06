@@ -8,7 +8,8 @@ using System.Linq.Expressions;
 
 namespace Hospital.Application.MedicalRecords.Queries
 {
-    public record SearchDiagnosisMedicalRecordsByASetOfProperties(DiagnosisMedicalRecordFilters RecordFilters)
+    public record SearchDiagnosisMedicalRecordsByASetOfProperties(int? ExaminedPatientId, int? ResponsibleDoctorId,
+        DateTimeOffset? DateOfExamination, string? DiagnosedIllnessName, string? PrescribedMedicine)
         : IRequest<List<DiagnosisMedicalRecordDto>>;
 
     public class SearchDiagnosisMedicalRecordsByASetOfPropertiesHandler
@@ -28,11 +29,11 @@ namespace Hospital.Application.MedicalRecords.Queries
             CancellationToken cancellationToken)
         {
             Expression<Func<DiagnosisMedicalRecord, bool>> predicate = r =>
-                (request.RecordFilters.ExaminedPatientId == 0 || r.ExaminedPatient.Id == request.RecordFilters.ExaminedPatientId) &&
-                (request.RecordFilters.ResponsibleDoctorId == 0 || r.ResponsibleDoctor.Id == request.RecordFilters.ResponsibleDoctorId) &&
-                (!request.RecordFilters.DateOfExamination.HasValue || r.DateOfExamination == request.RecordFilters.DateOfExamination) &&
-                (string.IsNullOrEmpty(request.RecordFilters.DiagnosedIllnessName) || r.DiagnosedIllness.Name == request.RecordFilters.DiagnosedIllnessName) &&
-                (string.IsNullOrEmpty(request.RecordFilters.PrescribedMedicine) || r.ProposedTreatment.PrescribedMedicine == request.RecordFilters.PrescribedMedicine);
+                (request.ExaminedPatientId == 0 || r.ExaminedPatient.Id == request.ExaminedPatientId) &&
+                (request.ResponsibleDoctorId == 0 || r.ResponsibleDoctor.Id == request.ResponsibleDoctorId) &&
+                (!request.DateOfExamination.HasValue || r.DateOfExamination == request.DateOfExamination) &&
+                (string.IsNullOrEmpty(request.DiagnosedIllnessName) || r.DiagnosedIllness.Name == request.DiagnosedIllnessName) &&
+                (string.IsNullOrEmpty(request.PrescribedMedicine) || r.ProposedTreatment.PrescribedMedicine == request.PrescribedMedicine);
 
             var medicalRecords = await _recordRepository.SearchByPropertyAsync(predicate);
 

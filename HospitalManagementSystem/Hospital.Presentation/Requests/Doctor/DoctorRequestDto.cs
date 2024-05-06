@@ -2,7 +2,7 @@
 
 namespace Hospital.Presentation.Dto.Doctor
 {
-    public class DoctorDto
+    public class DoctorRequestDto
     {
         [Required]
         [MinLength(1)]

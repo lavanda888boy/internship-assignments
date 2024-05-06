@@ -1,6 +1,6 @@
 ﻿namespace Hospital.Presentation.Dto.Patient
 {
-    public class PatientFilterDto
+    public class PatientFilterRequestDto
     {
         public string? Name { get; set; }
         public string? Surname { get; set; }
