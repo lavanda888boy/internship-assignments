@@ -1,6 +1,6 @@
 ﻿namespace Hospital.Application.Patients.Responses
 {
-    public class PatientRecordDto
+    public class PatientShortInfoDto
     {
         public required string Name { get; init; }
         public required string Surname { get; init; }

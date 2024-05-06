@@ -1,29 +1,17 @@
-﻿using Hospital.Domain.Models;
+﻿using Hospital.Application.Patients.Responses;
+using Hospital.Domain.Models;
 
 namespace Hospital.Application.Doctors.Responses
 {
     public class DoctorDto
     {
-        public int Id { get; set; }
-        public required string Name { get; set; }
-        public required string Surname { get; set; }
-        public required string Address { get; set; }
-        public required string PhoneNumber { get; set; }
-        public required Department Department { get; set; }
-        public required DoctorSchedule WorkingHours { get; set; }
-
-        public static DoctorDto FromDoctor(Doctor doctor)
-        {
-            return new DoctorDto()
-            {
-                Id = doctor.Id,
-                Name = doctor.Name,
-                Surname = doctor.Surname,
-                Address = doctor.Address,
-                PhoneNumber = doctor.PhoneNumber,
-                Department = doctor.Department,
-                WorkingHours = doctor.WorkingHours
-            };
-        }
+        public int Id { get; init; }
+        public required string Name { get; init; }
+        public required string Surname { get; init; }
+        public required string Address { get; init; }
+        public required string PhoneNumber { get; init; }
+        public required string Department { get; init; }
+        public required DoctorScheduleDto WorkingHours { get; init; }
+        public required ICollection<PatientShortInfoDto> Patients { get; init; }
     }
 }

@@ -24,18 +24,24 @@ namespace Hospital.Infrastructure.Repository
         public async Task<List<Doctor>> GetAllAsync()
         {
             return await _context.Doctors.AsNoTracking()
+                                         .Include(d => d.DoctorsPatients)
+                                         .ThenInclude(dp => dp.Patient)
                                          .Include(d => d.Department)
                                          .Include(d => d.WorkingHours)
                                          .ThenInclude(wh => wh.DoctorScheduleWeekDay)
+                                         .ThenInclude(dsw => dsw.WeekDay)
                                          .ToListAsync();
         }
 
         public async Task<Doctor?> GetByIdAsync(int id)
         {
             return await _context.Doctors.AsNoTracking()
+                                         .Include(d => d.DoctorsPatients)
+                                         .ThenInclude(dp => dp.Patient)
                                          .Include(d => d.Department)
                                          .Include(d => d.WorkingHours)
                                          .ThenInclude(wh => wh.DoctorScheduleWeekDay)
+                                         .ThenInclude(dsw => dsw.WeekDay)
                                          .FirstOrDefaultAsync(d => d.Id == id);
         }
 
@@ -43,9 +49,12 @@ namespace Hospital.Infrastructure.Repository
             (Expression<Func<Doctor, bool>> entityPredicate)
         {
             return await _context.Doctors.AsNoTracking()
+                                         .Include(d => d.DoctorsPatients)
+                                         .ThenInclude(dp => dp.Patient)
                                          .Include(d => d.Department)
                                          .Include(d => d.WorkingHours)
                                          .ThenInclude(wh => wh.DoctorScheduleWeekDay)
+                                         .ThenInclude(dsw => dsw.WeekDay)
                                          .Where(entityPredicate)
                                          .ToListAsync();
         }

@@ -1,4 +1,5 @@
-﻿using Hospital.Application.Abstractions;
+﻿using AutoMapper;
+using Hospital.Application.Abstractions;
 using Hospital.Application.Doctors.Responses;
 using Hospital.Application.Exceptions;
 using Hospital.Domain.Models;
@@ -12,10 +13,12 @@ namespace Hospital.Application.Doctors.Queries
     public class SearchDoctorsByASetOfPropertiesHandler : IRequestHandler<SearchDoctorsByASetOfProperties, List<DoctorDto>>
     {
         private readonly IRepository<Doctor> _doctorRepository;
+        private readonly IMapper _mapper;
 
-        public SearchDoctorsByASetOfPropertiesHandler(IRepository<Doctor> doctorRepository)
+        public SearchDoctorsByASetOfPropertiesHandler(IRepository<Doctor> doctorRepository, IMapper mapper)
         {
             _doctorRepository = doctorRepository;
+            _mapper = mapper;
         }
 
         public async Task<List<DoctorDto>> Handle(SearchDoctorsByASetOfProperties request, CancellationToken cancellationToken)
@@ -34,7 +37,8 @@ namespace Hospital.Application.Doctors.Queries
                 throw new NoEntityFoundException("No doctors with such properties exist");
             }
 
-            return await Task.FromResult(doctors.Select(DoctorDto.FromDoctor).ToList());
+            var doctorDtos = _mapper.Map<List<DoctorDto>>(doctors);
+            return await Task.FromResult(doctorDtos);
         }
     }
 }
