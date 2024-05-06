@@ -10,7 +10,7 @@ namespace Hospital.Application.MedicalRecords.Responses
     {
         public int Id { get; init; }
         public required PatientRecordDto ExaminedPatient { get; init; }
-        public required DoctorRecordDto ResponsibleDoctor { get; init; }
+        public required DoctorShortInfoDto ResponsibleDoctor { get; init; }
         public required DateTimeOffset DateOfExamination { get; init; }
         public required string ExaminationNotes { get; init; }
         public required IllnessRecordDto DiagnosedIllness { get; init; }

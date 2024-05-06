@@ -13,7 +13,7 @@ namespace Hospital.Application.Profiles
             CreateMap<RegularMedicalRecord, RegularMedicalRecordDto>();
             CreateMap<Patient, PatientRecordDto>();
 
-            CreateMap<Doctor, DoctorRecordDto>()
+            CreateMap<Doctor, DoctorShortInfoDto>()
                 .ForMember(dest => dest.Department, opt => opt.MapFrom(src => src.Department.Name));
         }
     }

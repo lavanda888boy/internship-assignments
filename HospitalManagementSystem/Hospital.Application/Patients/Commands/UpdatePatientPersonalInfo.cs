@@ -1,4 +1,5 @@
-﻿using Hospital.Application.Abstractions;
+﻿using AutoMapper;
+using Hospital.Application.Abstractions;
 using Hospital.Application.Exceptions;
 using Hospital.Application.Patients.Responses;
 using Hospital.Domain.Models;
@@ -14,10 +15,12 @@ namespace Hospital.Application.Patients.Commands
         : IRequestHandler<UpdatePatientPersonalInfo, PatientDto>
     {
         private readonly IRepository<Patient> _patientRepository;
+        private readonly IMapper _mapper;
 
-        public UpdatePatientPersonalInfoHandler(IRepository<Patient> patientRepository)
+        public UpdatePatientPersonalInfoHandler(IRepository<Patient> patientRepository, IMapper mapper)
         {
             _patientRepository = patientRepository;
+            _mapper = mapper;
         }
 
         public async Task<PatientDto> Handle(UpdatePatientPersonalInfo request, CancellationToken cancellationToken)
@@ -36,7 +39,7 @@ namespace Hospital.Application.Patients.Commands
 
                 await _patientRepository.UpdateAsync(existingPatient);
 
-                return await Task.FromResult(PatientDto.FromPatient(existingPatient));
+                return await Task.FromResult(_mapper.Map<PatientDto>(existingPatient));
             }
             else
             {

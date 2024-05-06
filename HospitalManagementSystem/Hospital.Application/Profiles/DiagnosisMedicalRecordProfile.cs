@@ -16,7 +16,7 @@ namespace Hospital.Application.Profiles
             CreateMap<DiagnosisMedicalRecord, DiagnosisMedicalRecordDto>();
             CreateMap<Patient, PatientRecordDto>();
 
-            CreateMap<Doctor, DoctorRecordDto>()
+            CreateMap<Doctor, DoctorShortInfoDto>()
                 .ForMember(dest => dest.Department, opt => opt.MapFrom(src => src.Department.Name));
 
             CreateMap<Illness, IllnessRecordDto>()

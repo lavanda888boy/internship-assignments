@@ -25,14 +25,18 @@ namespace Hospital.Infrastructure.Repository
         {
             return await _context.Patients.AsNoTracking()
                                           .Include(p => p.DoctorsPatients)
+                                          .ThenInclude(dp => dp.Doctor)
+                                          .ThenInclude(d => d.Department)
                                           .ToListAsync();
         }
 
         public async Task<Patient?> GetByIdAsync(int id)
         {
-            return await _context.Patients
-                                 .Include(p => p.DoctorsPatients)
-                                 .FirstOrDefaultAsync(p => p.Id == id);
+            return await _context.Patients.AsNoTracking()
+                                          .Include(p => p.DoctorsPatients)
+                                          .ThenInclude(dp => dp.Doctor)
+                                          .ThenInclude(d => d.Department)
+                                          .FirstOrDefaultAsync(p => p.Id == id);
         }
 
         public async Task<List<Patient>> SearchByPropertyAsync
@@ -40,6 +44,8 @@ namespace Hospital.Infrastructure.Repository
         {
             return await _context.Patients.AsNoTracking()
                                           .Include(p => p.DoctorsPatients)
+                                          .ThenInclude(dp => dp.Doctor)
+                                          .ThenInclude(d => d.Department)
                                           .Where(entityPredicate)
                                           .ToListAsync();
         }
