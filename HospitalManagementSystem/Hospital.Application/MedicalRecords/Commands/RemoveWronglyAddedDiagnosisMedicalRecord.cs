@@ -1,4 +1,5 @@
-﻿using Hospital.Application.Abstractions;
+﻿using AutoMapper;
+using Hospital.Application.Abstractions;
 using Hospital.Application.Exceptions;
 using Hospital.Application.MedicalRecords.Responses;
 using Hospital.Domain.Models;
@@ -12,10 +13,13 @@ namespace Hospital.Application.MedicalRecords.Commands
         IRequestHandler<RemoveWronglyAddedDiagnosisMedicalRecord, DiagnosisMedicalRecordDto>
     {
         private readonly IRepository<DiagnosisMedicalRecord> _recordRepository;
+        private readonly IMapper _mapper;
 
-        public RemoveWronglyAddedDiagnosisMedicalRecordHandler(IRepository<DiagnosisMedicalRecord> recordRepository)
+        public RemoveWronglyAddedDiagnosisMedicalRecordHandler(IRepository<DiagnosisMedicalRecord> recordRepository,
+            IMapper mapper)
         {
             _recordRepository = recordRepository;
+            _mapper = mapper;
         }
 
         public async Task<DiagnosisMedicalRecordDto> Handle(RemoveWronglyAddedDiagnosisMedicalRecord request,
@@ -29,7 +33,7 @@ namespace Hospital.Application.MedicalRecords.Commands
             }
 
             await _recordRepository.DeleteAsync(recordToDelete);
-            return await Task.FromResult(DiagnosisMedicalRecordDto.FromMedicalRecord(recordToDelete));
+            return await Task.FromResult(_mapper.Map<DiagnosisMedicalRecordDto>(recordToDelete));
         }
     }
 }

@@ -1,5 +1,6 @@
 using Hospital.Application.Abstractions;
 using Hospital.Application.Departments.Commands;
+using Hospital.Application.MedicalRecords.Queries;
 using Hospital.Domain.Models;
 using Hospital.Infrastructure;
 using Hospital.Infrastructure.Repository;
@@ -32,6 +33,8 @@ namespace Hospital.Presentation
                             .AddScoped<IRepository<Department>, DepartmentRepository>()
                             .AddScoped<IRepository<Illness>, IllnessRepository>()
                             .AddScoped<IRepository<Treatment>, TreatmentRepository>();
+
+            builder.Services.AddAutoMapper(typeof(ListAllRegularMedicalRecords));
 
             var app = builder.Build();
 

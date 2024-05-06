@@ -25,9 +25,8 @@ namespace Hospital.Infrastructure.Repository
         {
             return await _context.RegularRecords.AsNoTracking()
                                                 .Include(r => r.ExaminedPatient)
-                                                .ThenInclude(p => p.DoctorsPatients)
                                                 .Include(r => r.ResponsibleDoctor)
-                                                .ThenInclude(d => d.DoctorsPatients)
+                                                .ThenInclude(d => d.Department)
                                                 .ToListAsync();
         }
 
@@ -35,8 +34,8 @@ namespace Hospital.Infrastructure.Repository
         {
             return await _context.RegularRecords.AsNoTracking()
                                                 .Include(r => r.ExaminedPatient)
-                                                .ThenInclude(p => p.DoctorsPatients)
                                                 .Include(r => r.ResponsibleDoctor)
+                                                .ThenInclude(d => d.Department)
                                                 .FirstOrDefaultAsync(r => r.Id == id);
         }
 
@@ -45,9 +44,8 @@ namespace Hospital.Infrastructure.Repository
         {
             return await _context.RegularRecords.AsNoTracking()
                                                 .Include(r => r.ExaminedPatient)
-                                                .ThenInclude(p => p.DoctorsPatients)
                                                 .Include(r => r.ResponsibleDoctor)
-                                                .ThenInclude(d => d.DoctorsPatients)
+                                                .ThenInclude(d => d.Department)
                                                 .Where(entityPredicate)
                                                 .ToListAsync();
         }

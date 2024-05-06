@@ -1,4 +1,5 @@
-﻿using Hospital.Application.Abstractions;
+﻿using AutoMapper;
+using Hospital.Application.Abstractions;
 using Hospital.Application.Exceptions;
 using Hospital.Application.MedicalRecords.Responses;
 using Hospital.Domain.Models;
@@ -17,16 +18,19 @@ namespace Hospital.Application.MedicalRecords.Commands
         private readonly IRepository<Doctor> _doctorRepository;
         private readonly IRepository<Illness> _illnessRepository;
         private readonly IRepository<DiagnosisMedicalRecord> _recordRepository;
+        private readonly IMapper _mapper;
 
         public AddNewDiagnosisMedicalRecordHandler(IRepository<Patient> patientRepository,
             IRepository<Doctor> doctorRepository,
             IRepository<Illness> illnessRepository,
-            IRepository<DiagnosisMedicalRecord> recordRepository)
+            IRepository<DiagnosisMedicalRecord> recordRepository,
+            IMapper mapper)
         {
             _patientRepository = patientRepository;
             _doctorRepository = doctorRepository;
             _illnessRepository = illnessRepository;
             _recordRepository = recordRepository;
+            _mapper = mapper;
         }
 
         public async Task<DiagnosisMedicalRecordDto> Handle(AddNewDiagnosisMedicalRecord request,
@@ -75,7 +79,7 @@ namespace Hospital.Application.MedicalRecords.Commands
 
                 var createdRecord = await _recordRepository.AddAsync(medicalRecord);
 
-                return await Task.FromResult(DiagnosisMedicalRecordDto.FromMedicalRecord(createdRecord));
+                return await Task.FromResult(_mapper.Map<DiagnosisMedicalRecordDto>(createdRecord));
             }
             else
             {

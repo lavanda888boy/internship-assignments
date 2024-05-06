@@ -1,4 +1,5 @@
-﻿using Hospital.Application.Abstractions;
+﻿using AutoMapper;
+using Hospital.Application.Abstractions;
 using Hospital.Application.Exceptions;
 using Hospital.Application.MedicalRecords.Responses;
 using Hospital.Domain.Models;
@@ -14,12 +15,14 @@ namespace Hospital.Application.MedicalRecords.Commands
     {
         private readonly IRepository<Illness> _illnessRepository;
         private readonly IRepository<DiagnosisMedicalRecord> _recordRepository;
+        private readonly IMapper _mapper;
 
         public AdjustTreatmentDetailsWithinDiagnosisMedicalRecordHandler(IRepository<DiagnosisMedicalRecord> recordRepository, 
-            IRepository<Illness> illnessRepository)
+            IRepository<Illness> illnessRepository, IMapper mapper)
         {
             _recordRepository = recordRepository;
             _illnessRepository = illnessRepository;
+            _mapper = mapper;
         }
 
         public async Task<DiagnosisMedicalRecordDto> Handle(AdjustTreatmentDetailsWithinDiagnosisMedicalRecord request, CancellationToken cancellationToken)
@@ -41,7 +44,7 @@ namespace Hospital.Application.MedicalRecords.Commands
             existingRecord.ProposedTreatment.DurationInDays = request.Duration;
             await _recordRepository.UpdateAsync(existingRecord);
 
-            return await Task.FromResult(DiagnosisMedicalRecordDto.FromMedicalRecord(existingRecord));
+            return await Task.FromResult(_mapper.Map<DiagnosisMedicalRecordDto>(existingRecord));
         }
     }
 }

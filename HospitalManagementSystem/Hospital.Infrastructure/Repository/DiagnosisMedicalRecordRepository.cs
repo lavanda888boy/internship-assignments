@@ -25,9 +25,8 @@ namespace Hospital.Infrastructure.Repository
         {
             return await _context.DiagnosisRecords.AsNoTracking()
                                                   .Include(r => r.ExaminedPatient)
-                                                  .ThenInclude(p => p.DoctorsPatients)
                                                   .Include(r => r.ResponsibleDoctor)
-                                                  .ThenInclude(d => d.DoctorsPatients)
+                                                  .ThenInclude(d => d.Department)
                                                   .Include(r => r.DiagnosedIllness)
                                                   .Include(r => r.ProposedTreatment)
                                                   .ToListAsync();
@@ -37,9 +36,8 @@ namespace Hospital.Infrastructure.Repository
         {
             return await _context.DiagnosisRecords.AsNoTracking()
                                                   .Include(r => r.ExaminedPatient)
-                                                  .ThenInclude(p => p.DoctorsPatients)
                                                   .Include(r => r.ResponsibleDoctor)
-                                                  .ThenInclude(d => d.DoctorsPatients)
+                                                  .ThenInclude(d => d.Department)
                                                   .Include(r => r.DiagnosedIllness)
                                                   .Include(r => r.ProposedTreatment)
                                                   .FirstOrDefaultAsync(r => r.Id == id);
@@ -50,9 +48,8 @@ namespace Hospital.Infrastructure.Repository
         {
             return await _context.DiagnosisRecords.AsNoTracking()
                                                   .Include(r => r.ExaminedPatient)
-                                                  .ThenInclude(p => p.DoctorsPatients)
                                                   .Include(r => r.ResponsibleDoctor)
-                                                  .ThenInclude(d => d.DoctorsPatients)
+                                                  .ThenInclude(d => d.Department)
                                                   .Where(entityPredicate)
                                                   .ToListAsync();
         }

@@ -1,4 +1,5 @@
-﻿using Hospital.Application.Abstractions;
+﻿using AutoMapper;
+using Hospital.Application.Abstractions;
 using Hospital.Application.Exceptions;
 using Hospital.Application.MedicalRecords.Responses;
 using Hospital.Domain.Models;
@@ -14,10 +15,13 @@ namespace Hospital.Application.MedicalRecords.Queries
         : IRequestHandler<SearchDiagnosisMedicalRecordsByASetOfProperties, List<DiagnosisMedicalRecordDto>>
     {
         private readonly IRepository<DiagnosisMedicalRecord> _recordRepository;
+        private readonly IMapper _mapper;
 
-        public SearchDiagnosisMedicalRecordsByASetOfPropertiesHandler(IRepository<DiagnosisMedicalRecord> recordRepository)
+        public SearchDiagnosisMedicalRecordsByASetOfPropertiesHandler(IRepository<DiagnosisMedicalRecord> recordRepository,
+            IMapper mapper)
         {
             _recordRepository = recordRepository;
+            _mapper = mapper;
         }
 
         public async Task<List<DiagnosisMedicalRecordDto>> Handle(SearchDiagnosisMedicalRecordsByASetOfProperties request,
@@ -37,7 +41,8 @@ namespace Hospital.Application.MedicalRecords.Queries
                 throw new NoEntityFoundException("No diagnosis medical records with such properties exist");
             }
 
-            return await Task.FromResult(medicalRecords.Select(DiagnosisMedicalRecordDto.FromMedicalRecord).ToList());
+            var medicalRecordDtos = _mapper.Map<List<DiagnosisMedicalRecordDto>>(medicalRecords);
+            return await Task.FromResult(medicalRecordDtos);
         }
     }
 }

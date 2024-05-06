@@ -1,25 +1,14 @@
-﻿using Hospital.Domain.Models;
+﻿using Hospital.Application.Doctors.Responses;
+using Hospital.Application.Patients.Responses;
 
 namespace Hospital.Application.MedicalRecords.Responses
 {
     public class RegularMedicalRecordDto
     {
-        public int Id { get; set; }
-        public required Patient ExaminedPatient { get; set; }
-        public required Doctor ResponsibleDoctor { get; set; }
-        public required DateTimeOffset DateOfExamination { get; set; }
-        public required string ExaminationNotes { get; set; }
-
-        public static RegularMedicalRecordDto FromMedicalRecord(RegularMedicalRecord medicalRecord)
-        {
-            return new RegularMedicalRecordDto()
-            {
-                Id = medicalRecord.Id,
-                ExaminedPatient = medicalRecord.ExaminedPatient,
-                ResponsibleDoctor = medicalRecord.ResponsibleDoctor,
-                DateOfExamination = medicalRecord.DateOfExamination,
-                ExaminationNotes = medicalRecord.ExaminationNotes,
-            };
-        }
+        public int Id { get; init; }
+        public required PatientRecordDto ExaminedPatient { get; init; }
+        public required DoctorRecordDto ResponsibleDoctor { get; init; }
+        public required DateTimeOffset DateOfExamination { get; init; }
+        public required string ExaminationNotes { get; init; }
     }
 }
