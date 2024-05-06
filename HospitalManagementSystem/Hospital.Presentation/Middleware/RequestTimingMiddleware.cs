@@ -15,8 +15,8 @@
         {
             var requestReceiveTime = DateTime.UtcNow;
             await _next.Invoke(context);
-            _logger.LogInformation($"Request {context.Request.Method} {context.Request.Path} was processed" +
-                $" in {DateTime.UtcNow - requestReceiveTime} ms");
+            _logger.LogInformation("Request {Method} {Path} was processed in {Time} ms", context.Request.Method,
+                context.Request.Path, DateTime.UtcNow - requestReceiveTime);
         }
     }
 }
