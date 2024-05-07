@@ -8,7 +8,7 @@ using MediatR;
 
 namespace Hospital.Application.Patients.Commands
 {
-    public record UpdatePatientPersonalInfo(int Id, string Name, string Surname, int Age, Gender Gender,
+    public record UpdatePatientPersonalInfo(int Id, string Name, string Surname, int Age, string Gender,
         string Address, string? PhoneNumber, string? InsuranceNumber) : IRequest<PatientDto>;
 
     public class UpdatePatientPersonalInfoHandler
@@ -32,7 +32,7 @@ namespace Hospital.Application.Patients.Commands
                 existingPatient.Name = request.Name;
                 existingPatient.Surname = request.Surname;
                 existingPatient.Age = request.Age;
-                existingPatient.Gender = request.Gender;
+                existingPatient.Gender = Enum.Parse<Gender>(request.Gender);
                 existingPatient.Address = request.Address;
                 existingPatient.PhoneNumber = request.PhoneNumber;
                 existingPatient.InsuranceNumber = request.InsuranceNumber;

@@ -25,6 +25,8 @@ namespace Hospital.Presentation
             builder.Services.AddDbContext<HospitalManagementDbContext>(options =>
                 options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 
+            builder.Services.AddScoped<ModelValidationFilter>();
+
             builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(RegisterNewHospitalDepartment).Assembly));
             builder.Services.AddScoped<IRepository<Patient>, PatientRepository>()
                             .AddScoped<IRepository<Doctor>, DoctorRepository>()

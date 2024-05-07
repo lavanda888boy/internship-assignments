@@ -32,8 +32,7 @@ namespace Hospital.Infrastructure.Repository
 
         public async Task<Patient?> GetByIdAsync(int id)
         {
-            return await _context.Patients.AsNoTracking()
-                                          .Include(p => p.DoctorsPatients)
+            return await _context.Patients.Include(p => p.DoctorsPatients)
                                           .ThenInclude(dp => dp.Doctor)
                                           .ThenInclude(d => d.Department)
                                           .FirstOrDefaultAsync(p => p.Id == id);
@@ -58,7 +57,7 @@ namespace Hospital.Infrastructure.Repository
 
         public async Task UpdateAsync(Patient patient)
         {
-            _context.Update(patient);
+            _context.Patients.Update(patient);
             await _context.SaveChangesAsync();
         }
     }

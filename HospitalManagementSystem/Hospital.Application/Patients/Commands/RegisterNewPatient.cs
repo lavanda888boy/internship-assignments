@@ -8,7 +8,7 @@ using MediatR;
 
 namespace Hospital.Application.Patients.Commands
 {
-    public record RegisterNewPatient(string Name, string Surname, int Age, Gender Gender,
+    public record RegisterNewPatient(string Name, string Surname, int Age, string Gender,
         string Address, string? PhoneNumber, string? InsuranceNumber) : IRequest<PatientDto>;
 
     public class RegisterNewPatientHandler : IRequestHandler<RegisterNewPatient, PatientDto>
@@ -32,7 +32,7 @@ namespace Hospital.Application.Patients.Commands
                 Name = request.Name,
                 Surname = request.Surname,
                 Age = request.Age,
-                Gender = request.Gender,
+                Gender = Enum.Parse<Gender>(request.Gender),
                 Address = request.Address,
                 PhoneNumber = request.PhoneNumber,
                 InsuranceNumber = request.InsuranceNumber

@@ -49,18 +49,12 @@ namespace Hospital.Presentation.Controllers
         }
 
         [HttpPost]
-        [ValidateModel]
+        [ServiceFilter(typeof(ModelValidationFilter))]
         public async Task<IActionResult> AddPatient(PatientRequestDto patient)
         {
             _logger.LogInformation("Adding new patient: {Name} {Surname}...", patient.Name, patient.Surname);
 
-            var result = Enum.TryParse(patient.Gender, out Gender patientGender);
-            if (!result)
-            {
-                return BadRequest("Invalid gender value for the patient provided");
-            }
-
-            var command = new RegisterNewPatient(patient.Name, patient.Surname, patient.Age, patientGender,
+            var command = new RegisterNewPatient(patient.Name, patient.Surname, patient.Age, patient.Gender,
                 patient.Address, patient.PhoneNumber, patient.InsuranceNumber);
 
             var newPatient = await _mediator.Send(command);
@@ -74,12 +68,6 @@ namespace Hospital.Presentation.Controllers
         {
             _logger.LogInformation("Searching patients by a set of properties...");
 
-            var result = Enum.TryParse(patientFilter.Gender, out Gender patientGender);
-            if (!result)
-            {
-                return BadRequest("Invalid gender value for the patient provided");
-            }
-
             var command = new SearchPatientsByASetOfProperties(patientFilter.Name, patientFilter.Surname,
                 patientFilter.Age, patientFilter.Gender, patientFilter.Address, patientFilter.PhoneNumber,
                 patientFilter.InsuranceNumber);
@@ -91,19 +79,13 @@ namespace Hospital.Presentation.Controllers
         }
 
         [HttpPut("Info/{id}")]
-        [ValidateModel]
+        [ServiceFilter(typeof(ModelValidationFilter))]
         public async Task<IActionResult> UpdatePatientPersonalInfo(int id, PatientRequestDto patient)
         {
             _logger.LogInformation("Updating patient's (id = {Id}) personal info...", id);
 
-            var result = Enum.TryParse(patient.Gender, out Gender patientGender);
-            if (!result)
-            {
-                return BadRequest("Invalid gender value for the patient provided");
-            }
-
             var command = new UpdatePatientPersonalInfo(id, patient.Name, patient.Surname, patient.Age,
-                patientGender, patient.Address, patient.PhoneNumber, patient.InsuranceNumber);
+                patient.Gender, patient.Address, patient.PhoneNumber, patient.InsuranceNumber);
 
             var updatedPatient = await _mediator.Send(command);
             _logger.LogInformation("Patient's personal info successfully updated (id = {Id})", id);

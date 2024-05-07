@@ -47,7 +47,7 @@ namespace Hospital.Presentation.Controllers
         }
 
         [HttpPost]
-        [ValidateModel]
+        [ServiceFilter(typeof(ModelValidationFilter))]
         public async Task<IActionResult> AddRegularMedicalRecord(RegularMedicalRecordRequestDto record)
         {
             _logger.LogInformation("Adding new regular record: DoctorId = {Doctor}, PatientId = {Patient}...",

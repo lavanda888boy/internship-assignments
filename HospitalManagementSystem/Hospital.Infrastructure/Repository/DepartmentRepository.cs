@@ -47,7 +47,7 @@ namespace Hospital.Infrastructure.Repository
 
         public async Task UpdateAsync(Department department)
         {
-            _context.Update(department);
+            _context.Departments.Update(department);
             await _context.SaveChangesAsync();
         }
     }

@@ -47,7 +47,7 @@ namespace Hospital.Presentation.Controllers
         }
 
         [HttpPost]
-        [ValidateModel]
+        [ServiceFilter(typeof(ModelValidationFilter))]
         public async Task<IActionResult> AddDiagnosisMedicalRecord(DiagnosisMedicalRecordRequestDto record)
         {
             _logger.LogInformation("Adding new diagnosis record: DoctorId = {Doctor}, PatientId = {Patient}...",
@@ -92,7 +92,7 @@ namespace Hospital.Presentation.Controllers
         }
 
         [HttpPut("Treatment/{id}")]
-        [ValidateModel]
+        [ServiceFilter(typeof(ModelValidationFilter))]
         public async Task<IActionResult> UpdateDiagnosisMedicalRecordTreatmentDetails(int id, TreatmentDto treatment)
         {
             _logger.LogInformation("Updating diagnosis record's (id = {Id}) treatment...", id);

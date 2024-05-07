@@ -34,8 +34,7 @@ namespace Hospital.Infrastructure.Repository
 
         public async Task<DiagnosisMedicalRecord?> GetByIdAsync(int id)
         {
-            return await _context.DiagnosisRecords.AsNoTracking()
-                                                  .Include(r => r.ExaminedPatient)
+            return await _context.DiagnosisRecords.Include(r => r.ExaminedPatient)
                                                   .Include(r => r.ResponsibleDoctor)
                                                   .ThenInclude(d => d.Department)
                                                   .Include(r => r.DiagnosedIllness)
@@ -64,7 +63,7 @@ namespace Hospital.Infrastructure.Repository
 
         public async Task UpdateAsync(DiagnosisMedicalRecord record)
         {
-            _context.Update(record);
+            _context.DiagnosisRecords.Update(record);
             await _context.SaveChangesAsync();
         }
     }
