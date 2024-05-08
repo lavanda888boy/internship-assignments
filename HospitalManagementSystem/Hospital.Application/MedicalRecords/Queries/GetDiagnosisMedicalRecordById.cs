@@ -7,9 +7,9 @@ using MediatR;
 
 namespace Hospital.Application.MedicalRecords.Queries
 {
-    public record GetDiagnosisMedicalRecordById(int RecordId) : IRequest<DiagnosisMedicalRecordDto>;
+    public record GetDiagnosisMedicalRecordById(int RecordId) : IRequest<DiagnosisMedicalRecordFullInfoDto>;
 
-    public class GetDiagnosisMedicalRecordByIdHandler : IRequestHandler<GetDiagnosisMedicalRecordById, DiagnosisMedicalRecordDto>
+    public class GetDiagnosisMedicalRecordByIdHandler : IRequestHandler<GetDiagnosisMedicalRecordById, DiagnosisMedicalRecordFullInfoDto>
     {
         private readonly IRepository<DiagnosisMedicalRecord> _recordRepository;
         private readonly IMapper _mapper;
@@ -21,7 +21,7 @@ namespace Hospital.Application.MedicalRecords.Queries
             _mapper = mapper;
         }
 
-        public async Task<DiagnosisMedicalRecordDto> Handle(GetDiagnosisMedicalRecordById request, CancellationToken cancellationToken)
+        public async Task<DiagnosisMedicalRecordFullInfoDto> Handle(GetDiagnosisMedicalRecordById request, CancellationToken cancellationToken)
         {
             var record = await _recordRepository.GetByIdAsync(request.RecordId);
 
@@ -30,7 +30,7 @@ namespace Hospital.Application.MedicalRecords.Queries
                 throw new NoEntityFoundException($"Regular medical record with id {request.RecordId} does not exist");
             }
 
-            return await Task.FromResult(_mapper.Map<DiagnosisMedicalRecordDto>(record));
+            return await Task.FromResult(_mapper.Map<DiagnosisMedicalRecordFullInfoDto>(record));
         }
     }
 }

@@ -1,6 +1,4 @@
-﻿using AutoMapper;
-using Hospital.Application.Abstractions;
-using Hospital.Application.Doctors.Responses;
+﻿using Hospital.Application.Abstractions;
 using Hospital.Application.Exceptions;
 using Hospital.Domain.Models;
 using MediatR;
@@ -9,23 +7,21 @@ namespace Hospital.Application.Doctors.Commands
 {
     public record EmployNewDoctor(string Name, string Surname, string Address, string PhoneNumber, 
         int DepartmentId, TimeSpan StartShift, TimeSpan EndShift, List<int> WeekDayIds) 
-        : IRequest<DoctorDto>;
+        : IRequest<int>;
 
-    public class EmployNewDoctorHandler : IRequestHandler<EmployNewDoctor, DoctorDto>
+    public class EmployNewDoctorHandler : IRequestHandler<EmployNewDoctor, int>
     {
         private readonly IRepository<Doctor> _doctorRepository;
         private readonly IRepository<Department> _departmentRepository;
-        private readonly IMapper _mapper;
 
         public EmployNewDoctorHandler(IRepository<Doctor> doctorRepository, 
-            IRepository<Department> departmentRepository, IMapper mapper)
+            IRepository<Department> departmentRepository)
         {
             _doctorRepository = doctorRepository;
             _departmentRepository = departmentRepository;
-            _mapper = mapper;
         }
 
-        public async Task<DoctorDto> Handle(EmployNewDoctor request, CancellationToken cancellationToken)
+        public async Task<int> Handle(EmployNewDoctor request, CancellationToken cancellationToken)
         {
             var department = await _departmentRepository.GetByIdAsync(request.DepartmentId);
             if (department == null)
@@ -55,7 +51,7 @@ namespace Hospital.Application.Doctors.Commands
 
             await _doctorRepository.AddAsync(doctor);
 
-            return await Task.FromResult(_mapper.Map<DoctorDto>(doctor));
+            return await Task.FromResult(doctor.Id);
         }
     }
 }

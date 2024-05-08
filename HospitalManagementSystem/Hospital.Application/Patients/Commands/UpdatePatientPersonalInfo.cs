@@ -1,7 +1,5 @@
-﻿using AutoMapper;
-using Hospital.Application.Abstractions;
+﻿using Hospital.Application.Abstractions;
 using Hospital.Application.Exceptions;
-using Hospital.Application.Patients.Responses;
 using Hospital.Domain.Models;
 using Hospital.Domain.Models.Utility;
 using MediatR;
@@ -9,21 +7,19 @@ using MediatR;
 namespace Hospital.Application.Patients.Commands
 {
     public record UpdatePatientPersonalInfo(int Id, string Name, string Surname, int Age, string Gender,
-        string Address, string? PhoneNumber, string? InsuranceNumber) : IRequest<PatientDto>;
+        string Address, string? PhoneNumber, string? InsuranceNumber) : IRequest<int>;
 
     public class UpdatePatientPersonalInfoHandler
-        : IRequestHandler<UpdatePatientPersonalInfo, PatientDto>
+        : IRequestHandler<UpdatePatientPersonalInfo, int>
     {
         private readonly IRepository<Patient> _patientRepository;
-        private readonly IMapper _mapper;
 
-        public UpdatePatientPersonalInfoHandler(IRepository<Patient> patientRepository, IMapper mapper)
+        public UpdatePatientPersonalInfoHandler(IRepository<Patient> patientRepository)
         {
             _patientRepository = patientRepository;
-            _mapper = mapper;
         }
 
-        public async Task<PatientDto> Handle(UpdatePatientPersonalInfo request, CancellationToken cancellationToken)
+        public async Task<int> Handle(UpdatePatientPersonalInfo request, CancellationToken cancellationToken)
         {
             var existingPatient = await _patientRepository.GetByIdAsync(request.Id);
 
@@ -39,7 +35,7 @@ namespace Hospital.Application.Patients.Commands
 
                 await _patientRepository.UpdateAsync(existingPatient);
 
-                return await Task.FromResult(_mapper.Map<PatientDto>(existingPatient));
+                return await Task.FromResult(existingPatient.Id);
             }
             else
             {

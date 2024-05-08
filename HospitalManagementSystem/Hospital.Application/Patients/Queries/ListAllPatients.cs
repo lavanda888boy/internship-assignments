@@ -6,9 +6,9 @@ using MediatR;
 
 namespace Hospital.Application.Patients.Queries
 {
-    public record ListAllPatients() : IRequest<List<PatientDto>>;
+    public record ListAllPatients() : IRequest<List<PatientFullInfoDto>>;
 
-    public class ListAllPatientsHandler : IRequestHandler<ListAllPatients, List<PatientDto>>
+    public class ListAllPatientsHandler : IRequestHandler<ListAllPatients, List<PatientFullInfoDto>>
     {
         private readonly IRepository<Patient> _patientRepository;
         private readonly IMapper _mapper;
@@ -19,10 +19,10 @@ namespace Hospital.Application.Patients.Queries
             _mapper = mapper;
         }
 
-        public async Task<List<PatientDto>> Handle(ListAllPatients request, CancellationToken cancellationToken)
+        public async Task<List<PatientFullInfoDto>> Handle(ListAllPatients request, CancellationToken cancellationToken)
         {
             var patients = await _patientRepository.GetAllAsync();
-            var patientDtos = _mapper.Map<List<PatientDto>>(patients);
+            var patientDtos = _mapper.Map<List<PatientFullInfoDto>>(patients);
             return await Task.FromResult(patientDtos);
         }
     }

@@ -10,10 +10,13 @@ namespace Hospital.Application.Profiles
     {
         public RegularMedicalRecordProfile()
         {
-            CreateMap<RegularMedicalRecord, RegularMedicalRecordDto>();
-            CreateMap<Patient, PatientShortInfoDto>();
+            CreateMap<RegularMedicalRecord, RegularMedicalRecordFullInfoDto>();
+
+            CreateMap<Patient, PatientShortInfoDto>()
+                .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => src.Name + " " + src.Surname));
 
             CreateMap<Doctor, DoctorShortInfoDto>()
+                .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => src.Name + " " + src.Surname))
                 .ForMember(dest => dest.Department, opt => opt.MapFrom(src => src.Department.Name));
         }
     }

@@ -13,14 +13,18 @@ namespace Hospital.Application.Profiles
     {
         public DiagnosisMedicalRecordProfile()
         {
-            CreateMap<DiagnosisMedicalRecord, DiagnosisMedicalRecordDto>();
-            CreateMap<Patient, PatientShortInfoDto>();
+            CreateMap<DiagnosisMedicalRecord, DiagnosisMedicalRecordFullInfoDto>();
+
+            CreateMap<Patient, PatientShortInfoDto>()
+                .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => src.Name + " " + src.Surname));
 
             CreateMap<Doctor, DoctorShortInfoDto>()
+                .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => src.Name + " " + src.Surname))
                 .ForMember(dest => dest.Department, opt => opt.MapFrom(src => src.Department.Name));
 
             CreateMap<Illness, IllnessRecordDto>()
                 .ForMember(dest => dest.IllnessSeverity, opt => opt.MapFrom(src => Enum.GetName(typeof(IllnessSeverity), src.Severity)));
+
             CreateMap<Treatment, TreatmentRecordDto>();
         }
     }

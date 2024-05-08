@@ -9,10 +9,10 @@ using System.Linq.Expressions;
 namespace Hospital.Application.MedicalRecords.Queries
 {
     public record SearchRegularMedicalRecordsByASetProperties(int? ExaminedPatientId, int? ResponsibleDoctorId,
-        DateTimeOffset? DateOfExamination) : IRequest<List<RegularMedicalRecordDto>>;
+        DateTimeOffset? DateOfExamination) : IRequest<List<RegularMedicalRecordFullInfoDto>>;
 
     public class SearchRegularMedicalRecordsByASetPropertiesHandler
-        : IRequestHandler<SearchRegularMedicalRecordsByASetProperties, List<RegularMedicalRecordDto>>
+        : IRequestHandler<SearchRegularMedicalRecordsByASetProperties, List<RegularMedicalRecordFullInfoDto>>
     {
         private readonly IRepository<RegularMedicalRecord> _recordRepository;
         private readonly IMapper _mapper;
@@ -24,7 +24,7 @@ namespace Hospital.Application.MedicalRecords.Queries
             _mapper = mapper;
         }
 
-        public async Task<List<RegularMedicalRecordDto>> Handle(SearchRegularMedicalRecordsByASetProperties request, CancellationToken cancellationToken)
+        public async Task<List<RegularMedicalRecordFullInfoDto>> Handle(SearchRegularMedicalRecordsByASetProperties request, CancellationToken cancellationToken)
         {
             Expression<Func<RegularMedicalRecord, bool>> predicate = r =>
                 (request.ExaminedPatientId == 0 || r.ExaminedPatient.Id == request.ExaminedPatientId) &&
@@ -38,7 +38,7 @@ namespace Hospital.Application.MedicalRecords.Queries
                 throw new NoEntityFoundException("No regular medical records with such properties exist");
             }
 
-            var medicalRecordDtos = _mapper.Map<List<RegularMedicalRecordDto>>(medicalRecords);
+            var medicalRecordDtos = _mapper.Map<List<RegularMedicalRecordFullInfoDto>>(medicalRecords);
             return await Task.FromResult(medicalRecordDtos);
         }
     }

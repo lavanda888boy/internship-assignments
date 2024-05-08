@@ -1,6 +1,4 @@
-﻿using AutoMapper;
-using Hospital.Application.Abstractions;
-using Hospital.Application.Doctors.Responses;
+﻿using Hospital.Application.Abstractions;
 using Hospital.Application.Exceptions;
 using Hospital.Domain.Models;
 using MediatR;
@@ -9,23 +7,21 @@ namespace Hospital.Application.Doctors.Commands
 {
     public record UpdateDoctorPersonalInfo(int Id, string Name, string Surname, string Address,
         string PhoneNumber, int DepartmentId, TimeSpan StartShift, TimeSpan EndShift, 
-        List<int> WeekDayIds) : IRequest<DoctorDto>;
+        List<int> WeekDayIds) : IRequest<int>;
 
-    public class UpdateDoctorPersonalInfoHandler : IRequestHandler<UpdateDoctorPersonalInfo, DoctorDto>
+    public class UpdateDoctorPersonalInfoHandler : IRequestHandler<UpdateDoctorPersonalInfo, int>
     {
         private readonly IRepository<Doctor> _doctorRepository;
         private readonly IRepository<Department> _departmentRepository;
-        private readonly IMapper _mapper;
 
         public UpdateDoctorPersonalInfoHandler(IRepository<Doctor> doctorRepository,
-            IRepository<Department> departmentRepository, IMapper mapper)
+            IRepository<Department> departmentRepository)
         {
             _doctorRepository = doctorRepository;
             _departmentRepository = departmentRepository;
-            _mapper = mapper;
         }
 
-        public async Task<DoctorDto> Handle(UpdateDoctorPersonalInfo request, CancellationToken cancellationToken)
+        public async Task<int> Handle(UpdateDoctorPersonalInfo request, CancellationToken cancellationToken)
         {
             var department = await _departmentRepository.GetByIdAsync(request.DepartmentId);
             if (department == null)
@@ -51,7 +47,7 @@ namespace Hospital.Application.Doctors.Commands
 
                 await _doctorRepository.UpdateAsync(existingDoctor);
 
-                return await Task.FromResult(_mapper.Map<DoctorDto>(existingDoctor));
+                return await Task.FromResult(existingDoctor.Id);
             }
             else
             {

@@ -1,7 +1,5 @@
-﻿using AutoMapper;
-using Hospital.Application.Abstractions;
+﻿using Hospital.Application.Abstractions;
 using Hospital.Application.Exceptions;
-using Hospital.Application.MedicalRecords.Responses;
 using Hospital.Domain.Models;
 using MediatR;
 
@@ -9,31 +7,28 @@ namespace Hospital.Application.MedicalRecords.Commands
 {
     public record AddNewDiagnosisMedicalRecord(int PatientId, int DoctorId, string ExaminationNotes,
        int IllnessId, string PrescribedMedicine, int Duration)
-       : IRequest<DiagnosisMedicalRecordDto>;
+       : IRequest<int>;
 
     public class AddNewDiagnosisMedicalRecordHandler
-        : IRequestHandler<AddNewDiagnosisMedicalRecord, DiagnosisMedicalRecordDto>
+        : IRequestHandler<AddNewDiagnosisMedicalRecord, int>
     {
         private readonly IRepository<Patient> _patientRepository;
         private readonly IRepository<Doctor> _doctorRepository;
         private readonly IRepository<Illness> _illnessRepository;
         private readonly IRepository<DiagnosisMedicalRecord> _recordRepository;
-        private readonly IMapper _mapper;
 
         public AddNewDiagnosisMedicalRecordHandler(IRepository<Patient> patientRepository,
             IRepository<Doctor> doctorRepository,
             IRepository<Illness> illnessRepository,
-            IRepository<DiagnosisMedicalRecord> recordRepository,
-            IMapper mapper)
+            IRepository<DiagnosisMedicalRecord> recordRepository)
         {
             _patientRepository = patientRepository;
             _doctorRepository = doctorRepository;
             _illnessRepository = illnessRepository;
             _recordRepository = recordRepository;
-            _mapper = mapper;
         }
 
-        public async Task<DiagnosisMedicalRecordDto> Handle(AddNewDiagnosisMedicalRecord request,
+        public async Task<int> Handle(AddNewDiagnosisMedicalRecord request,
             CancellationToken cancellationToken)
         {
             var examinedPatient = await _patientRepository.GetByIdAsync(request.PatientId);
@@ -79,7 +74,7 @@ namespace Hospital.Application.MedicalRecords.Commands
 
                 var createdRecord = await _recordRepository.AddAsync(medicalRecord);
 
-                return await Task.FromResult(_mapper.Map<DiagnosisMedicalRecordDto>(createdRecord));
+                return await Task.FromResult(createdRecord.Id);
             }
             else
             {

@@ -1,29 +1,24 @@
-﻿using AutoMapper;
-using Hospital.Application.Abstractions;
+﻿using Hospital.Application.Abstractions;
 using Hospital.Application.Exceptions;
-using Hospital.Application.MedicalRecords.Responses;
 using Hospital.Domain.Models;
 using MediatR;
 
 namespace Hospital.Application.MedicalRecords.Commands
 {
     public record AdjustRegularMedicalRecordExaminationNotes(int Id, string ExaminationNotes) 
-        : IRequest<RegularMedicalRecordDto>;
+        : IRequest<int>;
 
     public class AdjustRegularMedicalRecordExaminationNotesHandler 
-        : IRequestHandler<AdjustRegularMedicalRecordExaminationNotes, RegularMedicalRecordDto>
+        : IRequestHandler<AdjustRegularMedicalRecordExaminationNotes, int>
     {
         private readonly IRepository<RegularMedicalRecord> _recordRepository;
-        private readonly IMapper _mapper;
 
-        public AdjustRegularMedicalRecordExaminationNotesHandler(IRepository<RegularMedicalRecord> recordRepository,
-            IMapper mapper)
+        public AdjustRegularMedicalRecordExaminationNotesHandler(IRepository<RegularMedicalRecord> recordRepository)
         {
             _recordRepository = recordRepository;
-            _mapper = mapper;
         }
 
-        public async Task<RegularMedicalRecordDto> Handle(AdjustRegularMedicalRecordExaminationNotes request, CancellationToken cancellationToken)
+        public async Task<int> Handle(AdjustRegularMedicalRecordExaminationNotes request, CancellationToken cancellationToken)
         {
             var existingRecord = await _recordRepository.GetByIdAsync(request.Id);
             if (existingRecord == null)
@@ -34,7 +29,7 @@ namespace Hospital.Application.MedicalRecords.Commands
             existingRecord.ExaminationNotes = request.ExaminationNotes;
             await _recordRepository.UpdateAsync(existingRecord);
 
-            return await Task.FromResult(_mapper.Map<RegularMedicalRecordDto>(existingRecord));
+            return await Task.FromResult(existingRecord.Id);
         }
     }
 }

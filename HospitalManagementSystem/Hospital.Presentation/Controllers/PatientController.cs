@@ -1,7 +1,5 @@
 ﻿using Hospital.Application.Patients.Commands;
 using Hospital.Application.Patients.Queries;
-using Hospital.Application.Patients.Responses;
-using Hospital.Domain.Models.Utility;
 using Hospital.Presentation.Dto.Patient;
 using Hospital.Presentation.Filters;
 using MediatR;

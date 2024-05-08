@@ -10,10 +10,10 @@ namespace Hospital.Application.MedicalRecords.Queries
 {
     public record SearchDiagnosisMedicalRecordsByASetOfProperties(int? ExaminedPatientId, int? ResponsibleDoctorId,
         DateTimeOffset? DateOfExamination, string? DiagnosedIllnessName, string? PrescribedMedicine)
-        : IRequest<List<DiagnosisMedicalRecordDto>>;
+        : IRequest<List<DiagnosisMedicalRecordFullInfoDto>>;
 
     public class SearchDiagnosisMedicalRecordsByASetOfPropertiesHandler
-        : IRequestHandler<SearchDiagnosisMedicalRecordsByASetOfProperties, List<DiagnosisMedicalRecordDto>>
+        : IRequestHandler<SearchDiagnosisMedicalRecordsByASetOfProperties, List<DiagnosisMedicalRecordFullInfoDto>>
     {
         private readonly IRepository<DiagnosisMedicalRecord> _recordRepository;
         private readonly IMapper _mapper;
@@ -25,7 +25,7 @@ namespace Hospital.Application.MedicalRecords.Queries
             _mapper = mapper;
         }
 
-        public async Task<List<DiagnosisMedicalRecordDto>> Handle(SearchDiagnosisMedicalRecordsByASetOfProperties request,
+        public async Task<List<DiagnosisMedicalRecordFullInfoDto>> Handle(SearchDiagnosisMedicalRecordsByASetOfProperties request,
             CancellationToken cancellationToken)
         {
             Expression<Func<DiagnosisMedicalRecord, bool>> predicate = r =>
@@ -42,7 +42,7 @@ namespace Hospital.Application.MedicalRecords.Queries
                 throw new NoEntityFoundException("No diagnosis medical records with such properties exist");
             }
 
-            var medicalRecordDtos = _mapper.Map<List<DiagnosisMedicalRecordDto>>(medicalRecords);
+            var medicalRecordDtos = _mapper.Map<List<DiagnosisMedicalRecordFullInfoDto>>(medicalRecords);
             return await Task.FromResult(medicalRecordDtos);
         }
     }

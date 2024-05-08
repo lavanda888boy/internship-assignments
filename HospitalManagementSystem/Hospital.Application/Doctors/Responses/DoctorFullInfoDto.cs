@@ -1,9 +1,8 @@
 ﻿using Hospital.Application.Patients.Responses;
-using Hospital.Domain.Models;
 
 namespace Hospital.Application.Doctors.Responses
 {
-    public class DoctorDto
+    public class DoctorFullInfoDto
     {
         public int Id { get; init; }
         public required string Name { get; init; }

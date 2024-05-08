@@ -1,26 +1,22 @@
-﻿using AutoMapper;
-using Hospital.Application.Abstractions;
-using Hospital.Application.Doctors.Responses;
+﻿using Hospital.Application.Abstractions;
 using Hospital.Application.Exceptions;
 using Hospital.Domain.Models;
 using MediatR;
 
 namespace Hospital.Application.Doctors.Commands
 {
-    public record RemoveWronglyEmployedDoctor(int DoctorId) : IRequest<DoctorDto>;
+    public record RemoveWronglyEmployedDoctor(int DoctorId) : IRequest<int>;
 
-    public class RemoveWronglyEmployedDoctorHandler : IRequestHandler<RemoveWronglyEmployedDoctor, DoctorDto>
+    public class RemoveWronglyEmployedDoctorHandler : IRequestHandler<RemoveWronglyEmployedDoctor, int>
     {
         private readonly IRepository<Doctor> _doctorRepository;
-        private readonly IMapper _mapper;
 
-        public RemoveWronglyEmployedDoctorHandler(IRepository<Doctor> doctorRepository, IMapper mapper)
+        public RemoveWronglyEmployedDoctorHandler(IRepository<Doctor> doctorRepository)
         {
             _doctorRepository = doctorRepository;
-            _mapper = mapper;
         }
 
-        public async Task<DoctorDto> Handle(RemoveWronglyEmployedDoctor request, CancellationToken cancellationToken)
+        public async Task<int> Handle(RemoveWronglyEmployedDoctor request, CancellationToken cancellationToken)
         {
             var doctorToDelete = await _doctorRepository.GetByIdAsync(request.DoctorId);
 
@@ -30,7 +26,7 @@ namespace Hospital.Application.Doctors.Commands
             }
 
             await _doctorRepository.DeleteAsync(doctorToDelete);
-            return await Task.FromResult(_mapper.Map<DoctorDto>(doctorToDelete));
+            return await Task.FromResult(doctorToDelete.Id);
         }
     }
 }

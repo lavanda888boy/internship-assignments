@@ -10,9 +10,9 @@ using System.Linq.Expressions;
 namespace Hospital.Application.Patients.Queries
 {
     public record SearchPatientsByASetOfProperties(string? Name, string? Surname, int? Age, string? Gender,
-        string? Address, string? PhoneNumber, string? InsuranceNumber) : IRequest<List<PatientDto>>;
+        string? Address, string? PhoneNumber, string? InsuranceNumber) : IRequest<List<PatientFullInfoDto>>;
 
-    public class SearchPatientsByASetOfPropertiesHandler : IRequestHandler<SearchPatientsByASetOfProperties, List<PatientDto>>
+    public class SearchPatientsByASetOfPropertiesHandler : IRequestHandler<SearchPatientsByASetOfProperties, List<PatientFullInfoDto>>
     {
         private readonly IRepository<Patient> _patientRepository;
         private readonly IMapper _mapper;
@@ -23,7 +23,7 @@ namespace Hospital.Application.Patients.Queries
             _mapper = mapper;
         }
 
-        public async Task<List<PatientDto>> Handle(SearchPatientsByASetOfProperties request, CancellationToken cancellationToken)
+        public async Task<List<PatientFullInfoDto>> Handle(SearchPatientsByASetOfProperties request, CancellationToken cancellationToken)
         {
             Expression<Func<Patient, bool>> predicate = p =>
                 (string.IsNullOrEmpty(request.Name) || p.Name == request.Name) &&
@@ -41,7 +41,7 @@ namespace Hospital.Application.Patients.Queries
                 throw new NoEntityFoundException("No patients with such properties exist");
             }
 
-            var patientDtos = _mapper.Map<List<PatientDto>>(patients);
+            var patientDtos = _mapper.Map<List<PatientFullInfoDto>>(patients);
             return await Task.FromResult(patientDtos);
         }
     }

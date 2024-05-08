@@ -1,35 +1,30 @@
-﻿using AutoMapper;
-using Hospital.Application.Abstractions;
+﻿using Hospital.Application.Abstractions;
 using Hospital.Application.Exceptions;
-using Hospital.Application.MedicalRecords.Responses;
 using Hospital.Domain.Models;
 using MediatR;
 
 namespace Hospital.Application.MedicalRecords.Commands
 {
     public record AddNewRegularMedicalRecord(int PatientId, int DoctorId,
-        string ExaminationNotes) : IRequest<RegularMedicalRecordDto>;
+        string ExaminationNotes) : IRequest<int>;
 
     public class AddNewRegularMedicalRecordHandler
-        : IRequestHandler<AddNewRegularMedicalRecord, RegularMedicalRecordDto>
+        : IRequestHandler<AddNewRegularMedicalRecord, int>
     {
         private readonly IRepository<Patient> _patientRepository;
         private readonly IRepository<Doctor> _doctorRepository;
         private readonly IRepository<RegularMedicalRecord> _recordRepository;
-        private readonly IMapper _mapper;
 
         public AddNewRegularMedicalRecordHandler(IRepository<Patient> patientRepository, 
             IRepository<Doctor> doctorRepository,
-            IRepository<RegularMedicalRecord> recordRepository,
-            IMapper mapper)
+            IRepository<RegularMedicalRecord> recordRepository)
         {
             _patientRepository = patientRepository;
             _doctorRepository = doctorRepository;
             _recordRepository = recordRepository;
-            _mapper = mapper;
         }
 
-        public async Task<RegularMedicalRecordDto> Handle(AddNewRegularMedicalRecord request,
+        public async Task<int> Handle(AddNewRegularMedicalRecord request,
             CancellationToken cancellationToken)
         {
             var examinedPatient = await _patientRepository.GetByIdAsync(request.PatientId);
@@ -61,7 +56,7 @@ namespace Hospital.Application.MedicalRecords.Commands
 
                 var createdRecord = await _recordRepository.AddAsync(medicalRecord);
 
-                return await Task.FromResult(_mapper.Map<RegularMedicalRecordDto>(createdRecord));
+                return await Task.FromResult(createdRecord.Id);
             }
             else
             {

@@ -1,7 +1,5 @@
-﻿using AutoMapper;
-using Hospital.Application.Abstractions;
+﻿using Hospital.Application.Abstractions;
 using Hospital.Application.Exceptions;
-using Hospital.Application.Patients.Responses;
 using Hospital.Domain.Models;
 using Hospital.Domain.Models.Utility;
 using MediatR;
@@ -9,23 +7,21 @@ using MediatR;
 namespace Hospital.Application.Patients.Commands
 {
     public record RegisterNewPatient(string Name, string Surname, int Age, string Gender,
-        string Address, string? PhoneNumber, string? InsuranceNumber) : IRequest<PatientDto>;
+        string Address, string? PhoneNumber, string? InsuranceNumber) : IRequest<int>;
 
-    public class RegisterNewPatientHandler : IRequestHandler<RegisterNewPatient, PatientDto>
+    public class RegisterNewPatientHandler : IRequestHandler<RegisterNewPatient, int>
     {
         private readonly IRepository<Patient> _patientRepository;
         private readonly IRepository<Doctor> _doctorRepository;
-        private readonly IMapper _mapper;
 
         public RegisterNewPatientHandler(IRepository<Patient> patientRepository, 
-            IRepository<Doctor> doctorRepository, IMapper mapper)
+            IRepository<Doctor> doctorRepository)
         {
             _patientRepository = patientRepository;
             _doctorRepository = doctorRepository;
-            _mapper = mapper;
         }
 
-        public async Task<PatientDto> Handle(RegisterNewPatient request, CancellationToken cancellationToken)
+        public async Task<int> Handle(RegisterNewPatient request, CancellationToken cancellationToken)
         {
             var patient = new Patient
             {
@@ -57,7 +53,7 @@ namespace Hospital.Application.Patients.Commands
             };
 
             await _patientRepository.AddAsync(patient);
-            return await Task.FromResult(_mapper.Map<PatientDto>(patient));
+            return await Task.FromResult(patient.Id);
         }
     }
 }

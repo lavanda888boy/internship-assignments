@@ -10,11 +10,12 @@ namespace Hospital.Application.Profiles
     {
         public PatientProfile()
         {
-            CreateMap<Patient, PatientDto>()
+            CreateMap<Patient, PatientFullInfoDto>()
                 .ForMember(dest => dest.Gender, opt => opt.MapFrom(src => Enum.GetName(typeof(Gender), src.Gender)))
                 .ForMember(dest => dest.Doctors, opt => opt.MapFrom(src => src.DoctorsPatients.Select(dp => dp.Doctor)));
 
             CreateMap<Doctor, DoctorShortInfoDto>()
+                .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => src.Name + " " + src.Surname))
                 .ForMember(dest => dest.Department, opt => opt.MapFrom(src => src.Department.Name));
         }
     }

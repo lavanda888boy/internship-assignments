@@ -1,28 +1,23 @@
-﻿using AutoMapper;
-using Hospital.Application.Abstractions;
+﻿using Hospital.Application.Abstractions;
 using Hospital.Application.Exceptions;
-using Hospital.Application.MedicalRecords.Responses;
 using Hospital.Domain.Models;
 using MediatR;
 
 namespace Hospital.Application.MedicalRecords.Commands
 {
-    public record RemoveWronglyAddedRegularMedicalRecord(int RecordId) : IRequest<RegularMedicalRecordDto>;
+    public record RemoveWronglyAddedRegularMedicalRecord(int RecordId) : IRequest<int>;
 
     public class RemoveWronglyAddedRegularMedicalRecordHandler :
-        IRequestHandler<RemoveWronglyAddedRegularMedicalRecord, RegularMedicalRecordDto>
+        IRequestHandler<RemoveWronglyAddedRegularMedicalRecord, int>
     {
         private readonly IRepository<RegularMedicalRecord> _recordRepository;
-        private readonly IMapper _mapper;
 
-        public RemoveWronglyAddedRegularMedicalRecordHandler(IRepository<RegularMedicalRecord> recordRepository,
-            IMapper mapper)
+        public RemoveWronglyAddedRegularMedicalRecordHandler(IRepository<RegularMedicalRecord> recordRepository)
         {
             _recordRepository = recordRepository;
-            _mapper = mapper;
         }
 
-        public async Task<RegularMedicalRecordDto> Handle(RemoveWronglyAddedRegularMedicalRecord request,
+        public async Task<int> Handle(RemoveWronglyAddedRegularMedicalRecord request,
             CancellationToken cancellationToken)
         {
             var recordToDelete = await _recordRepository.GetByIdAsync(request.RecordId);
@@ -33,7 +28,7 @@ namespace Hospital.Application.MedicalRecords.Commands
             }
 
             await _recordRepository.DeleteAsync(recordToDelete);
-            return await Task.FromResult(_mapper.Map<RegularMedicalRecordDto>(recordToDelete));
+            return await Task.FromResult(recordToDelete.Id);
         }
     }
 }

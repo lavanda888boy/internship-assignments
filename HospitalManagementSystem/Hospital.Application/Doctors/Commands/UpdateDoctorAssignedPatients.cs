@@ -1,26 +1,22 @@
-﻿using AutoMapper;
-using Hospital.Application.Abstractions;
-using Hospital.Application.Doctors.Responses;
+﻿using Hospital.Application.Abstractions;
 using Hospital.Application.Exceptions;
 using Hospital.Domain.Models;
 using MediatR;
 
 namespace Hospital.Application.Doctors.Commands
 {
-    public record UpdateDoctorAssignedPatients(int Id, List<int> PatientIds) : IRequest<DoctorDto>;
+    public record UpdateDoctorAssignedPatients(int Id, List<int> PatientIds) : IRequest<int>;
 
-    public class UpdateDoctorAssignedPatientsHandler : IRequestHandler<UpdateDoctorAssignedPatients, DoctorDto>
+    public class UpdateDoctorAssignedPatientsHandler : IRequestHandler<UpdateDoctorAssignedPatients, int>
     {
         private readonly IRepository<Doctor> _doctorRepository;
-        private readonly IMapper _mapper;
 
-        public UpdateDoctorAssignedPatientsHandler(IRepository<Doctor> doctorRepository, IMapper mapper)
+        public UpdateDoctorAssignedPatientsHandler(IRepository<Doctor> doctorRepository)
         {
             _doctorRepository = doctorRepository;
-            _mapper = mapper;
         }
 
-        public async Task<DoctorDto> Handle(UpdateDoctorAssignedPatients request, CancellationToken cancellationToken)
+        public async Task<int> Handle(UpdateDoctorAssignedPatients request, CancellationToken cancellationToken)
         {
             var existingDoctor = await _doctorRepository.GetByIdAsync(request.Id);
             if (existingDoctor != null)
@@ -35,7 +31,7 @@ namespace Hospital.Application.Doctors.Commands
 
                 await _doctorRepository.UpdateAsync(existingDoctor);
 
-                return await Task.FromResult(_mapper.Map<DoctorDto>(existingDoctor));
+                return await Task.FromResult(existingDoctor.Id);
             }
             else
             {
