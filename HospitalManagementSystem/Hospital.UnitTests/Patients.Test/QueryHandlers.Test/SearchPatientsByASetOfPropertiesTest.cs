@@ -40,35 +40,6 @@ namespace Hospital.UnitTests.Patients.Test.QueryHandlers.Test
                 }
             };
 
-            var patientDto = new PatientFullInfoDto()
-            {
-                Id = 1,
-                Name = "Mike",
-                Surname = "Smith",
-                Age = 25,
-                Gender = "M",
-                Address = "Some address",
-                PhoneNumber = "068749856",
-                InsuranceNumber = "AB45687952",
-                Doctors = new List<DoctorShortInfoDto>()
-                {
-                    new()
-                    {
-                        FullName = "Michael Bay",
-                        Department = "Heart diseases"
-                    }
-                }
-            };
-
-            Expression<Func<Patient, bool>> predicate = p =>
-                (string.IsNullOrEmpty("Mike") || p.Name == "Mike") &&
-                (string.IsNullOrEmpty("") || p.Surname == "") &&
-                (25 == 0 || p.Age == 25) &&
-                (string.IsNullOrEmpty("") || p.Gender == Enum.Parse<Gender>("")) &&
-                (string.IsNullOrEmpty("") || p.Address == "") &&
-                (string.IsNullOrEmpty("") || p.PhoneNumber == "") &&
-                (string.IsNullOrEmpty("") || p.InsuranceNumber == "");
-
             _patientRepositoryMock.Setup(repo => repo.SearchByPropertyAsync(It.IsAny<Expression<Func<Patient, bool>>>()))
                 .Returns(Task.FromResult(patients));
 
@@ -110,15 +81,6 @@ namespace Hospital.UnitTests.Patients.Test.QueryHandlers.Test
         public async Task SearchPatientsByASetOfProperties_ShouldThrowException_PatientsWithSuchPropertiesDoNotExist()
         {
             var patients = new List<Patient>();
-
-            Expression<Func<Patient, bool>> predicate = p =>
-                (string.IsNullOrEmpty("Mike") || p.Name == "Mike") &&
-                (string.IsNullOrEmpty("") || p.Surname == "") &&
-                (25 == 0 || p.Age == 25) &&
-                (string.IsNullOrEmpty("") || p.Gender == Enum.Parse<Gender>("")) &&
-                (string.IsNullOrEmpty("") || p.Address == "") &&
-                (string.IsNullOrEmpty("") || p.PhoneNumber == "") &&
-                (string.IsNullOrEmpty("") || p.InsuranceNumber == "");
 
             _patientRepositoryMock.Setup(repo => repo.SearchByPropertyAsync(It.IsAny<Expression<Func<Patient, bool>>>()))
                 .Returns(Task.FromResult(patients));

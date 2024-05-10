@@ -47,37 +47,6 @@ namespace Hospital.UnitTests.Doctors.Test.QueryHandlers.Test
                 }
             };
 
-
-            var doctorDto = new DoctorFullInfoDto()
-            {
-                Id = 1,
-                Name = "Steve",
-                Surname = "Smith",
-                Address = "Some address",
-                PhoneNumber = "068749856",
-                Department = "Heart diseases",
-                WorkingHours = new DoctorScheduleDto()
-                {
-                    StartShift = new TimeSpan(7, 0, 0),
-                    EndShift = new TimeSpan(16, 0, 0),
-                    WeekDays = new List<string>() { "Monday" }
-                },
-                Patients = new List<PatientShortInfoDto>()
-                {
-                    new()
-                    {
-                        FullName = "Michael Bay",
-                    }
-                }
-            };
-
-            Expression<Func<Doctor, bool>> predicate = d =>
-                (string.IsNullOrEmpty("Mike") || d.Name == "Mike") &&
-                (string.IsNullOrEmpty("") || d.Surname == "") &&
-                (string.IsNullOrEmpty("") || d.Address == "") &&
-                (string.IsNullOrEmpty("") || d.PhoneNumber == "") &&
-                (string.IsNullOrEmpty("Heart diseases") || d.Department.Name == "Heart diseases");
-
             _doctorRepositoryMock.Setup(repo => repo.SearchByPropertyAsync(It.IsAny<Expression<Func<Doctor, bool>>>()))
                 .Returns(Task.FromResult(doctors));
 
@@ -122,13 +91,6 @@ namespace Hospital.UnitTests.Doctors.Test.QueryHandlers.Test
         public async Task SearchDoctorsByASetOfProperties_ShouldThrowException_DoctorsWithSuchPropertiesDoNotExist()
         {
             var doctors = new List<Doctor>();
-
-            Expression<Func<Doctor, bool>> predicate = d =>
-                (string.IsNullOrEmpty("Mike") || d.Name == "Mike") &&
-                (string.IsNullOrEmpty("") || d.Surname == "") &&
-                (string.IsNullOrEmpty("") || d.Address == "") &&
-                (string.IsNullOrEmpty("") || d.PhoneNumber == "") &&
-                (string.IsNullOrEmpty("Heart diseases") || d.Department.Name == "Heart diseases");
 
             _doctorRepositoryMock.Setup(repo => repo.SearchByPropertyAsync(It.IsAny<Expression<Func<Doctor, bool>>>()))
                 .Returns(Task.FromResult(doctors));

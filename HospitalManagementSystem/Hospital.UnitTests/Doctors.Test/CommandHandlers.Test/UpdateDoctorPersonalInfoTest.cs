@@ -48,6 +48,7 @@ namespace Hospital.UnitTests.Doctors.Test.CommandHandlers.Test
 
             _departmentRepositoryMock.Setup(repo => repo.GetByIdAsync(2)).Returns(Task.FromResult(department));
             _doctorRepositoryMock.Setup(repo => repo.GetByIdAsync(1)).Returns(Task.FromResult(doctor));
+            _doctorRepositoryMock.Setup(repo => repo.UpdateAsync(doctor));
 
             var command = new UpdateDoctorPersonalInfo(doctor.Id, doctor.Name, doctor.Surname, "another address",
                 doctor.PhoneNumber, 2, doctor.WorkingHours.StartShift, doctor.WorkingHours.EndShift,

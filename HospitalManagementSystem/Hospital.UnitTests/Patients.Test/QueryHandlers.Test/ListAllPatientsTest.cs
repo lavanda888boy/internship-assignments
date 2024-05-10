@@ -38,26 +38,6 @@ namespace Hospital.UnitTests.Patients.Test.QueryHandlers.Test
                 }
             };
 
-            var patientDto = new PatientFullInfoDto()
-            {
-                Id = 1,
-                Name = "Steve",
-                Surname = "Smith",
-                Age = 25,
-                Gender = "M",
-                Address = "Some address",
-                PhoneNumber = "068749856",
-                InsuranceNumber = "AB45687952",
-                Doctors = new List<DoctorShortInfoDto>()
-                {
-                    new()
-                    {
-                        FullName = "Michael Bay",
-                        Department = "Heart diseases"
-                    }
-                }
-            };
-
             _patientRepositoryMock.Setup(repo => repo.GetAllAsync()).Returns(Task.FromResult(patients));
             _mapperMock.Setup(mapper => mapper.Map<List<PatientFullInfoDto>>(patients))
                 .Returns(new List<PatientFullInfoDto>()

@@ -43,30 +43,7 @@ namespace Hospital.UnitTests.Doctors.Test.QueryHandlers.Test
                     }
                 }
             };
-            
 
-            var doctorDto = new DoctorFullInfoDto()
-            {
-                Id = 1,
-                Name = "Steve",
-                Surname = "Smith",
-                Address = "Some address",
-                PhoneNumber = "068749856",
-                Department = "Heart diseases",
-                WorkingHours = new DoctorScheduleDto()
-                {
-                    StartShift = new TimeSpan(7, 0, 0),
-                    EndShift = new TimeSpan(16, 0, 0),
-                    WeekDays = new List<string>() { "Monday" }
-                },
-                Patients = new List<PatientShortInfoDto>()
-                {
-                    new()
-                    {
-                        FullName = "Michael Bay",
-                    }
-                }
-            };
             _doctorRepositoryMock.Setup(repo => repo.GetAllAsync()).Returns(Task.FromResult(doctors));
             _mapperMock.Setup(mapper => mapper.Map<List<DoctorFullInfoDto>>(doctors))
                 .Returns(new List<DoctorFullInfoDto>()
