@@ -52,8 +52,8 @@ namespace Hospital.Application.Patients.Commands
                 }
             };
 
-            await _patientRepository.AddAsync(patient);
-            return await Task.FromResult(patient.Id);
+            var newPatient = await _patientRepository.AddAsync(patient);
+            return await Task.FromResult(newPatient.Id);
         }
     }
 }

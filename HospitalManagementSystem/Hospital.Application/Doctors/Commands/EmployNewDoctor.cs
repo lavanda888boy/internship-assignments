@@ -49,9 +49,9 @@ namespace Hospital.Application.Doctors.Commands
                 WorkingHours = schedule,
             };
 
-            await _doctorRepository.AddAsync(doctor);
+            var newDoctor = await _doctorRepository.AddAsync(doctor);
 
-            return await Task.FromResult(doctor.Id);
+            return await Task.FromResult(newDoctor.Id);
         }
     }
 }

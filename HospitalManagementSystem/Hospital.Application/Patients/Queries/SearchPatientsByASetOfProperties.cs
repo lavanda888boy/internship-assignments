@@ -28,7 +28,7 @@ namespace Hospital.Application.Patients.Queries
             Expression<Func<Patient, bool>> predicate = p =>
                 (string.IsNullOrEmpty(request.Name) || p.Name == request.Name) &&
                 (string.IsNullOrEmpty(request.Surname) || p.Surname == request.Surname) &&
-                (request.Age == 0  || p.Age == request.Age) &&
+                (request.Age == 0 || p.Age == request.Age) &&
                 (string.IsNullOrEmpty(request.Gender) || p.Gender == Enum.Parse<Gender>(request.Gender)) &&
                 (string.IsNullOrEmpty(request.Address) || p.Address == request.Address) &&
                 (string.IsNullOrEmpty(request.PhoneNumber) || p.PhoneNumber == request.PhoneNumber) &&
