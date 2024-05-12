@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hospital.Presentation", "Ho
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hospital.UnitTests", "Hospital.UnitTests\Hospital.UnitTests.csproj", "{AF13BC4E-A81C-4DE1-9424-4B0BA555DAAC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hospital.IntegrationTests", "Hospital.IntegrationTests\Hospital.IntegrationTests.csproj", "{45CE26DA-38CE-4454-859F-8DF45BFF7744}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{AF13BC4E-A81C-4DE1-9424-4B0BA555DAAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AF13BC4E-A81C-4DE1-9424-4B0BA555DAAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AF13BC4E-A81C-4DE1-9424-4B0BA555DAAC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{45CE26DA-38CE-4454-859F-8DF45BFF7744}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{45CE26DA-38CE-4454-859F-8DF45BFF7744}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45CE26DA-38CE-4454-859F-8DF45BFF7744}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45CE26DA-38CE-4454-859F-8DF45BFF7744}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
