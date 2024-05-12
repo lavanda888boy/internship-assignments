@@ -32,6 +32,11 @@ namespace Hospital.Presentation.Filters
                 _logger.LogError("Path: {Path}\nEntity not found: {Message}", requestPath, exception.Message);
                 context.Result = new NotFoundObjectResult(exception.Message);
             }
+            else if (exception is PatientDoctorMisassignationException)
+            {
+                _logger.LogError("Path: {Path}\nMisassignation error: {Message}", requestPath, exception.Message);
+                context.Result = new BadRequestObjectResult(exception.Message);
+            }
             else
             {
                 _logger.LogError("Path: {Path}\nAn error occurred: {Message}", requestPath, exception.Message);

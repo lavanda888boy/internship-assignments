@@ -27,7 +27,7 @@ namespace Hospital.IntegrationTests.PatientController.Test
 
             var patients = await response.Content.ReadFromJsonAsync<List<PatientFullInfoDto>>();
             Assert.NotNull(patients);
-            Assert.NotEmpty(patients);
+            Assert.Equal(3, patients.Count);
         }
 
         [Fact]

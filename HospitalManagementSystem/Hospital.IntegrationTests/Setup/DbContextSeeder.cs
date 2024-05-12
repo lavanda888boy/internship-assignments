@@ -121,7 +121,7 @@ namespace Hospital.IntegrationTests.Setup
                 },
                 new()
                 {
-                    ExaminedPatient = patients[1],
+                    ExaminedPatient = patients[0],
                     ResponsibleDoctor = doctors[0],
                     DateOfExamination = DateTimeOffset.UtcNow,
                     ExaminationNotes = "Another notes",
@@ -138,6 +138,16 @@ namespace Hospital.IntegrationTests.Setup
             context.RegularRecords.AddRange(regularRecords);
             context.SaveChanges();
 
+            var illness = new Illness()
+            {
+                Id = 1,
+                Name = "Hypotensia",
+                Severity = IllnessSeverity.MEDIUM,
+            };
+
+            context.Illnesses.Add(illness);
+            context.SaveChanges();
+
             var diagnosisRecords = new List<DiagnosisMedicalRecord>()
             {
                 new()
@@ -146,10 +156,7 @@ namespace Hospital.IntegrationTests.Setup
                     ResponsibleDoctor = doctors[1],
                     DateOfExamination = DateTimeOffset.UtcNow,
                     ExaminationNotes = "Some notes",
-                    DiagnosedIllness = new Illness()
-                    {
-                        Name = "Arrhytmia"
-                    },
+                    DiagnosedIllness = illness,
                     ProposedTreatment = new Treatment()
                     {
                         PrescribedMedicine = "Corvalment",
@@ -162,10 +169,7 @@ namespace Hospital.IntegrationTests.Setup
                     ResponsibleDoctor = doctors[0],
                     DateOfExamination = DateTimeOffset.UtcNow,
                     ExaminationNotes = "Another notes",
-                    DiagnosedIllness = new Illness()
-                    {
-                        Name = "Hypertensia"
-                    },
+                    DiagnosedIllness = illness,
                     ProposedTreatment = new Treatment()
                     {
                         PrescribedMedicine = "Valocordin",
@@ -178,10 +182,7 @@ namespace Hospital.IntegrationTests.Setup
                     ResponsibleDoctor = doctors[0],
                     DateOfExamination = DateTimeOffset.UtcNow,
                     ExaminationNotes = "Some more notes",
-                    DiagnosedIllness = new Illness()
-                    {
-                        Name = "Hypotensia"
-                    },
+                    DiagnosedIllness = illness,
                     ProposedTreatment = new Treatment()
                     {
                         PrescribedMedicine = "Medical tea",
