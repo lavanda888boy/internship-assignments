@@ -50,6 +50,8 @@ namespace Hospital.Presentation
 
             app.UseHttpsRedirection();
 
+            app.UseAuthentication();
+
             app.UseAuthorization();
 
             app.MapControllers();

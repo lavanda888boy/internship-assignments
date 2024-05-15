@@ -2,7 +2,6 @@
 using Hospital.Application.Departments.Commands;
 using Hospital.Application.MedicalRecords.Queries;
 using Hospital.Domain.Models;
-using Hospital.Domain.Models.Utility;
 using Hospital.Infrastructure;
 using Hospital.Infrastructure.Repository;
 using Hospital.Presentation;
@@ -37,17 +36,6 @@ namespace Hospital.IntegrationTests.Setup
                     options.UseInMemoryDatabase("InMemoryHospitalTest");
                     options.UseInternalServiceProvider(serviceProvider);
                 });
-
-                services.AddScoped<ModelValidationFilter>()
-                        .AddScoped<IRepository<Patient>, PatientRepository>()
-                        .AddScoped<IRepository<Doctor>, DoctorRepository>()
-                        .AddScoped<IRepository<RegularMedicalRecord>, RegularMedicalRecordRepository>()
-                        .AddScoped<IRepository<DiagnosisMedicalRecord>, DiagnosisMedicalRecordRepository>()
-                        .AddScoped<IRepository<Department>, DepartmentRepository>()
-                        .AddScoped<IRepository<Illness>, IllnessRepository>()
-                        .AddScoped<IRepository<Treatment>, TreatmentRepository>()
-                        .AddAutoMapper(typeof(ListAllRegularMedicalRecords))
-                        .AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(RegisterNewHospitalDepartment).Assembly));
 
                 var sp = services.BuildServiceProvider();
 

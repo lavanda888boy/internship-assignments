@@ -1,10 +1,13 @@
 ﻿using Hospital.Domain.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using System.Data;
 
 namespace Hospital.Infrastructure
 {
-    public class HospitalManagementDbContext : DbContext
+    public class HospitalManagementDbContext : IdentityDbContext<IdentityUser>
     {
         private readonly string _dbConnectionString = "Server=ARTIFICIALBEAUT\\SQL_AMDARIS;Database=Hospital;Trusted_Connection=True;TrustServerCertificate=True;";
 
@@ -32,6 +35,8 @@ namespace Hospital.Infrastructure
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<Doctor>()
                         .HasOne(d => d.Department)
                         .WithMany()
