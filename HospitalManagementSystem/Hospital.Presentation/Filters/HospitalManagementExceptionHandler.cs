@@ -27,6 +27,19 @@ namespace Hospital.Presentation.Filters
                     StatusCode = 500
                 };
             }
+            else if (exception is UserRegistrationException)
+            {
+                _logger.LogError("Path: {Path}\nRegistartion failed: {Message}", requestPath, exception.Message);
+                context.Result = new ObjectResult(exception.Message)
+                {
+                    StatusCode = 500
+                };
+            }
+            else if (exception is UserLoginException)
+            {
+                _logger.LogError("Path: {Path}\nLogin failed: {Message}", requestPath, exception.Message);
+                context.Result = new BadRequestObjectResult(exception.Message);
+            }
             else if (exception is NoEntityFoundException)
             {
                 _logger.LogError("Path: {Path}\nEntity not found: {Message}", requestPath, exception.Message);

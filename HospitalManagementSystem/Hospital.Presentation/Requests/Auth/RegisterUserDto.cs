@@ -20,5 +20,9 @@ namespace Hospital.Presentation.Requests.Auth
 
         [Required]
         public required string Password { get; init; }
+
+        [Required]
+        [MinLength(5)]
+        public required string Role { get; init; }
     }
 }

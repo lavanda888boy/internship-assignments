@@ -1,4 +1,6 @@
-﻿using Hospital.Infrastructure;
+﻿using Hospital.Application.Abstractions;
+using Hospital.Infrastructure;
+using Hospital.Infrastructure.Identity;
 using Hospital.Infrastructure.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -42,6 +44,8 @@ namespace Hospital.Presentation.Extensions
                     options.ClaimsIssuer = jwtOptions.Issuer;
                 });
 
+            builder.Services.AddTransient<PasswordHasher<IdentityUser>, PasswordHasher<IdentityUser>>();
+
             builder.Services
                 .AddIdentityCore<IdentityUser>(options =>
                 {
@@ -51,8 +55,11 @@ namespace Hospital.Presentation.Extensions
                     options.Password.RequiredLength = 10;
                 })
                 .AddRoles<IdentityRole>()
-                .AddSignInManager()
+                .AddSignInManager<SignInManager<IdentityUser>>()
+                .AddUserManager<UserManager<IdentityUser>>()
                 .AddEntityFrameworkStores<HospitalManagementDbContext>();
+
+            builder.Services.AddTransient<IJwtGenerationService, JwtGenerationService>();
 
             return builder;
         }

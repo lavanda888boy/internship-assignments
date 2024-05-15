@@ -4,8 +4,10 @@ using Hospital.Application.MedicalRecords.Queries;
 using Hospital.Domain.Models;
 using Hospital.Infrastructure;
 using Hospital.Infrastructure.Repository;
+using Hospital.Presentation.Extensions;
 using Hospital.Presentation.Filters;
 using Hospital.Presentation.Middleware;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Hospital.Presentation
@@ -26,6 +28,9 @@ namespace Hospital.Presentation
                 options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 
             builder.Services.AddScoped<ModelValidationFilter>();
+
+            builder.RegisterAuthentication();
+            builder.Services.AddAuthToSwagger();
 
             builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(RegisterNewHospitalDepartment).Assembly));
             builder.Services.AddScoped<IRepository<Patient>, PatientRepository>()

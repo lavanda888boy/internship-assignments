@@ -1,5 +1,4 @@
 ﻿using Hospital.Application.Abstractions;
-using Hospital.Application.Exceptions;
 using Hospital.Application.Departments.Responses;
 using Hospital.Domain.Models;
 using MediatR;
