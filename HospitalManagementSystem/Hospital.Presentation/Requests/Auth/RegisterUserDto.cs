@@ -23,6 +23,7 @@ namespace Hospital.Presentation.Requests.Auth
 
         [Required]
         [MinLength(5)]
+        [RoleValidation]
         public required string Role { get; init; }
     }
 }

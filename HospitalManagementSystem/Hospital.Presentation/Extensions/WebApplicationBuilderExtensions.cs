@@ -67,11 +67,11 @@ namespace Hospital.Presentation.Extensions
         {
             services.AddSwaggerGen(options =>
             {
-                options.AddSecurityDefinition("Jwt Bearer", new OpenApiSecurityScheme
+                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
                     In = ParameterLocation.Header,
                     Description = "Enter a valid Jwt",
-                    Name = "Authorization token",
+                    Name = "Authorization",
                     Type = SecuritySchemeType.Http,
                     BearerFormat = "JWT",
                     Scheme = "Bearer"

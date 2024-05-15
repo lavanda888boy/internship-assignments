@@ -3,12 +3,14 @@ using Hospital.Application.MedicalRecords.Queries;
 using Hospital.Presentation.Dto.Record;
 using Hospital.Presentation.Filters;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hospital.Presentation.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class DiagnosisMedicalRecordController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -21,6 +23,7 @@ namespace Hospital.Presentation.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin, DoctorUser")]
         public async Task<IActionResult> GetAllDiagnosisMedicalRecords()
         {
             _logger.LogInformation("Extracting the list of diagnosis records...");
@@ -34,6 +37,7 @@ namespace Hospital.Presentation.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "Admin, DoctorUser")]
         public async Task<IActionResult> GetDiagnosisMedicalRecordById(int id)
         {
             _logger.LogInformation("Extracting the diagnosis record with id: {Id}...", id);
@@ -48,6 +52,7 @@ namespace Hospital.Presentation.Controllers
 
         [HttpPost]
         [ServiceFilter(typeof(ModelValidationFilter))]
+        [Authorize(Roles = "Admin, DoctorUser")]
         public async Task<IActionResult> AddDiagnosisMedicalRecord(DiagnosisMedicalRecordRequestDto record)
         {
             _logger.LogInformation("Adding new diagnosis record: DoctorId = {Doctor}, PatientId = {Patient}...",
@@ -64,6 +69,7 @@ namespace Hospital.Presentation.Controllers
         }
 
         [HttpPost("Search")]
+        [Authorize(Roles = "Admin, DoctorUser")]
         public async Task<IActionResult> SearchDiagnosisMedicalRecordsByASetOfProperties(DiagnosisMedicalRecordFilterRequestDto recordFilter)
         {
             _logger.LogInformation("Searching diagnosis records by a set of properties...");
@@ -79,6 +85,7 @@ namespace Hospital.Presentation.Controllers
         }
 
         [HttpPut("ExaminationNotes/{id}")]
+        [Authorize(Roles = "Admin, DoctorUser")]
         public async Task<IActionResult> UpdateDiagnosisMedicalRecordExaminationNotes(int id, [FromQuery] string notes)
         {
             _logger.LogInformation("Updating diagnosis record's (id = {Id}) notes...", id);
@@ -93,6 +100,7 @@ namespace Hospital.Presentation.Controllers
 
         [HttpPut("Treatment/{id}")]
         [ServiceFilter(typeof(ModelValidationFilter))]
+        [Authorize(Roles = "Admin, DoctorUser")]
         public async Task<IActionResult> UpdateDiagnosisMedicalRecordTreatmentDetails(int id, TreatmentDto treatment)
         {
             _logger.LogInformation("Updating diagnosis record's (id = {Id}) treatment...", id);
@@ -107,6 +115,7 @@ namespace Hospital.Presentation.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteDiagnosisMedicalRecord(int id)
         {
             _logger.LogInformation("Deleting diagnosis record with id: {Id}...", id);

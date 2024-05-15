@@ -2,6 +2,7 @@
 using Hospital.Presentation.Filters;
 using Hospital.Presentation.Requests.Auth;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hospital.Presentation.Controllers

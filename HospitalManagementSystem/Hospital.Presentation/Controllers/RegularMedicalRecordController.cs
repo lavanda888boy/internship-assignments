@@ -3,12 +3,14 @@ using Hospital.Application.MedicalRecords.Queries;
 using Hospital.Presentation.Dto.Record;
 using Hospital.Presentation.Filters;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Hospital.Presentation.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class RegularMedicalRecordController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -21,6 +23,7 @@ namespace Hospital.Presentation.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "Admin, DoctorUser")]
         public async Task<IActionResult> GetAllRegularMedicalRecords()
         {
             _logger.LogInformation("Extracting the list of regular records...");
@@ -34,6 +37,7 @@ namespace Hospital.Presentation.Controllers
         }
 
         [HttpGet("{id}")]
+        [Authorize(Roles = "Admin, DoctorUser")]
         public async Task<IActionResult> GetRegularMedicalRecordById(int id)
         {
             _logger.LogInformation("Extracting the regular record with id: {Id}...", id);
@@ -48,6 +52,7 @@ namespace Hospital.Presentation.Controllers
 
         [HttpPost]
         [ServiceFilter(typeof(ModelValidationFilter))]
+        [Authorize(Roles = "Admin, DoctorUser")]
         public async Task<IActionResult> AddRegularMedicalRecord(RegularMedicalRecordRequestDto record)
         {
             _logger.LogInformation("Adding new regular record: DoctorId = {Doctor}, PatientId = {Patient}...",
@@ -64,6 +69,7 @@ namespace Hospital.Presentation.Controllers
         }
 
         [HttpPost("Search")]
+        [Authorize(Roles = "Admin, DoctorUser")]
         public async Task<IActionResult> SearchRegularMedicalRecordsByASetOfProperties(RegularMedicalRecordFilterRequestDto recordFilter)
         {
             _logger.LogInformation("Searching regular records by a set of properties...");
@@ -78,6 +84,7 @@ namespace Hospital.Presentation.Controllers
         }
 
         [HttpPut("{id}")]
+        [Authorize(Roles = "Admin, DoctorUser")]
         public async Task<IActionResult> UpdateRegularMedicalRecordExaminationNotes(int id, [FromQuery] string notes)
         {
             _logger.LogInformation("Updating regular record's (id = {Id}) notes...", id);
@@ -91,6 +98,7 @@ namespace Hospital.Presentation.Controllers
         }
 
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteRegularMedicalRecord(int id)
         {
             _logger.LogInformation("Deleting regular record with id: {Id}...", id);
