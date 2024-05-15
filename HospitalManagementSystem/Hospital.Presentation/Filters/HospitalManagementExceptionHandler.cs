@@ -29,7 +29,7 @@ namespace Hospital.Presentation.Filters
             }
             else if (exception is UserRegistrationException)
             {
-                _logger.LogError("Path: {Path}\nRegistartion failed: {Message}", requestPath, exception.Message);
+                _logger.LogError("Path: {Path}\nRegistration failed: {Message}", requestPath, exception.Message);
                 context.Result = new ObjectResult(exception.Message)
                 {
                     StatusCode = 500

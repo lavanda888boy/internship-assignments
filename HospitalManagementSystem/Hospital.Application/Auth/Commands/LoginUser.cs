@@ -2,6 +2,7 @@
 using Hospital.Application.Exceptions;
 using MediatR;
 using Microsoft.AspNetCore.Identity;
+using System.Security.Claims;
 
 namespace Hospital.Application.Auth.Commands
 {
@@ -37,7 +38,10 @@ namespace Hospital.Application.Auth.Commands
                 throw new UserLoginException("Invalid email or password");
             }
 
-            var userClaims = await _userManager.GetClaimsAsync(user);
+            var userClaims = (await _userManager.GetClaimsAsync(user)).Where(c => 
+                c.Type == ClaimTypes.Email || c.Type == ClaimTypes.Role
+            );
+
             var token = _jwtGenerationService.GenerateAccessToken(userClaims);
 
             return token;

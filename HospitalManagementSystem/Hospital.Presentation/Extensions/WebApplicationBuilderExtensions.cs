@@ -44,8 +44,6 @@ namespace Hospital.Presentation.Extensions
                     options.ClaimsIssuer = jwtOptions.Issuer;
                 });
 
-            builder.Services.AddTransient<PasswordHasher<IdentityUser>, PasswordHasher<IdentityUser>>();
-
             builder.Services
                 .AddIdentityCore<IdentityUser>(options =>
                 {
@@ -53,6 +51,7 @@ namespace Hospital.Presentation.Extensions
                     options.Password.RequireLowercase = true;
                     options.Password.RequireUppercase = true;
                     options.Password.RequiredLength = 10;
+                    options.Password.RequireNonAlphanumeric = false;
                 })
                 .AddRoles<IdentityRole>()
                 .AddSignInManager<SignInManager<IdentityUser>>()

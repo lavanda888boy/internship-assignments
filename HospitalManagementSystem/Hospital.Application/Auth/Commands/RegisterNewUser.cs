@@ -14,29 +14,23 @@ namespace Hospital.Application.Auth.Commands
         private readonly UserManager<IdentityUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IJwtGenerationService _jwtGenerationService;
-        private readonly PasswordHasher<IdentityUser> _passwordHasher;
 
         public RegisterNewUserHandler(UserManager<IdentityUser> userManager, 
-            RoleManager<IdentityRole> roleManager, IJwtGenerationService jwtGenerationService, 
-            PasswordHasher<IdentityUser> passwordHasher)
+            RoleManager<IdentityRole> roleManager, IJwtGenerationService jwtGenerationService)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _jwtGenerationService = jwtGenerationService;
-            _passwordHasher = passwordHasher;
         }
 
         public async Task<string> Handle(RegisterNewUser request, CancellationToken cancellationToken)
         {
-            var hashedPassword = _passwordHasher.HashPassword(null, request.Password);
-
             var newUser = new IdentityUser
             {
-                UserName = request.Name + " " + request.Surname,
+                UserName = request.Name + request.Surname,
                 Email = request.Email,
-                PasswordHash = hashedPassword,
             };
-            var result = await _userManager.CreateAsync(newUser, hashedPassword);
+            var result = await _userManager.CreateAsync(newUser, request.Password);
 
             if (result.Succeeded)
             {
@@ -51,14 +45,19 @@ namespace Hospital.Application.Auth.Commands
 
                 var newClaims = new List<Claim>()
                 {
-                    new("Name", request.Name),
-                    new("Surname", request.Surname),
-                    new("Role", request.Role)
+                    new(ClaimTypes.Name, request.Name),
+                    new(ClaimTypes.Surname, request.Surname),
+                    new(ClaimTypes.Email, request.Email),
+                    new(ClaimTypes.Role, request.Role)
                 };
 
                 await _userManager.AddClaimsAsync(newUser, newClaims);
 
-                var token = _jwtGenerationService.GenerateAccessToken(newClaims);
+                var token = _jwtGenerationService.GenerateAccessToken(new List<Claim>()
+                {
+                    new(ClaimTypes.Email, request.Email),
+                    new(ClaimTypes.Role, request.Role)
+                });
 
                 return await Task.FromResult(token);
             }

@@ -7,7 +7,6 @@ using Hospital.Infrastructure.Repository;
 using Hospital.Presentation.Extensions;
 using Hospital.Presentation.Filters;
 using Hospital.Presentation.Middleware;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace Hospital.Presentation
