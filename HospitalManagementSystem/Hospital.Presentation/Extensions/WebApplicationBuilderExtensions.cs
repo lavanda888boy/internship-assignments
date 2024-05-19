@@ -39,7 +39,8 @@ namespace Hospital.Presentation.Extensions
                         RequireExpirationTime = true,
                         ValidAudiences = jwtOptions.Audiences,
                         ValidIssuer = jwtOptions.Issuer,
-                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SigningKey))
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtOptions.SigningKey)),
+                        ClockSkew = TimeSpan.Zero
                     };
                     options.ClaimsIssuer = jwtOptions.Issuer;
                 });

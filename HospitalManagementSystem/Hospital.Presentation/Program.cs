@@ -24,7 +24,8 @@ namespace Hospital.Presentation
             builder.Services.AddSwaggerGen();
 
             builder.Services.AddDbContext<HospitalManagementDbContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
+                options.UseSqlServer(builder.Configuration.GetConnectionString("Default"),
+                    op => op.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)));
 
             builder.Services.AddScoped<ModelValidationFilter>();
 
@@ -51,6 +52,8 @@ namespace Hospital.Presentation
             }
 
             app.UseMiddleware<RequestTimingMiddleware>();
+
+            app.UseMiddleware<DbTransactionMiddleware>();
 
             app.UseHttpsRedirection();
 
