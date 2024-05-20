@@ -32,12 +32,22 @@ namespace Hospital.Infrastructure.Repository
             return await _context.Departments.FirstOrDefaultAsync(d => d.Id == id);
         }
 
-        public async Task<List<Department>> SearchByPropertyAsync
-            (Expression<Func<Department, bool>> entityPredicate)
+        public async Task<PaginatedResult<Department>> SearchByPropertyPaginatedAsync
+            (Expression<Func<Department, bool>> entityPredicate, int pageNumber, int pageSize)
         {
-            return await _context.Departments.AsNoTracking()
-                                             .Where(entityPredicate)
-                                             .ToListAsync();
+            var departments = _context.Departments.AsNoTracking()
+                                                  .Where(entityPredicate)
+                                                  .AsQueryable();
+
+            var paginatedDepartments = await departments.Skip((pageNumber - 1) * pageSize)
+                                                        .Take(pageSize)
+                                                        .ToListAsync();
+
+            return new PaginatedResult<Department>
+            {
+                TotalItems = departments.Count(),
+                Items = paginatedDepartments
+            };
         }
 
         public async Task DeleteAsync(Department department)
@@ -45,6 +55,8 @@ namespace Hospital.Infrastructure.Repository
             _context.Departments.Remove(department);
             await _context.SaveChangesAsync();
         }
+
+        // Seva, I am living in your comments
 
         public async Task UpdateAsync(Department department)
         {

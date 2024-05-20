@@ -9,7 +9,7 @@ namespace Hospital.Application.Abstractions
         Task UpdateAsync(T entity);
         Task DeleteAsync(T entity);
         Task<T?> GetByIdAsync(int id);
-        Task<List<T>> SearchByPropertyAsync(Expression<Func<T, bool>> entityPredicate);
+        Task<PaginatedResult<T>> SearchByPropertyPaginatedAsync(Expression<Func<T, bool>> entityPredicate, int pageNumber, int pageSize);
         Task<List<T>> GetAllAsync();
         Task<PaginatedResult<T>> GetAllPaginatedAsync(int pageNumber, int pageSize);
     }

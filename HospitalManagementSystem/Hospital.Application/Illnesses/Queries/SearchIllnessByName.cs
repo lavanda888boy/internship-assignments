@@ -6,7 +6,8 @@ using MediatR;
 
 namespace Hospital.Application.Illnesses.Queries
 {
-    public record SearchIllnessByName(string IllnessName) : IRequest<IllnessDto>;
+    public record SearchIllnessByName(string IllnessName, int PageNumber, int PageSize) 
+        : IRequest<IllnessDto>;
 
     public class SearchIllnessByNameHandler : IRequestHandler<SearchIllnessByName, IllnessDto>
     {
@@ -19,15 +20,15 @@ namespace Hospital.Application.Illnesses.Queries
 
         public async Task<IllnessDto> Handle(SearchIllnessByName request, CancellationToken cancellationToken)
         {
-            var illnesses = await _illnessRepository.SearchByPropertyAsync(i => 
-                    i.Name == request.IllnessName);
+            var illnesses = await _illnessRepository.SearchByPropertyPaginatedAsync(i => 
+                    i.Name == request.IllnessName, request.PageNumber, request.PageSize);
 
-            if (illnesses.Count == 0)
+            if (illnesses.Items.Count == 0)
             {
                 throw new NoEntityFoundException("No illness with such name exists");
             }
 
-            return await Task.FromResult(IllnessDto.FromIllness(illnesses[0]));
+            return await Task.FromResult(IllnessDto.FromIllness(illnesses.Items[0]));
         }
     }
 }

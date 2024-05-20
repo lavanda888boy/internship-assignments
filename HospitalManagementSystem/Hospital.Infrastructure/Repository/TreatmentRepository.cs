@@ -2,6 +2,7 @@
 using Hospital.Application.Common;
 using Hospital.Domain.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Drawing.Printing;
 using System.Linq.Expressions;
 
 namespace Hospital.Infrastructure.Repository
@@ -32,12 +33,22 @@ namespace Hospital.Infrastructure.Repository
             return await _context.Treatments.FirstOrDefaultAsync(t => t.Id == id);
         }
 
-        public async Task<List<Treatment>> SearchByPropertyAsync
-            (Expression<Func<Treatment, bool>> entityPredicate)
+        public async Task<PaginatedResult<Treatment>> SearchByPropertyPaginatedAsync
+            (Expression<Func<Treatment, bool>> entityPredicate, int pageNumber, int pageSize)
         {
-            return await _context.Treatments.AsNoTracking()
-                                            .Where(entityPredicate)
-                                            .ToListAsync();
+            var treatments = _context.Treatments.AsNoTracking()
+                                                .Where(entityPredicate)
+                                                .AsQueryable();
+
+            var paginatedTreatments = await treatments.Skip((pageNumber - 1) * pageSize)
+                                                      .Take(pageSize)
+                                                      .ToListAsync();
+
+            return new PaginatedResult<Treatment>
+            {
+                TotalItems = treatments.Count(),
+                Items = paginatedTreatments
+            };
         }
 
         public async Task DeleteAsync(Treatment treatment)

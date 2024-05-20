@@ -32,12 +32,22 @@ namespace Hospital.Infrastructure.Repository
             return await _context.Illnesses.FirstOrDefaultAsync(i => i.Id == id);
         }
 
-        public async Task<List<Illness>> SearchByPropertyAsync
-            (Expression<Func<Illness, bool>> entityPredicate)
+        public async Task<PaginatedResult<Illness>> SearchByPropertyPaginatedAsync
+            (Expression<Func<Illness, bool>> entityPredicate, int pageNumber, int pageSize)
         {
-            return await _context.Illnesses.AsNoTracking()
-                                           .Where(entityPredicate)
-                                           .ToListAsync();
+            var illnesses = _context.Illnesses.AsNoTracking()
+                                              .Where(entityPredicate) 
+                                              .AsQueryable();
+
+            var paginatedIllnesses = await illnesses.Skip((pageNumber - 1) * pageSize)
+                                                    .Take(pageSize)
+                                                    .ToListAsync();
+
+            return new PaginatedResult<Illness>
+            {
+                TotalItems = illnesses.Count(),
+                Items = paginatedIllnesses
+            };
         }
 
         public async Task DeleteAsync(Illness illness)

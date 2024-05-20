@@ -56,15 +56,25 @@ namespace Hospital.Infrastructure.Repository
                                                 .FirstOrDefaultAsync(r => r.Id == id);
         }
 
-        public async Task<List<RegularMedicalRecord>> SearchByPropertyAsync
-            (Expression<Func<RegularMedicalRecord, bool>> entityPredicate)
+        public async Task<PaginatedResult<RegularMedicalRecord>> SearchByPropertyPaginatedAsync
+            (Expression<Func<RegularMedicalRecord, bool>> entityPredicate, int pageNumber, int pageSize)
         {
-            return await _context.RegularRecords.AsNoTracking()
-                                                .Include(r => r.ExaminedPatient)
-                                                .Include(r => r.ResponsibleDoctor)
-                                                .ThenInclude(d => d.Department)
-                                                .Where(entityPredicate)
+            var records = _context.RegularRecords.AsNoTracking()
+                                                 .Include(r => r.ExaminedPatient)
+                                                 .Include(r => r.ResponsibleDoctor)
+                                                 .ThenInclude(d => d.Department)
+                                                 .Where(entityPredicate)
+                                                 .AsQueryable();
+
+            var paginatedRecords = await records.Skip((pageNumber - 1) * pageSize)
+                                                .Take(pageSize)
                                                 .ToListAsync();
+
+            return new PaginatedResult<RegularMedicalRecord>
+            {
+                TotalItems = records.Count(),
+                Items = paginatedRecords
+            };
         }
 
         public async Task DeleteAsync(RegularMedicalRecord record)

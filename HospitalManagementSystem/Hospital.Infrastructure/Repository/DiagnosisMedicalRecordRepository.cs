@@ -2,6 +2,7 @@
 using Hospital.Application.Common;
 using Hospital.Domain.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using System.Linq.Expressions;
 
 namespace Hospital.Infrastructure.Repository
@@ -62,17 +63,27 @@ namespace Hospital.Infrastructure.Repository
                                                   .FirstOrDefaultAsync(r => r.Id == id);
         }
 
-        public async Task<List<DiagnosisMedicalRecord>> SearchByPropertyAsync
-            (Expression<Func<DiagnosisMedicalRecord, bool>> entityPredicate)
+        public async Task<PaginatedResult<DiagnosisMedicalRecord>> SearchByPropertyPaginatedAsync
+            (Expression<Func<DiagnosisMedicalRecord, bool>> entityPredicate, int pageNumber, int pageSize)
         {
-            return await _context.DiagnosisRecords.AsNoTracking()
-                                                  .Include(r => r.ExaminedPatient)
-                                                  .Include(r => r.ResponsibleDoctor)
-                                                  .ThenInclude(d => d.Department)
-                                                  .Include(r => r.DiagnosedIllness)
-                                                  .Include(r => r.ProposedTreatment)
-                                                  .Where(entityPredicate)
-                                                  .ToListAsync();
+            var records = _context.DiagnosisRecords.AsNoTracking()
+                                                   .Include(r => r.ExaminedPatient)
+                                                   .Include(r => r.ResponsibleDoctor)
+                                                   .ThenInclude(d => d.Department)
+                                                   .Include(r => r.DiagnosedIllness)
+                                                   .Include(r => r.ProposedTreatment)
+                                                   .Where(entityPredicate)
+                                                   .AsQueryable();
+
+            var paginatedRecords = await records.Skip((pageNumber - 1) * pageSize)
+                                                .Take(pageSize)
+                                                .ToListAsync();
+
+            return new PaginatedResult<DiagnosisMedicalRecord>
+            {
+                TotalItems = records.Count(),
+                Items = paginatedRecords
+            };
         }
 
         public async Task DeleteAsync(DiagnosisMedicalRecord record)

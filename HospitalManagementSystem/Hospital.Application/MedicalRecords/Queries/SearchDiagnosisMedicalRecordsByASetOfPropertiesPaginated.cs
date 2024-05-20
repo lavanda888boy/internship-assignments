@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Hospital.Application.Abstractions;
+using Hospital.Application.Common;
 using Hospital.Application.Exceptions;
 using Hospital.Application.MedicalRecords.Responses;
 using Hospital.Domain.Models;
@@ -8,24 +9,25 @@ using System.Linq.Expressions;
 
 namespace Hospital.Application.MedicalRecords.Queries
 {
-    public record SearchDiagnosisMedicalRecordsByASetOfProperties(int? ExaminedPatientId, int? ResponsibleDoctorId,
-        DateTimeOffset? DateOfExamination, string? DiagnosedIllnessName, string? PrescribedMedicine)
-        : IRequest<List<DiagnosisMedicalRecordFullInfoDto>>;
+    public record SearchDiagnosisMedicalRecordsByASetOfPropertiesPaginated(int PageNumber, int PageSize,
+        int? ExaminedPatientId, int? ResponsibleDoctorId, DateTimeOffset? DateOfExamination, 
+        string? DiagnosedIllnessName, string? PrescribedMedicine) : IRequest<PaginatedResult<DiagnosisMedicalRecordFullInfoDto>>;
 
-    public class SearchDiagnosisMedicalRecordsByASetOfPropertiesHandler
-        : IRequestHandler<SearchDiagnosisMedicalRecordsByASetOfProperties, List<DiagnosisMedicalRecordFullInfoDto>>
+    public class SearchDiagnosisMedicalRecordsByASetOfPropertiesPaginatedHandler
+        : IRequestHandler<SearchDiagnosisMedicalRecordsByASetOfPropertiesPaginated, 
+            PaginatedResult<DiagnosisMedicalRecordFullInfoDto>>
     {
         private readonly IRepository<DiagnosisMedicalRecord> _recordRepository;
         private readonly IMapper _mapper;
 
-        public SearchDiagnosisMedicalRecordsByASetOfPropertiesHandler(IRepository<DiagnosisMedicalRecord> recordRepository,
+        public SearchDiagnosisMedicalRecordsByASetOfPropertiesPaginatedHandler(IRepository<DiagnosisMedicalRecord> recordRepository,
             IMapper mapper)
         {
             _recordRepository = recordRepository;
             _mapper = mapper;
         }
 
-        public async Task<List<DiagnosisMedicalRecordFullInfoDto>> Handle(SearchDiagnosisMedicalRecordsByASetOfProperties request,
+        public async Task<PaginatedResult<DiagnosisMedicalRecordFullInfoDto>> Handle(SearchDiagnosisMedicalRecordsByASetOfPropertiesPaginated request,
             CancellationToken cancellationToken)
         {
             Expression<Func<DiagnosisMedicalRecord, bool>> predicate = r =>
@@ -35,15 +37,19 @@ namespace Hospital.Application.MedicalRecords.Queries
                 (string.IsNullOrEmpty(request.DiagnosedIllnessName) || r.DiagnosedIllness.Name == request.DiagnosedIllnessName) &&
                 (string.IsNullOrEmpty(request.PrescribedMedicine) || r.ProposedTreatment.PrescribedMedicine == request.PrescribedMedicine);
 
-            var medicalRecords = await _recordRepository.SearchByPropertyAsync(predicate);
+            var paginatedRecords = await _recordRepository.SearchByPropertyPaginatedAsync(predicate,
+                request.PageNumber, request.PageSize);
 
-            if (medicalRecords.Count == 0)
+            if (paginatedRecords.Items.Count == 0)
             {
                 throw new NoEntityFoundException("No diagnosis medical records with such properties exist");
             }
 
-            var medicalRecordDtos = _mapper.Map<List<DiagnosisMedicalRecordFullInfoDto>>(medicalRecords);
-            return await Task.FromResult(medicalRecordDtos);
+            return await Task.FromResult(new PaginatedResult<DiagnosisMedicalRecordFullInfoDto>
+            {
+                TotalItems = paginatedRecords.TotalItems,
+                Items = _mapper.Map<List<DiagnosisMedicalRecordFullInfoDto>>(paginatedRecords.Items)
+            });
         }
     }
 }

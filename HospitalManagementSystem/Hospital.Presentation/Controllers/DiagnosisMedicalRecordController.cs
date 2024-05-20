@@ -70,16 +70,17 @@ namespace Hospital.Presentation.Controllers
 
         [HttpPost("Search")]
         [Authorize(Roles = "Admin, DoctorUser")]
-        public async Task<IActionResult> SearchDiagnosisMedicalRecordsByASetOfProperties(DiagnosisMedicalRecordFilterRequestDto recordFilter)
+        public async Task<IActionResult> SearchDiagnosisMedicalRecordsByASetOfProperties([FromQuery] int pageNumber,
+            [FromQuery] int pageSize, [FromBody] DiagnosisMedicalRecordFilterRequestDto recordFilter)
         {
             _logger.LogInformation("Searching diagnosis records by a set of properties...");
 
-            var command = new SearchDiagnosisMedicalRecordsByASetOfProperties(recordFilter.ExaminedPatientId,
-                recordFilter.ResponsibleDoctorId, recordFilter.DateOfExamination, recordFilter.DiagnosedIllnessName,
-                recordFilter.PrescribedMedicine);
+            var command = new SearchDiagnosisMedicalRecordsByASetOfPropertiesPaginated(pageNumber,
+                pageSize, recordFilter.ExaminedPatientId, recordFilter.ResponsibleDoctorId,
+                recordFilter.DateOfExamination, recordFilter.DiagnosedIllnessName, recordFilter.PrescribedMedicine);
 
             var records = await _mediator.Send(command);
-            _logger.LogInformation("Diagnosis records with such properties were found. List count: {Count}", records.Count);
+            _logger.LogInformation("Diagnosis records with such properties were found. Page items count: {Count}", records.Items.Count);
 
             return Ok(records);
         }

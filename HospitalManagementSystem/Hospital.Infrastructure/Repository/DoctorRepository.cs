@@ -65,18 +65,28 @@ namespace Hospital.Infrastructure.Repository
                                          .FirstOrDefaultAsync(d => d.Id == id);
         }
 
-        public async Task<List<Doctor>> SearchByPropertyAsync
-            (Expression<Func<Doctor, bool>> entityPredicate)
+        public async Task<PaginatedResult<Doctor>> SearchByPropertyPaginatedAsync
+            (Expression<Func<Doctor, bool>> entityPredicate, int pageNumber, int pageSize)
         {
-            return await _context.Doctors.AsNoTracking()
-                                         .Include(d => d.DoctorsPatients)
-                                         .ThenInclude(dp => dp.Patient)
-                                         .Include(d => d.Department)
-                                         .Include(d => d.WorkingHours)
-                                         .ThenInclude(wh => wh.DoctorScheduleWeekDay)
-                                         .ThenInclude(dsw => dsw.WeekDay)
-                                         .Where(entityPredicate)
-                                         .ToListAsync();
+            var doctors = _context.Doctors.AsNoTracking()
+                                          .Include(d => d.DoctorsPatients)
+                                          .ThenInclude(dp => dp.Patient)
+                                          .Include(d => d.Department)
+                                          .Include(d => d.WorkingHours)
+                                          .ThenInclude(wh => wh.DoctorScheduleWeekDay)
+                                          .ThenInclude(dsw => dsw.WeekDay)
+                                          .Where(entityPredicate)
+                                          .AsQueryable();
+
+            var paginatedDoctors = await doctors.Skip((pageNumber - 1) * pageSize)
+                                                .Take(pageSize)
+                                                .ToListAsync();
+
+            return new PaginatedResult<Doctor>
+            {
+                TotalItems = doctors.Count(),
+                Items = paginatedDoctors
+            };
         }
 
         public async Task DeleteAsync(Doctor doctor)

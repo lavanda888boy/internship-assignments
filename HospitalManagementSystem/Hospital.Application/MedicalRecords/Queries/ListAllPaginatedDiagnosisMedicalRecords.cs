@@ -31,7 +31,7 @@ namespace Hospital.Application.MedicalRecords.Queries
             {
                 TotalItems = paginatedRecords.TotalItems,
                 Items = _mapper.Map<List<DiagnosisMedicalRecordFullInfoDto>>(paginatedRecords.Items)
-        });
+            });
         }
     }
 }

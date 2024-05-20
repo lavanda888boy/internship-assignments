@@ -48,7 +48,7 @@ namespace Hospital.Presentation.Controllers
             _logger.LogInformation("Doctor with id: {Id} successfully extracted", id);
 
             return Ok(doctor);
-        }
+        } 
 
         [HttpPost]
         [ServiceFilter(typeof(ModelValidationFilter))]
@@ -68,15 +68,17 @@ namespace Hospital.Presentation.Controllers
 
         [HttpPost("Search")]
         [Authorize(Roles = "Admin, DoctorUser, PatientUser")]
-        public async Task<IActionResult> SearchDoctorsByASetOfProperties(DoctorFilterRequestDto doctorFilter)
+        public async Task<IActionResult> SearchDoctorsByASetOfProperties([FromQuery] int pageNumber, 
+            [FromQuery] int pageSize, [FromBody] DoctorFilterRequestDto doctorFilter)
         {
             _logger.LogInformation("Searching doctors by a set of properties...");
 
-            var command = new SearchDoctorsByASetOfProperties(doctorFilter.Name, doctorFilter.Surname,
-                doctorFilter.Address, doctorFilter.PhoneNumber, doctorFilter.DepartmentName);
+            var command = new SearchDoctorsByASetOfPropertiesPaginated(pageNumber, pageSize, 
+                doctorFilter.Name, doctorFilter.Surname, doctorFilter.Address, doctorFilter.PhoneNumber,
+                doctorFilter.DepartmentName);
 
             var doctors = await _mediator.Send(command);
-            _logger.LogInformation("Doctors with such properties were found. List count: {Count}", doctors.Count);
+            _logger.LogInformation("Doctors with such properties were found. Page items count: {Count}", doctors.Items.Count);
 
             return Ok(doctors);
         }
