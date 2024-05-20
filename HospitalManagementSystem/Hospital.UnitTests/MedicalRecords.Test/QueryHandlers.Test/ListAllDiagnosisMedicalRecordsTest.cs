@@ -126,8 +126,8 @@ namespace Hospital.UnitTests.MedicalRecords.Test.QueryHandlers.Test
                     }
                 });
 
-            var command = new ListAllDiagnosisMedicalRecords();
-            var handler = new ListAllDiagnosisMedicalRecordsHandler(_recordRepositoryMock.Object, _mapperMock.Object);
+            var command = new ListAllPaginatedDiagnosisMedicalRecords();
+            var handler = new ListAllPaginatedDiagnosisMedicalRecordsHandler(_recordRepositoryMock.Object, _mapperMock.Object);
 
             var result = await handler.Handle(command, default);
 

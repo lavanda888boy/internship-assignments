@@ -27,7 +27,7 @@ namespace Hospital.Infrastructure
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer(_dbConnectionString, op => op.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery))
+                optionsBuilder.UseSqlServer(_dbConnectionString)
                               .LogTo(Console.WriteLine, new[] { DbLoggerCategory.Database.Command.Name }, LogLevel.Information);
             }
         }

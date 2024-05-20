@@ -63,8 +63,8 @@ namespace Hospital.UnitTests.Patients.Test.QueryHandlers.Test
                     }
                 });
 
-            var command = new ListAllPatients();
-            var handler = new ListAllPatientsHandler(_patientRepositoryMock.Object, _mapperMock.Object);
+            var command = new ListAllPaginatedPatients();
+            var handler = new ListAllPaginatedPatientsHandler(_patientRepositoryMock.Object, _mapperMock.Object);
 
             var result = await handler.Handle(command, default);
 

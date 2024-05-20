@@ -1,4 +1,5 @@
 ﻿using Hospital.Application.Abstractions;
+using Hospital.Application.Common;
 using Hospital.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
@@ -28,6 +29,23 @@ namespace Hospital.Infrastructure.Repository
                                           .ThenInclude(dp => dp.Doctor)
                                           .ThenInclude(d => d.Department)
                                           .ToListAsync();
+        }
+
+        public async Task<PaginatedResult<Patient>> GetAllPaginatedAsync(int pageNumber, int pageSize)
+        {
+            var patients= await _context.Patients.AsNoTracking()
+                                                 .Include(p => p.DoctorsPatients)
+                                                 .ThenInclude(dp => dp.Doctor)
+                                                 .ThenInclude(d => d.Department)
+                                                 .Skip((pageNumber - 1) * pageSize)
+                                                 .Take(pageSize)
+                                                 .ToListAsync();
+
+            return new PaginatedResult<Patient>
+            {
+                TotalItems = _context.Patients.Count(),
+                Items = patients
+            };
         }
 
         public async Task<Patient?> GetByIdAsync(int id)

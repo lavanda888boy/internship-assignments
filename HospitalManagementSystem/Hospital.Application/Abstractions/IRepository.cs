@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using Hospital.Application.Common;
+using System.Linq.Expressions;
 
 namespace Hospital.Application.Abstractions
 {
@@ -10,5 +11,6 @@ namespace Hospital.Application.Abstractions
         Task<T?> GetByIdAsync(int id);
         Task<List<T>> SearchByPropertyAsync(Expression<Func<T, bool>> entityPredicate);
         Task<List<T>> GetAllAsync();
+        Task<PaginatedResult<T>> GetAllPaginatedAsync(int pageNumber, int pageSize);
     }
 }

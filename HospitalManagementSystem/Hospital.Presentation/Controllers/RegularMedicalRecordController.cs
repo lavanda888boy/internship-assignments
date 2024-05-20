@@ -24,16 +24,16 @@ namespace Hospital.Presentation.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Admin, DoctorUser")]
-        public async Task<IActionResult> GetAllRegularMedicalRecords()
+        public async Task<IActionResult> GetPaginatedRegularMedicalRecords([FromQuery] int pageNumber, [FromQuery] int pageSize)
         {
             _logger.LogInformation("Extracting the list of regular records...");
 
-            var command = new ListAllRegularMedicalRecords();
-            var records = await _mediator.Send(command);
+            var command = new ListAllPaginatedRegularMedicalRecords(pageNumber, pageSize);
+            var paginatedRecords = await _mediator.Send(command);
 
-            _logger.LogInformation("Regular records successfully extracted. List count: {Count}", records.Count);
+            _logger.LogInformation("Regular records successfully extracted. Page items count: {Count}", paginatedRecords.Items.Count);
 
-            return Ok(records);
+            return Ok(paginatedRecords);
         }
 
         [HttpGet("{id}")]

@@ -24,16 +24,16 @@ namespace Hospital.Presentation.Controllers
 
         [HttpGet]
         [Authorize(Roles = "Admin, DoctorUser")]
-        public async Task<IActionResult> GetAllPatients()
+        public async Task<IActionResult> GetPaginatedPatients([FromQuery] int pageNumber, [FromQuery] int pageSize)
         {
             _logger.LogInformation("Extracting the list of patients...");
 
-            var command = new ListAllPatients();
-            var patients = await _mediator.Send(command);
+            var command = new ListAllPaginatedPatients(pageNumber, pageSize);
+            var paginatedPatients = await _mediator.Send(command);
 
-            _logger.LogInformation("Patients successfully extracted. List count: {Count}", patients.Count);
+            _logger.LogInformation("Patients successfully extracted. Page items count: {Count}", paginatedPatients.Items.Count);
 
-            return Ok(patients);
+            return Ok(paginatedPatients);
         }
 
         [HttpGet("{id}")]

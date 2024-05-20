@@ -1,4 +1,5 @@
 ﻿using Hospital.Application.Abstractions;
+using Hospital.Application.Common;
 using Hospital.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
@@ -49,6 +50,20 @@ namespace Hospital.Infrastructure.Repository
         {
             _context.Illnesses.Update(illness);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<PaginatedResult<Illness>> GetAllPaginatedAsync(int pageNumber, int pageSize)
+        {
+            var illnesses = await _context.Illnesses.AsNoTracking()
+                                                    .Skip((pageNumber - 1) * pageSize)
+                                                    .Take(pageSize)
+                                                    .ToListAsync();
+
+            return new PaginatedResult<Illness>
+            {
+                TotalItems = _context.Illnesses.Count(),
+                Items = illnesses
+            };
         }
     }
 }

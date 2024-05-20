@@ -24,8 +24,7 @@ namespace Hospital.Presentation
             builder.Services.AddSwaggerGen();
 
             builder.Services.AddDbContext<HospitalManagementDbContext>(options =>
-                options.UseSqlServer(builder.Configuration.GetConnectionString("Default"),
-                    op => op.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery)));
+                options.UseSqlServer(builder.Configuration.GetConnectionString("Default")));
 
             builder.Services.AddScoped<ModelValidationFilter>();
 
@@ -41,7 +40,7 @@ namespace Hospital.Presentation
                             .AddScoped<IRepository<Illness>, IllnessRepository>()
                             .AddScoped<IRepository<Treatment>, TreatmentRepository>();
 
-            builder.Services.AddAutoMapper(typeof(ListAllRegularMedicalRecords));
+            builder.Services.AddAutoMapper(typeof(ListAllPaginatedRegularMedicalRecords));
 
             var app = builder.Build();
 
