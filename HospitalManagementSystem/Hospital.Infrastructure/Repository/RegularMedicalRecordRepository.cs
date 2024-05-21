@@ -63,8 +63,7 @@ namespace Hospital.Infrastructure.Repository
                                                  .Include(r => r.ExaminedPatient)
                                                  .Include(r => r.ResponsibleDoctor)
                                                  .ThenInclude(d => d.Department)
-                                                 .Where(entityPredicate)
-                                                 .AsQueryable();
+                                                 .Where(entityPredicate);
 
             var paginatedRecords = await records.Skip((pageNumber - 1) * pageSize)
                                                 .Take(pageSize)

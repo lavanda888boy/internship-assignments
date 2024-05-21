@@ -36,8 +36,7 @@ namespace Hospital.Infrastructure.Repository
             (Expression<Func<Department, bool>> entityPredicate, int pageNumber, int pageSize)
         {
             var departments = _context.Departments.AsNoTracking()
-                                                  .Where(entityPredicate)
-                                                  .AsQueryable();
+                                                  .Where(entityPredicate);
 
             var paginatedDepartments = await departments.Skip((pageNumber - 1) * pageSize)
                                                         .Take(pageSize)
@@ -55,8 +54,6 @@ namespace Hospital.Infrastructure.Repository
             _context.Departments.Remove(department);
             await _context.SaveChangesAsync();
         }
-
-        // Seva, I am living in your comments
 
         public async Task UpdateAsync(Department department)
         {

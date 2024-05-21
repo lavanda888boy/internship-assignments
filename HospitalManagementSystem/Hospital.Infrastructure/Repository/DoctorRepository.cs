@@ -75,8 +75,7 @@ namespace Hospital.Infrastructure.Repository
                                           .Include(d => d.WorkingHours)
                                           .ThenInclude(wh => wh.DoctorScheduleWeekDay)
                                           .ThenInclude(dsw => dsw.WeekDay)
-                                          .Where(entityPredicate)
-                                          .AsQueryable();
+                                          .Where(entityPredicate);
 
             var paginatedDoctors = await doctors.Skip((pageNumber - 1) * pageSize)
                                                 .Take(pageSize)

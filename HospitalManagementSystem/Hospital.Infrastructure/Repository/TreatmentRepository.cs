@@ -37,8 +37,7 @@ namespace Hospital.Infrastructure.Repository
             (Expression<Func<Treatment, bool>> entityPredicate, int pageNumber, int pageSize)
         {
             var treatments = _context.Treatments.AsNoTracking()
-                                                .Where(entityPredicate)
-                                                .AsQueryable();
+                                                .Where(entityPredicate);
 
             var paginatedTreatments = await treatments.Skip((pageNumber - 1) * pageSize)
                                                       .Take(pageSize)
