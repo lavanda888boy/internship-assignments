@@ -11,10 +11,10 @@
   <body>
     <header class="page-header">
       <h1 class="header-name">Dashboard</h1>
-      <form class="header-searchbar">
+      <form>
         <input
           type="text"
-          class="form-input"
+          class="header-searchbar"
           name="search"
           placeholder="Search smth here"
         />
@@ -31,6 +31,29 @@
       <p class="sidebar-action">Action</p>
       <p class="sidebar-action">Action</p>
       <p class="sidebar-logout-action">Logout</p>
+    </aside>
+
+    <aside class="page-filter">
+      <h1>Filters</h1>
+      <p class="filter-name">Age</p>
+      <div class="subfilter">
+        <label> <input type="checkbox" name="filter" /> 2-14 </label>
+        <label> <input type="checkbox" name="filter" /> 15-18 </label>
+        <label> <input type="checkbox" name="filter" /> 19-35 </label>
+        <label> <input type="checkbox" name="filter" /> 36-55 </label>
+        <label> <input type="checkbox" name="filter" /> 56-75 </label>
+      </div>
+      <p class="filter-name">Gender</p>
+      <div class="subfilter">
+        <label> <input type="checkbox" name="filter" /> Male </label>
+        <label> <input type="checkbox" name="filter" /> Female </label>
+        <label> <input type="checkbox" name="filter" /> Other </label>
+      </div>
+      <p class="filter-name">Insurance</p>
+      <div class="subfilter">
+        <label> <input type="checkbox" name="filter" /> Present </label>
+        <label> <input type="checkbox" name="filter" /> Not present </label>
+      </div>
     </aside>
 
     <section class="page-content">

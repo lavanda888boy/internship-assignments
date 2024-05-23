@@ -7,7 +7,7 @@ body {
   display: flex;
   flex-direction: row;
   align-items: center;
-  width: 85%;
+  width: 88%;
   z-index: 2;
   padding: 1.5% 1% 1.5% 1%;
   margin-left: 8%;
@@ -19,7 +19,7 @@ body {
   }
 
   .header-searchbar {
-    margin-right: 5%;
+    width: 350%;
   }
 
   .header-userinfo {
@@ -52,6 +52,28 @@ body {
     color: white;
     margin-top: auto;
     margin-bottom: 60%;
+  }
+}
+
+.page-filter {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  top: 30%;
+  right: 7%;
+  width: 10%;
+  padding: 2% 1% 2% 1%;
+  background-color: white;
+  border-radius: 5px;
+
+  .filter-name {
+    margin-top: 2%;
+  }
+
+  .subfilter {
+    display: flex;
+    flex-direction: column;
+    margin-left: 10%;
   }
 }
 
