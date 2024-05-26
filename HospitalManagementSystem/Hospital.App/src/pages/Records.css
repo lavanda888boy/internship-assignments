@@ -1,0 +1,17 @@
+.page-content {
+  position: absolute;
+  width: 60%;
+  height: auto;
+  z-index: 1;
+  padding: 3%;
+  margin-top: 7%;
+  margin-left: 8%;
+  border-radius: 5px;
+  background-color: white;
+
+  .content-list {
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+  }
+}

@@ -1,18 +1,18 @@
 .page-content {
   position: absolute;
-  width: 60%;
-  height: 100%;
+  width: 65%;
+  height: auto;
   z-index: 1;
-  padding: 3%;
+  padding: 3% 2% 3% 2%;
   margin-top: 7%;
   margin-left: 8%;
   border-radius: 5px;
   background-color: white;
 
   .content-list {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    justify-items: center;
-    row-gap: 10%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 3%;
   }
 }

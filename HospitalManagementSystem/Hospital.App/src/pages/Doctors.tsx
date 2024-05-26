@@ -19,6 +19,21 @@ function Doctors() {
       Surname: "Johnson",
       Department: "Pediatrics",
     },
+    {
+      Name: "John",
+      Surname: "Peters",
+      Department: "Cardiology",
+    },
+    {
+      Name: "Jane",
+      Surname: "Smith",
+      Department: "Neurology",
+    },
+    {
+      Name: "Alice",
+      Surname: "Johnson",
+      Department: "Pediatrics",
+    },
   ];
 
   return (
