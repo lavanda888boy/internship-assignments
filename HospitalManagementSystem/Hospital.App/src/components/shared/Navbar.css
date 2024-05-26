@@ -1,0 +1,23 @@
+.page-sidebar {
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7%;
+  width: 5%;
+  height: 100%;
+  padding-top: 2.5%;
+  background-color: #9381ff;
+
+  .sidebar-action {
+    text-decoration: none;
+    color: white;
+  }
+
+  .sidebar-logout-action {
+    text-decoration: none;
+    color: white;
+    margin-top: auto;
+    margin-bottom: 90%;
+  }
+}
