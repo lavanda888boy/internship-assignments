@@ -1,7 +1,7 @@
 import "./Statusbar.css";
 import person from "../../assets/person.jpg";
 import { useContext } from "react";
-import { PageContext } from "../../PageContext";
+import { PageContext } from "../../context/PageContext";
 
 function Statusbar() {
   const pageContextProps = useContext(PageContext);
