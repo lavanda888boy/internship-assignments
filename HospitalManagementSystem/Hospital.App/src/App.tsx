@@ -5,14 +5,15 @@ import Statusbar from "./components/shared/Statusbar";
 import Doctors from "./pages/Doctors";
 import Patients from "./pages/Patients";
 import Records from "./pages/Records";
+import { PageContextProvider } from "./PageContext";
 
 function App() {
   return (
-    <>
+    <PageContextProvider>
       <Statusbar />
       <Navbar />
-      <Records />
-    </>
+      <Doctors />
+    </PageContextProvider>
   );
 }
 

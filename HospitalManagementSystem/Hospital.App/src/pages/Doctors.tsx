@@ -1,8 +1,16 @@
+import { useContext, useEffect } from "react";
 import DoctorCard from "../components/doctors/DoctorCard";
 import { Doctor } from "../models/Doctor";
 import "./Doctors.css";
+import { PageContext } from "../PageContext";
 
 function Doctors() {
+  const pageContextProps = useContext(PageContext);
+
+  useEffect(() => {
+    pageContextProps?.setPageName("Doctors");
+  }, []);
+
   const doctors: Doctor[] = [
     {
       Name: "John",

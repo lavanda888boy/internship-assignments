@@ -1,11 +1,15 @@
 import "./Statusbar.css";
 import person from "../../assets/person.jpg";
+import { useContext } from "react";
+import { PageContext } from "../../PageContext";
 
 function Statusbar() {
+  const pageContextProps = useContext(PageContext);
+
   return (
     <>
       <header className="page-header">
-        <h1 className="header-name">Dashboard</h1>
+        <h1 className="header-name">{pageContextProps?.pageName}</h1>
         <form>
           <input
             type="text"

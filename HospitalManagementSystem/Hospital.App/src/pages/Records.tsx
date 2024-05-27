@@ -1,8 +1,16 @@
+import { useContext, useEffect } from "react";
 import RecordCard from "../components/records/RecordCard";
 import { Record } from "../models/Record";
 import "./Records.css";
+import { PageContext } from "../PageContext";
 
 function Records() {
+  const pageContextProps = useContext(PageContext);
+
+  useEffect(() => {
+    pageContextProps?.setPageName("Medical Records");
+  }, []);
+
   const records: Record[] = [
     {
       PatientFullName: "Mike Jordan",
