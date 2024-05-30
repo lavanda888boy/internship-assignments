@@ -1,11 +1,23 @@
 import { Record } from "../../models/Record";
-import { Card, CardHeader, CardContent, Typography } from "@mui/material";
+import { Card, CardHeader, CardContent, Typography, Box } from "@mui/material";
+import ActionMenu from "../shared/ActionMenu";
+import React from "react";
 
 interface RecordCardProps {
   record: Record;
 }
 
 function RecordCard({ record: record }: RecordCardProps) {
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+
+  const handleMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
   return (
     <Card
       sx={{
@@ -21,7 +33,14 @@ function RecordCard({ record: record }: RecordCardProps) {
         subheaderTypographyProps={{ style: { color: "white" } }}
         sx={{ backgroundColor: "#9381ff", color: "white" }}
       />
-      <CardContent>
+      <CardContent
+        sx={{
+          padding: "2%",
+          "&:last-child": {
+            paddingBottom: "0.5%",
+          },
+        }}
+      >
         <Typography variant="body2" color="textSecondary" component="p">
           Examination notes: {record.ExaminationNotes}
         </Typography>
@@ -35,6 +54,14 @@ function RecordCard({ record: record }: RecordCardProps) {
             Treatment: {record.ProposedTreatment}
           </Typography>
         )}
+        <Box sx={{ textAlign: "right" }}>
+          <ActionMenu
+            rowId={record.id}
+            anchorEl={anchorEl}
+            handleMenuClick={handleMenuClick}
+            handleMenuClose={handleMenuClose}
+          />
+        </Box>
       </CardContent>
     </Card>
   );

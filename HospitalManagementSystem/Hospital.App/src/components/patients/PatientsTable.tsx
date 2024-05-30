@@ -1,8 +1,7 @@
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { Patient } from "../../models/Patient";
 import React, { useState } from "react";
-import { IconButton, Menu, MenuItem } from "@mui/material";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
+import ActionMenu from "../shared/ActionMenu";
 
 interface PatientsTableProps {
   patients: Patient[];
@@ -37,12 +36,12 @@ function PatientsTable({ patients }: PatientsTableProps) {
       headerName: "Actions",
       width: 80,
       renderCell: (params) => (
-        <IconButton
-          aria-label="actions"
-          onClick={(event) => handleMenuClick(event, params.row.id)}
-        >
-          <MoreVertIcon />
-        </IconButton>
+        <ActionMenu
+          rowId={params.row.id}
+          anchorEl={anchorEl}
+          handleMenuClick={handleMenuClick}
+          handleMenuClose={handleMenuClose}
+        />
       ),
     },
   ];
@@ -65,14 +64,6 @@ function PatientsTable({ patients }: PatientsTableProps) {
           borderRadius: "5px",
         }}
       />
-      <Menu
-        anchorEl={anchorEl}
-        open={Boolean(anchorEl)}
-        onClose={handleMenuClose}
-      >
-        <MenuItem>Update</MenuItem>
-        <MenuItem>Delete</MenuItem>
-      </Menu>
     </>
   );
 }

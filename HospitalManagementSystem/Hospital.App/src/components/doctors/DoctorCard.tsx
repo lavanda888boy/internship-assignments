@@ -1,12 +1,30 @@
 import { Doctor } from "../../models/Doctor";
 import person from "../../assets/person.jpg";
-import { Card, CardContent, CardMedia, Typography } from "@mui/material";
+import {
+  Card,
+  CardActions,
+  CardContent,
+  CardMedia,
+  Typography,
+} from "@mui/material";
+import React from "react";
+import ActionMenu from "../shared/ActionMenu";
 
 interface DoctorCardProps {
   doctor: Doctor;
 }
 
 function DoctorCard({ doctor }: DoctorCardProps) {
+  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+
+  const handleMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
+
   return (
     <Card
       sx={{
@@ -18,7 +36,7 @@ function DoctorCard({ doctor }: DoctorCardProps) {
         borderStyle: "solid",
         borderWidth: "5px",
         borderRadius: "5px",
-        padding: "4%",
+        padding: "2% 3% 1% 3%",
         marginBottom: "4%",
       }}
     >
@@ -36,6 +54,14 @@ function DoctorCard({ doctor }: DoctorCardProps) {
           {doctor.Department}
         </Typography>
       </CardContent>
+      <CardActions>
+        <ActionMenu
+          rowId={doctor.id}
+          anchorEl={anchorEl}
+          handleMenuClick={handleMenuClick}
+          handleMenuClose={handleMenuClose}
+        />
+      </CardActions>
     </Card>
   );
 }
