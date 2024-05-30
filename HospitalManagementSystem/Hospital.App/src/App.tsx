@@ -12,7 +12,7 @@ function App() {
     <PageContextProvider>
       <Statusbar />
       <Navbar />
-      <Patients />
+      <Records />
     </PageContextProvider>
   );
 }

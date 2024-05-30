@@ -8,6 +8,7 @@ function Records() {
 
   const records: Record[] = [
     {
+      id: 1,
       PatientFullName: "Mike Jordan",
       DoctorFullName: "John Doe",
       DateOfExamination: new Date().toDateString(),
@@ -16,6 +17,7 @@ function Records() {
       ProposedTreatment: "Citramon, 3 times a day, 7 days",
     },
     {
+      id: 2,
       PatientFullName: "Mike Jordan",
       DoctorFullName: "John Doe",
       DateOfExamination: new Date().toDateString(),
@@ -24,30 +26,7 @@ function Records() {
       ProposedTreatment: "Citramon, 3 times a day, 7 days",
     },
     {
-      PatientFullName: "Mike Jordan",
-      DoctorFullName: "John Doe",
-      DateOfExamination: new Date().toDateString(),
-      ExaminationNotes: "The patient was alright when I examined him.",
-      DiagnosedIllness: "Happiness",
-      ProposedTreatment: "Citramon, 3 times a day, 7 days",
-    },
-    {
-      PatientFullName: "Mike Jordan",
-      DoctorFullName: "John Doe",
-      DateOfExamination: new Date().toDateString(),
-      ExaminationNotes: "The patient was alright when I examined him.",
-      DiagnosedIllness: "Happiness",
-      ProposedTreatment: "Citramon, 3 times a day, 7 days",
-    },
-    {
-      PatientFullName: "Mike Jordan",
-      DoctorFullName: "John Doe",
-      DateOfExamination: new Date().toDateString(),
-      ExaminationNotes: "The patient was alright when I examined him.",
-      DiagnosedIllness: "Happiness",
-      ProposedTreatment: "Citramon, 3 times a day, 7 days",
-    },
-    {
+      id: 3,
       PatientFullName: "Mike Jordan",
       DoctorFullName: "John Doe",
       DateOfExamination: new Date().toDateString(),

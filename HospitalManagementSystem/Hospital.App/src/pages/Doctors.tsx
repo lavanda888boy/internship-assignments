@@ -8,31 +8,37 @@ function Doctors() {
 
   const doctors: Doctor[] = [
     {
+      id: 1,
       Name: "John",
       Surname: "Peters",
       Department: "Cardiology",
     },
     {
+      id: 2,
       Name: "Jane",
       Surname: "Smith",
       Department: "Neurology",
     },
     {
+      id: 3,
       Name: "Alice",
       Surname: "Johnson",
       Department: "Pediatrics",
     },
     {
+      id: 4,
       Name: "John",
       Surname: "Peters",
       Department: "Cardiology",
     },
     {
+      id: 5,
       Name: "Jane",
       Surname: "Smith",
       Department: "Neurology",
     },
     {
+      id: 6,
       Name: "Alice",
       Surname: "Johnson",
       Department: "Pediatrics",

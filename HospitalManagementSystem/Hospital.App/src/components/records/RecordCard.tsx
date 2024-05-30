@@ -1,5 +1,5 @@
 import { Record } from "../../models/Record";
-import "./RecordCard.css";
+import { Card, CardHeader, CardContent, Typography } from "@mui/material";
 
 interface RecordCardProps {
   record: Record;
@@ -7,24 +7,36 @@ interface RecordCardProps {
 
 function RecordCard({ record: record }: RecordCardProps) {
   return (
-    <>
-      <div className="card-content">
-        <div className="card-header">
-          <p>{record.DateOfExamination}</p>
-          <p>Examined patient: {record.PatientFullName}</p>
-          <p>Responsible doctor: {record.DoctorFullName}</p>
-        </div>
-        <p className="card-info">
+    <Card
+      sx={{
+        borderColor: "#B8B8FF",
+        borderStyle: "solid",
+        borderWidth: "5px",
+        borderRadius: "5px",
+      }}
+    >
+      <CardHeader
+        title={record.DateOfExamination}
+        subheader={`Examined patient: ${record.PatientFullName} | Responsible doctor: ${record.DoctorFullName}`}
+        subheaderTypographyProps={{ style: { color: "white" } }}
+        sx={{ backgroundColor: "#9381ff", color: "white" }}
+      />
+      <CardContent>
+        <Typography variant="body2" color="textSecondary" component="p">
           Examination notes: {record.ExaminationNotes}
-        </p>
+        </Typography>
         {record.DiagnosedIllness && (
-          <p className="card-info">Diagnosis: {record.DiagnosedIllness}</p>
+          <Typography variant="body2" color="textSecondary" component="p">
+            Diagnosis: {record.DiagnosedIllness}
+          </Typography>
         )}
         {record.ProposedTreatment && (
-          <p className="card-info">Treatment: {record.ProposedTreatment}</p>
+          <Typography variant="body2" color="textSecondary" component="p">
+            Treatment: {record.ProposedTreatment}
+          </Typography>
         )}
-      </div>
-    </>
+      </CardContent>
+    </Card>
   );
 }
 
