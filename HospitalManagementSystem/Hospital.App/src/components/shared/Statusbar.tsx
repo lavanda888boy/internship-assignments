@@ -1,70 +1,94 @@
-import "./Statusbar.css";
+import { useContext, useState } from "react";
+import {
+  AppBar,
+  Toolbar,
+  IconButton,
+  Typography,
+  TextField,
+  Button,
+  Box,
+} from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
 import person from "../../assets/person.jpg";
-import React, { useContext, useState } from "react";
 import { PageContext } from "../../context/PageContext";
+import Navbar from "./Navbar";
 
 function Statusbar() {
   const pageContextProps = useContext(PageContext);
+  const [navbarOpen, setNavbarOpen] = useState(false);
 
-  const [loginButton, setLoginButton] = useState(false);
-  const [loginForm, setLoginForm] = useState(false);
-  const [userName, setUserName] = useState("");
-  const [userSurname, setUserSurname] = useState("");
-
-  const handleLoginButtonClick = () => {
-    setLoginForm(!loginForm);
+  const toggleNavbar = (open: boolean) => () => {
+    setNavbarOpen(open);
   };
-
-  const handleLoginFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    setLoginButton(true);
-    setLoginForm(false);
-  };
-
   return (
     <>
-      <header className="page-header">
-        <h1 className="header-name">{pageContextProps?.pageName}</h1>
-        <form>
-          <input
-            type="text"
-            className="header-searchbar"
-            name="search"
-            placeholder="Search smth here"
-          />
-        </form>
-        {loginButton ? (
-          <p className="header-userinfo">
-            {userName} {userSurname}
-          </p>
-        ) : (
-          <button className="header-login" onClick={handleLoginButtonClick}>
+      <AppBar>
+        <Toolbar
+          sx={{
+            position: "fixed",
+            display: "flex",
+            flexDirection: "row",
+            width: "82%",
+            height: "5%",
+            zIndex: 2,
+            padding: "1%",
+            marginLeft: "8%",
+            borderRadius: "5px",
+            backgroundColor: "white",
+          }}
+        >
+          <IconButton
+            sx={{
+              backgroundColor: "#9381ff",
+              color: "white",
+              "&:hover": {
+                backgroundColor: "#B8B8FF",
+                color: "white",
+              },
+            }}
+            edge="start"
+            aria-label="menu"
+            onClick={toggleNavbar(true)}
+          >
+            <MenuIcon />
+          </IconButton>
+          <Typography
+            variant="h6"
+            sx={{ marginLeft: "2%", marginRight: "2%", color: "black" }}
+          >
+            {pageContextProps?.pageName}
+          </Typography>
+          <form>
+            <TextField
+              variant="outlined"
+              size="small"
+              placeholder="Search smth here"
+            />
+          </form>
+          <Button
+            sx={{
+              marginLeft: "auto",
+              marginRight: "1%",
+              padding: "0.5% 1% 0.5% 1%",
+              backgroundColor: "#9381ff",
+              color: "white",
+              "&:hover": {
+                backgroundColor: "#B8B8FF",
+                color: "white",
+              },
+            }}
+          >
             Login
-          </button>
-        )}
-        <img src={person} className="header-userimage" />
-        {loginForm && (
-          <div className="login-form-wrapper">
-            <form className="login-form" onSubmit={handleLoginFormSubmit}>
-              <input
-                type="text"
-                value={userName}
-                placeholder="Name"
-                onChange={(e) => setUserName(e.target.value)}
-              />
-              <input
-                type="text"
-                value={userSurname}
-                onChange={(e) => setUserSurname(e.target.value)}
-                placeholder="Surname"
-              />
-              <button type="submit" className="login-form-submit">
-                Submit
-              </button>
-            </form>
-          </div>
-        )}
-      </header>
+          </Button>
+          <Box
+            component="img"
+            src={person}
+            alt="User"
+            sx={{ width: "3%", height: "60%" }}
+          />
+        </Toolbar>
+      </AppBar>
+      <Navbar open={navbarOpen} onClose={toggleNavbar(false)} />
     </>
   );
 }

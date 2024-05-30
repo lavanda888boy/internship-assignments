@@ -35,7 +35,7 @@ function PatientsTable({ patients }: PatientsTableProps) {
     {
       field: "actions",
       headerName: "Actions",
-      width: 50,
+      width: 80,
       renderCell: (params) => (
         <IconButton
           aria-label="actions"

@@ -1,23 +1,59 @@
-import "./Navbar.css";
+import { Logout } from "@mui/icons-material";
+import {
+  Drawer,
+  List,
+  ListItem,
+  ListItemText,
+  ListItemButton,
+  Box,
+  IconButton,
+} from "@mui/material";
 
-function Navbar() {
+interface NavbarProps {
+  open: boolean;
+  onClose: () => void;
+}
+
+function Navbar({ open, onClose }: NavbarProps) {
   return (
-    <>
-      <aside className="page-sidebar">
-        <a href="" className="sidebar-action">
-          Patients
-        </a>
-        <a href="" className="sidebar-action">
-          Doctors
-        </a>
-        <a href="" className="sidebar-action">
-          Records
-        </a>
-        <a href="" className="sidebar-logout-action">
-          Logout
-        </a>
-      </aside>
-    </>
+    <Drawer anchor="left" open={open} onClose={onClose}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          width: 125,
+          height: "100%",
+          paddingTop: "10%",
+          backgroundColor: "#9381ff",
+          color: "white",
+          textAlign: "center",
+        }}
+        role="presentation"
+        onClick={onClose}
+      >
+        <List>
+          {["Patients", "Doctors", "Records"].map((text) => (
+            <ListItem key={text} disablePadding sx={{ marginY: 1 }}>
+              <ListItemButton>
+                <ListItemText primary={text} />
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>
+      </Box>
+      <Box
+        sx={{
+          height: "10%",
+          textAlign: "center",
+          backgroundColor: "#9381ff",
+          color: "white",
+        }}
+      >
+        <IconButton color="inherit">
+          <Logout />
+        </IconButton>
+      </Box>
+    </Drawer>
   );
 }
 
