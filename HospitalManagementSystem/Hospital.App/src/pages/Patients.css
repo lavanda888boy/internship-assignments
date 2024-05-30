@@ -8,11 +8,4 @@
   margin-left: 8%;
   border-radius: 5px;
   background-color: white;
-
-  .content-list {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 3%;
-  }
 }

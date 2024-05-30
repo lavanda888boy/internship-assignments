@@ -1,5 +1,5 @@
-import PatientCard from "../components/patients/PatientCard";
 import { Patient } from "../models/Patient";
+import PatientsTable from "../components/patients/PatientsTable";
 import "./Patients.css";
 import usePageTitle from "../hooks/PageTitleHook";
 
@@ -8,6 +8,7 @@ function Patients() {
 
   const patients: Patient[] = [
     {
+      id: 1,
       Name: "John",
       Surname: "Peters",
       Age: 25,
@@ -15,6 +16,7 @@ function Patients() {
       Address: "85 Qwertysdnsfd,snfdsm street",
     },
     {
+      id: 2,
       Name: "Jane",
       Surname: "Smith",
       Age: 25,
@@ -24,6 +26,7 @@ function Patients() {
       InsuranceNumber: "AB12574896",
     },
     {
+      id: 3,
       Name: "Alice",
       Surname: "Johnson",
       Age: 25,
@@ -34,15 +37,9 @@ function Patients() {
   ];
 
   return (
-    <>
-      <section className="page-content">
-        <div className="content-list">
-          {patients.map((patient, index) => (
-            <PatientCard key={index} patient={patient} />
-          ))}
-        </div>
-      </section>
-    </>
+    <div className="page-content">
+      <PatientsTable patients={patients}></PatientsTable>
+    </div>
   );
 }
 
