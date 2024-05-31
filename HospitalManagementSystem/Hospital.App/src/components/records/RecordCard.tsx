@@ -1,5 +1,12 @@
 import { Record } from "../../models/Record";
-import { Card, CardHeader, CardContent, Typography, Box } from "@mui/material";
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  Typography,
+  Box,
+  useTheme,
+} from "@mui/material";
 import ActionMenu from "../shared/ActionMenu";
 import React from "react";
 
@@ -8,6 +15,7 @@ interface RecordCardProps {
 }
 
 function RecordCard({ record: record }: RecordCardProps) {
+  const theme = useTheme();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const handleMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -21,7 +29,7 @@ function RecordCard({ record: record }: RecordCardProps) {
   return (
     <Card
       sx={{
-        borderColor: "#B8B8FF",
+        borderColor: theme.palette.primary.light,
         borderStyle: "solid",
         borderWidth: "5px",
         borderRadius: "5px",
@@ -31,7 +39,7 @@ function RecordCard({ record: record }: RecordCardProps) {
         title={record.DateOfExamination}
         subheader={`Examined patient: ${record.PatientFullName} | Responsible doctor: ${record.DoctorFullName}`}
         subheaderTypographyProps={{ style: { color: "white" } }}
-        sx={{ backgroundColor: "#9381ff", color: "white" }}
+        sx={{ backgroundColor: theme.palette.primary.main, color: "white" }}
       />
       <CardContent
         sx={{

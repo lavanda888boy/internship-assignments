@@ -7,6 +7,7 @@ import {
   TextField,
   Button,
   Box,
+  useTheme,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import person from "../../assets/person.jpg";
@@ -14,6 +15,7 @@ import { PageContext } from "../../context/PageContext";
 import Navbar from "./Navbar";
 
 function Statusbar() {
+  const theme = useTheme();
   const pageContextProps = useContext(PageContext);
   const [navbarOpen, setNavbarOpen] = useState(false);
 
@@ -39,10 +41,10 @@ function Statusbar() {
         >
           <IconButton
             sx={{
-              backgroundColor: "#9381ff",
+              backgroundColor: theme.palette.primary.main,
               color: "white",
               "&:hover": {
-                backgroundColor: "#B8B8FF",
+                backgroundColor: theme.palette.primary.light,
                 color: "white",
               },
             }}
@@ -73,7 +75,7 @@ function Statusbar() {
               backgroundColor: "#9381ff",
               color: "white",
               "&:hover": {
-                backgroundColor: "#B8B8FF",
+                backgroundColor: theme.palette.primary.light,
                 color: "white",
               },
             }}

@@ -6,6 +6,7 @@ import {
   CardContent,
   CardMedia,
   Typography,
+  useTheme,
 } from "@mui/material";
 import React from "react";
 import ActionMenu from "../shared/ActionMenu";
@@ -15,6 +16,7 @@ interface DoctorCardProps {
 }
 
 function DoctorCard({ doctor }: DoctorCardProps) {
+  const theme = useTheme();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const handleMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -32,7 +34,7 @@ function DoctorCard({ doctor }: DoctorCardProps) {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        borderColor: "#B8B8FF",
+        borderColor: theme.palette.primary.light,
         borderStyle: "solid",
         borderWidth: "5px",
         borderRadius: "5px",

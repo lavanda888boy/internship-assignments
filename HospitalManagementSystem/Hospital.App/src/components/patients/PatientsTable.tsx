@@ -2,12 +2,14 @@ import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { Patient } from "../../models/Patient";
 import React, { useState } from "react";
 import ActionMenu from "../shared/ActionMenu";
+import { useTheme } from "@mui/material";
 
 interface PatientsTableProps {
   patients: Patient[];
 }
 
 function PatientsTable({ patients }: PatientsTableProps) {
+  const theme = useTheme();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [selectedRowId, setSelectedRowId] = useState(0);
 
@@ -26,7 +28,7 @@ function PatientsTable({ patients }: PatientsTableProps) {
   const columns: GridColDef[] = [
     { field: "Name", headerName: "Name", width: 120 },
     { field: "Surname", headerName: "Surname", width: 120 },
-    { field: "Age", headerName: "Age", width: 50 },
+    { field: "Age", headerName: "Age", width: 60 },
     { field: "Gender", headerName: "Gender", width: 100 },
     { field: "Address", headerName: "Address", width: 270 },
     { field: "PhoneNumber", headerName: "Phone", width: 130 },
@@ -34,7 +36,7 @@ function PatientsTable({ patients }: PatientsTableProps) {
     {
       field: "actions",
       headerName: "Actions",
-      width: 80,
+      width: 95,
       renderCell: (params) => (
         <ActionMenu
           rowId={params.row.id}
@@ -60,7 +62,7 @@ function PatientsTable({ patients }: PatientsTableProps) {
         pageSizeOptions={[5, 10]}
         sx={{
           padding: "1% 2% 1% 2%",
-          border: "5px solid #B8B8FF",
+          border: `5px solid ${theme.palette.primary.main}`,
           borderRadius: "5px",
         }}
       />

@@ -7,6 +7,7 @@ import {
   ListItemButton,
   Box,
   IconButton,
+  useTheme,
 } from "@mui/material";
 
 interface NavbarProps {
@@ -15,6 +16,8 @@ interface NavbarProps {
 }
 
 function Navbar({ open, onClose }: NavbarProps) {
+  const theme = useTheme();
+
   return (
     <Drawer anchor="left" open={open} onClose={onClose}>
       <Box
@@ -24,7 +27,7 @@ function Navbar({ open, onClose }: NavbarProps) {
           width: 125,
           height: "100%",
           paddingTop: "10%",
-          backgroundColor: "#9381ff",
+          backgroundColor: theme.palette.primary.main,
           color: "white",
           textAlign: "center",
         }}
@@ -45,7 +48,7 @@ function Navbar({ open, onClose }: NavbarProps) {
         sx={{
           height: "10%",
           textAlign: "center",
-          backgroundColor: "#9381ff",
+          backgroundColor: theme.palette.primary.main,
           color: "white",
         }}
       >

@@ -11,6 +11,10 @@ const theme = createTheme({
       light: "#FFEEDD",
     },
   },
+  typography: {
+    fontFamily: "Roboto",
+    fontSize: 18,
+  },
 });
 
 export default theme;
