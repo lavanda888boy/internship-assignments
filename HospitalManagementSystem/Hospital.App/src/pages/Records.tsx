@@ -38,7 +38,7 @@ function Records() {
 
   return (
     <>
-      <section className="page-content">
+      <section className="records-content">
         <div className="content-list">
           {records.map((record, index) => (
             <RecordCard key={index} record={record} />

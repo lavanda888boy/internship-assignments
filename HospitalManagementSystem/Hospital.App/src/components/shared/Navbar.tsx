@@ -9,6 +9,7 @@ import {
   IconButton,
   useTheme,
 } from "@mui/material";
+import { Link } from "react-router-dom";
 
 interface NavbarProps {
   open: boolean;
@@ -17,6 +18,12 @@ interface NavbarProps {
 
 function Navbar({ open, onClose }: NavbarProps) {
   const theme = useTheme();
+
+  const routes = [
+    { text: "Patients", path: "/patients" },
+    { text: "Doctors", path: "/doctors" },
+    { text: "Records", path: "/records" },
+  ];
 
   return (
     <Drawer anchor="left" open={open} onClose={onClose}>
@@ -35,10 +42,10 @@ function Navbar({ open, onClose }: NavbarProps) {
         onClick={onClose}
       >
         <List>
-          {["Patients", "Doctors", "Records"].map((text) => (
-            <ListItem key={text} disablePadding sx={{ marginY: 1 }}>
-              <ListItemButton>
-                <ListItemText primary={text} />
+          {routes.map((route) => (
+            <ListItem key={route.text} disablePadding sx={{ marginY: 1 }}>
+              <ListItemButton component={Link} to={route.path}>
+                <ListItemText primary={route.text} />
               </ListItemButton>
             </ListItem>
           ))}

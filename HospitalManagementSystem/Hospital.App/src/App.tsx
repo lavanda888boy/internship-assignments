@@ -6,13 +6,20 @@ import { PageContextProvider } from "./context/PageContext";
 import { ThemeProvider } from "@mui/material";
 import theme from "./theme";
 import "./reset.css";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 function App() {
   return (
     <ThemeProvider theme={theme}>
       <PageContextProvider>
-        <Statusbar />
-        <Records />
+        <BrowserRouter>
+          <Statusbar />
+          <Routes>
+            <Route path="/patients" element={<Patients />} />
+            <Route path="/doctors" element={<Doctors />} />
+            <Route path="/records" element={<Records />} />
+          </Routes>
+        </BrowserRouter>
       </PageContextProvider>
     </ThemeProvider>
   );

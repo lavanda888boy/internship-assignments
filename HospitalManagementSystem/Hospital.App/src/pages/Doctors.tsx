@@ -47,7 +47,7 @@ function Doctors() {
 
   return (
     <>
-      <section className="page-content">
+      <section className="doctors-content">
         <div className="content-list">
           {doctors.map((doctor, index) => (
             <DoctorCard key={index} doctor={doctor} />

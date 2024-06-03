@@ -37,7 +37,7 @@ function Patients() {
   ];
 
   return (
-    <div className="page-content">
+    <div className="patients-content">
       <PatientsTable patients={patients}></PatientsTable>
     </div>
   );
