@@ -8,9 +8,14 @@ import {
   useTheme,
   InputLabel,
 } from "@mui/material";
+import usePageTitle from "../hooks/PageTitleHook";
+import { useNavigate } from "react-router-dom";
 
 function Registration() {
+  usePageTitle("Register");
+
   const theme = useTheme();
+  const navigate = useNavigate();
 
   const formik = useFormik({
     initialValues: {
@@ -42,7 +47,9 @@ function Registration() {
         .required("Confirm password is required"),
     }),
 
-    onSubmit: () => {},
+    onSubmit: () => {
+      navigate("/login");
+    },
   });
 
   return (
@@ -52,7 +59,7 @@ function Registration() {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        height: "100vh",
+        minHeight: "100vh",
         backgroundColor: theme.palette.secondary.main,
       }}
     >

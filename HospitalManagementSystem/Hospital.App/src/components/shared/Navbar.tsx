@@ -9,7 +9,7 @@ import {
   IconButton,
   useTheme,
 } from "@mui/material";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 interface NavbarProps {
   open: boolean;
@@ -18,12 +18,17 @@ interface NavbarProps {
 
 function Navbar({ open, onClose }: NavbarProps) {
   const theme = useTheme();
+  const navigate = useNavigate();
 
   const routes = [
     { text: "Patients", path: "/patients" },
     { text: "Doctors", path: "/doctors" },
     { text: "Records", path: "/records" },
   ];
+
+  const handleLogout = () => {
+    navigate("/");
+  };
 
   return (
     <Drawer anchor="left" open={open} onClose={onClose}>
@@ -59,7 +64,7 @@ function Navbar({ open, onClose }: NavbarProps) {
           color: "white",
         }}
       >
-        <IconButton color="inherit">
+        <IconButton color="inherit" onClick={handleLogout}>
           <Logout />
         </IconButton>
       </Box>
