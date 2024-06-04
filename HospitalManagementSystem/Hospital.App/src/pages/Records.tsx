@@ -4,7 +4,7 @@ import "./Records.css";
 import usePageTitle from "../hooks/PageTitleHook";
 import CreateActionButton from "../components/shared/CreateActionButton";
 import { useState } from "react";
-import AddRecordFormDialog from "../components/records/AddRecordFormDialog";
+import RecordFormDialog from "../components/records/RecordFormDialog";
 
 function Records() {
   usePageTitle("Medical Records");
@@ -61,7 +61,7 @@ function Records() {
             <RecordCard key={index} record={record} />
           ))}
         </div>
-        <AddRecordFormDialog
+        <RecordFormDialog
           open={createFormOpen}
           onClose={handleCreateFormClose}
         />

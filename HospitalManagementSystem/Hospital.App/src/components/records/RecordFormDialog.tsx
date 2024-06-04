@@ -9,6 +9,8 @@ import {
   TextField,
   Button,
   InputLabel,
+  FormControlLabel,
+  Checkbox,
 } from "@mui/material";
 
 interface AddRecordFormDialogProps {
@@ -16,12 +18,16 @@ interface AddRecordFormDialogProps {
   onClose: () => void;
 }
 
-function AddRecordFormDialog({ open, onClose }: AddRecordFormDialogProps) {
+function RecordFormDialog({ open, onClose }: AddRecordFormDialogProps) {
   const formik = useFormik({
     initialValues: {
+      isDiagnosis: false,
       examinedPatient: "",
       responsibleDoctor: "",
       examinationNotes: "",
+      diagnosedIllness: "",
+      prescribedMedicine: "",
+      treatmentDuration: 1,
     },
 
     validationSchema: Yup.object({
@@ -40,16 +46,28 @@ function AddRecordFormDialog({ open, onClose }: AddRecordFormDialogProps) {
       examinationNotes: Yup.string()
         .max(1800, "Examination notes must be precise")
         .required("Examination notes are required"),
+      diagnosedIllness: Yup.string()
+        .max(30, "Illness name should no longer than 30 characters")
+        .required("Diagnosed illness is required"),
+      prescribedMedicine: Yup.string()
+        .max(30, "Prescribed medicine name should no longer than 30 characters")
+        .required("Prescribed medicine is required"),
+      treatmentDuration: Yup.number()
+        .max(30, "Treatment duration should be no longer than 30 days")
+        .min(1, "Treatment duration should be no shorter than 1 day")
+        .required("Treatment duration is required"),
     }),
 
-    onSubmit: () => {
-      onClose();
-    },
+    onSubmit: () => {},
   });
+
+  const handleFormSubmit = () => {
+    onClose();
+  };
 
   return (
     <>
-      <Dialog open={open} onClose={onClose}>
+      <Dialog open={open}>
         <DialogTitle>Add Record</DialogTitle>
         <DialogContent>
           <DialogContentText>
@@ -63,8 +81,16 @@ function AddRecordFormDialog({ open, onClose }: AddRecordFormDialogProps) {
               padding: "3% 3% 0% 3%",
               backgroundColor: "white",
             }}
-            onSubmit={formik.handleSubmit}
           >
+            <FormControlLabel
+              control={
+                <Checkbox
+                  checked={formik.values.isDiagnosis}
+                  onChange={formik.handleChange("isDiagnosis")}
+                />
+              }
+              label="Is this a diagnosis record?"
+            />
             <InputLabel htmlFor="examinedPatient">Examined patient</InputLabel>
             <TextField
               name="examinedPatient"
@@ -120,10 +146,77 @@ function AddRecordFormDialog({ open, onClose }: AddRecordFormDialogProps) {
                 formik.errors.examinationNotes
               }
               fullWidth
+              multiline
+              rows={3}
               sx={{ mt: 0, mb: 1 }}
             />
+            {formik.values.isDiagnosis && (
+              <>
+                <InputLabel htmlFor="diagnosedIllness">
+                  Diagnosed illness
+                </InputLabel>
+                <TextField
+                  name="diagnosedIllness"
+                  value={formik.values.diagnosedIllness}
+                  placeholder="Enter diagnosed illness"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  error={
+                    formik.touched.diagnosedIllness &&
+                    Boolean(formik.errors.diagnosedIllness)
+                  }
+                  helperText={
+                    formik.touched.diagnosedIllness &&
+                    formik.errors.diagnosedIllness
+                  }
+                  fullWidth
+                  sx={{ mt: 0, mb: 1 }}
+                />
+                <InputLabel htmlFor="prescribedMedicine">
+                  Prescribed medicine
+                </InputLabel>
+                <TextField
+                  name="prescribedMedicine"
+                  value={formik.values.prescribedMedicine}
+                  placeholder="Enter prescribed medicine"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  error={
+                    formik.touched.prescribedMedicine &&
+                    Boolean(formik.errors.prescribedMedicine)
+                  }
+                  helperText={
+                    formik.touched.prescribedMedicine &&
+                    formik.errors.prescribedMedicine
+                  }
+                  fullWidth
+                  sx={{ mt: 0, mb: 1 }}
+                />
+                <InputLabel htmlFor="treatmentDuration">
+                  Treatment duration
+                </InputLabel>
+                <TextField
+                  name="treatmentDuration"
+                  type="number"
+                  value={formik.values.treatmentDuration}
+                  placeholder="Enter treatment duration"
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  error={
+                    formik.touched.treatmentDuration &&
+                    Boolean(formik.errors.treatmentDuration)
+                  }
+                  helperText={
+                    formik.touched.treatmentDuration &&
+                    formik.errors.treatmentDuration
+                  }
+                  fullWidth
+                  sx={{ mt: 0, mb: 1 }}
+                />
+              </>
+            )}
             <Button
-              type="submit"
+              onClick={handleFormSubmit}
               variant="contained"
               color="primary"
               sx={{ mt: 2, mx: 12 }}
@@ -140,4 +233,4 @@ function AddRecordFormDialog({ open, onClose }: AddRecordFormDialogProps) {
   );
 }
 
-export default AddRecordFormDialog;
+export default RecordFormDialog;
