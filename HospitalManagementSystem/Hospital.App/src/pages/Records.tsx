@@ -3,9 +3,21 @@ import { Record } from "../models/Record";
 import "./Records.css";
 import usePageTitle from "../hooks/PageTitleHook";
 import CreateActionButton from "../components/shared/CreateActionButton";
+import { useState } from "react";
+import AddRecordFormDialog from "../components/records/AddRecordFormDialog";
 
 function Records() {
   usePageTitle("Medical Records");
+
+  const [createFormOpen, setCreateFormOpen] = useState(false);
+
+  const handleCreateFormOpen = () => {
+    setCreateFormOpen(true);
+  };
+
+  const handleCreateFormClose = () => {
+    setCreateFormOpen(false);
+  };
 
   const records: Record[] = [
     {
@@ -41,11 +53,18 @@ function Records() {
     <>
       <section className="records-content">
         <div className="content-list">
-          <CreateActionButton entityName="Record" />
+          <CreateActionButton
+            entityName="Record"
+            clickAction={handleCreateFormOpen}
+          />
           {records.map((record, index) => (
             <RecordCard key={index} record={record} />
           ))}
         </div>
+        <AddRecordFormDialog
+          open={createFormOpen}
+          onClose={handleCreateFormClose}
+        />
       </section>
     </>
   );
