@@ -13,15 +13,22 @@ import MenuIcon from "@mui/icons-material/Menu";
 import person from "../../assets/person.jpg";
 import { PageContext } from "../../context/PageContext";
 import Navbar from "./Navbar";
+import { useNavigate } from "react-router-dom";
 
 function Statusbar() {
   const theme = useTheme();
+  const navigate = useNavigate();
   const pageContextProps = useContext(PageContext);
   const [navbarOpen, setNavbarOpen] = useState(false);
 
   const toggleNavbar = (open: boolean) => () => {
     setNavbarOpen(open);
   };
+
+  const handleLoginButton = () => {
+    navigate("/");
+  };
+
   return (
     <>
       <AppBar>
@@ -79,6 +86,7 @@ function Statusbar() {
                 color: "white",
               },
             }}
+            onClick={handleLoginButton}
           >
             Login
           </Button>

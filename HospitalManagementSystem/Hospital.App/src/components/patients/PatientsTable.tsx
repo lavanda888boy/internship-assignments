@@ -62,6 +62,7 @@ function PatientsTable({ patients }: PatientsTableProps) {
         pageSizeOptions={[5, 10]}
         sx={{
           padding: "1% 2% 1% 2%",
+          mt: "2%",
           border: `5px solid ${theme.palette.primary.main}`,
           borderRadius: "5px",
         }}

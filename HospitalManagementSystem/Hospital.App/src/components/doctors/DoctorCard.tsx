@@ -39,7 +39,7 @@ function DoctorCard({ doctor }: DoctorCardProps) {
         borderWidth: "5px",
         borderRadius: "5px",
         padding: "2% 3% 1% 3%",
-        marginBottom: "4%",
+        my: "3%",
       }}
     >
       <CardMedia

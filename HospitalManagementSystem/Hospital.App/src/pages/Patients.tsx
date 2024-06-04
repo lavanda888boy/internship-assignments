@@ -2,6 +2,7 @@ import { Patient } from "../models/Patient";
 import PatientsTable from "../components/patients/PatientsTable";
 import "./Patients.css";
 import usePageTitle from "../hooks/PageTitleHook";
+import CreateActionButton from "../components/shared/CreateActionButton";
 
 function Patients() {
   usePageTitle("Patients");
@@ -38,6 +39,7 @@ function Patients() {
 
   return (
     <div className="patients-content">
+      <CreateActionButton entityName="Patient" />
       <PatientsTable patients={patients}></PatientsTable>
     </div>
   );

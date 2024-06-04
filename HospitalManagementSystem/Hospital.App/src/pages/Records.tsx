@@ -2,6 +2,7 @@ import RecordCard from "../components/records/RecordCard";
 import { Record } from "../models/Record";
 import "./Records.css";
 import usePageTitle from "../hooks/PageTitleHook";
+import CreateActionButton from "../components/shared/CreateActionButton";
 
 function Records() {
   usePageTitle("Medical Records");
@@ -40,6 +41,7 @@ function Records() {
     <>
       <section className="records-content">
         <div className="content-list">
+          <CreateActionButton entityName="Record" />
           {records.map((record, index) => (
             <RecordCard key={index} record={record} />
           ))}

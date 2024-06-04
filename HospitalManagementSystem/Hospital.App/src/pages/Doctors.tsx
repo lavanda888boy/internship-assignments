@@ -2,6 +2,7 @@ import DoctorCard from "../components/doctors/DoctorCard";
 import { Doctor } from "../models/Doctor";
 import "./Doctors.css";
 import usePageTitle from "../hooks/PageTitleHook";
+import CreateActionButton from "../components/shared/CreateActionButton";
 
 function Doctors() {
   usePageTitle("Doctors");
@@ -49,6 +50,7 @@ function Doctors() {
     <>
       <section className="doctors-content">
         <div className="content-list">
+          <CreateActionButton entityName="Doctor" />
           {doctors.map((doctor, index) => (
             <DoctorCard key={index} doctor={doctor} />
           ))}

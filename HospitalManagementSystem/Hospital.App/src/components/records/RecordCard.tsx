@@ -14,7 +14,7 @@ interface RecordCardProps {
   record: Record;
 }
 
-function RecordCard({ record: record }: RecordCardProps) {
+function RecordCard({ record }: RecordCardProps) {
   const theme = useTheme();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
