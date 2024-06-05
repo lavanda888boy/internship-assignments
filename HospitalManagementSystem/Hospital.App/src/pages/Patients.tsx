@@ -3,9 +3,21 @@ import PatientsTable from "../components/patients/PatientsTable";
 import "./Patients.css";
 import usePageTitle from "../hooks/PageTitleHook";
 import CreateActionButton from "../components/shared/CreateActionButton";
+import { useState } from "react";
+import PatientFormDialog from "../components/patients/PatientFormDialog";
 
 function Patients() {
   usePageTitle("Patients");
+
+  const [createFormOpen, setCreateFormOpen] = useState(false);
+
+  const handleCreateFormOpen = () => {
+    setCreateFormOpen(true);
+  };
+
+  const handleCreateFormClose = () => {
+    setCreateFormOpen(false);
+  };
 
   const patients: Patient[] = [
     {
@@ -39,8 +51,15 @@ function Patients() {
 
   return (
     <div className="patients-content">
-      <CreateActionButton entityName="Patient" />
+      <CreateActionButton
+        entityName="Patient"
+        clickAction={handleCreateFormOpen}
+      />
       <PatientsTable patients={patients}></PatientsTable>
+      <PatientFormDialog
+        open={createFormOpen}
+        onClose={handleCreateFormClose}
+      />
     </div>
   );
 }

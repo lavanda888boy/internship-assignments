@@ -13,12 +13,12 @@ import {
   Checkbox,
 } from "@mui/material";
 
-interface AddRecordFormDialogProps {
+interface RecordFormDialogProps {
   open: boolean;
   onClose: () => void;
 }
 
-function RecordFormDialog({ open, onClose }: AddRecordFormDialogProps) {
+function RecordFormDialog({ open, onClose }: RecordFormDialogProps) {
   const formik = useFormik({
     initialValues: {
       isDiagnosis: false,
@@ -46,28 +46,59 @@ function RecordFormDialog({ open, onClose }: AddRecordFormDialogProps) {
       examinationNotes: Yup.string()
         .max(1800, "Examination notes must be precise")
         .required("Examination notes are required"),
-      diagnosedIllness: Yup.string()
-        .max(30, "Illness name should no longer than 30 characters")
-        .required("Diagnosed illness is required"),
-      prescribedMedicine: Yup.string()
-        .max(30, "Prescribed medicine name should no longer than 30 characters")
-        .required("Prescribed medicine is required"),
-      treatmentDuration: Yup.number()
-        .max(30, "Treatment duration should be no longer than 30 days")
-        .min(1, "Treatment duration should be no shorter than 1 day")
-        .required("Treatment duration is required"),
+      diagnosedIllness: Yup.string().test(
+        "isDiagnosis",
+        "Diagnosed illness is required",
+        function (value) {
+          const isDiagnosis = this.parent.isDiagnosis;
+          if (isDiagnosis) {
+            return Yup.string()
+              .max(30, "Illness name should be no longer than 30 characters")
+              .required("Diagnosed illness is required")
+              .isValidSync(value);
+          } else return Yup.string().isValidSync(value);
+        }
+      ),
+      prescribedMedicine: Yup.string().test(
+        "isDiagnosis",
+        "Prescribed medicine is required",
+        function (value) {
+          const isDiagnosis = this.parent.isDiagnosis;
+          if (isDiagnosis) {
+            return Yup.string()
+              .max(
+                30,
+                "Prescribed medicine name should be no longer than 30 characters"
+              )
+              .required("Prescribed medicine is required")
+              .isValidSync(value);
+          } else return Yup.string().isValidSync(value);
+        }
+      ),
+      treatmentDuration: Yup.number().test(
+        "isDiagnosis",
+        "Treatment duration is required",
+        function (value) {
+          const isDiagnosis = this.parent.isDiagnosis;
+          if (isDiagnosis) {
+            return Yup.number()
+              .max(30, "Treatment duration should be no longer than 30 days")
+              .min(1, "Treatment duration should be no shorter than 1 day")
+              .required("Treatment duration is required")
+              .isValidSync(value);
+          } else return Yup.string().isValidSync(value);
+        }
+      ),
     }),
 
-    onSubmit: () => {},
+    onSubmit: () => {
+      onClose();
+    },
   });
-
-  const handleFormSubmit = () => {
-    onClose();
-  };
 
   return (
     <>
-      <Dialog open={open}>
+      <Dialog open={open} onClose={onClose}>
         <DialogTitle>Add Record</DialogTitle>
         <DialogContent>
           <DialogContentText>
@@ -81,6 +112,7 @@ function RecordFormDialog({ open, onClose }: AddRecordFormDialogProps) {
               padding: "3% 3% 0% 3%",
               backgroundColor: "white",
             }}
+            onSubmit={formik.handleSubmit}
           >
             <FormControlLabel
               control={
@@ -216,7 +248,7 @@ function RecordFormDialog({ open, onClose }: AddRecordFormDialogProps) {
               </>
             )}
             <Button
-              onClick={handleFormSubmit}
+              type="submit"
               variant="contained"
               color="primary"
               sx={{ mt: 2, mx: 12 }}
