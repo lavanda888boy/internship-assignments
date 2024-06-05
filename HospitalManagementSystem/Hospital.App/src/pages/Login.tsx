@@ -9,7 +9,7 @@ import {
   InputLabel,
 } from "@mui/material";
 import usePageTitle from "../hooks/PageTitleHook";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 function Login() {
   usePageTitle("Login");
@@ -103,6 +103,14 @@ function Login() {
         >
           Login
         </Button>
+        <Typography sx={{ mt: 2, textAlign: "center" }} variant="body1">
+          Don't have an account?{" "}
+          <Link to={"/registration"}>
+            <Typography variant="body1" sx={{ display: "inline" }}>
+              Click here to register
+            </Typography>
+          </Link>
+        </Typography>
       </Box>
     </Box>
   );
