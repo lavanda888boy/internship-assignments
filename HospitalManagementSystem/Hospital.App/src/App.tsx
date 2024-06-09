@@ -5,7 +5,7 @@ import "./reset.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Registration from "./pages/Registration";
 import Login from "./pages/Login";
-import PageLayout from "./PageLayout";
+import PageLayout from "./routes/PageLayout";
 import { UserRoleContextProvider } from "./context/UserRoleContext";
 
 function App() {

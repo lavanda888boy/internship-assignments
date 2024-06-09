@@ -1,4 +1,4 @@
-import axios from "../axios";
+import api from "../axios";
 import { jwtDecode, JwtPayload } from "jwt-decode";
 
 interface RegisterUserDto {
@@ -19,9 +19,9 @@ interface CustomJwtPayload extends JwtPayload {
 }
 
 class AuthService {
-  public async register(user: RegisterUserDto) {
+  public async register(user: RegisterUserDto): Promise<string> {
     try {
-      const response = await axios.post("/Auth/Register", user);
+      const response = await api.post("/Auth/Register", user);
       const token = response.data;
 
       localStorage.setItem("access-token", token);
@@ -31,9 +31,9 @@ class AuthService {
     }
   }
 
-  public async login(user: LoginUserDto) {
+  public async login(user: LoginUserDto): Promise<string> {
     try {
-      const response = await axios.post("/Auth/Login", user);
+      const response = await api.post("/Auth/Login", user);
       const token = response.data;
 
       localStorage.setItem("access-token", token);
@@ -47,7 +47,7 @@ class AuthService {
     localStorage.removeItem("access-token");
   }
 
-  private getUserRoleFromToken(token: string) {
+  private getUserRoleFromToken(token: string): string {
     const decodedToken = jwtDecode(token) as CustomJwtPayload;
     const userRole =
       decodedToken[
