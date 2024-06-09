@@ -11,11 +11,14 @@ import {
 import usePageTitle from "../hooks/PageTitleHook";
 import { useNavigate } from "react-router-dom";
 import AuthService from "../api/services/AuthService";
+import { useContext } from "react";
+import { UserRoleContext } from "../context/UserRoleContext";
 
 function Registration() {
   usePageTitle("Register");
 
   const theme = useTheme();
+  const userRoleContextProps = useContext(UserRoleContext);
   const navigate = useNavigate();
 
   const formik = useFormik({
@@ -58,7 +61,8 @@ function Registration() {
           role: "PatientUser",
         };
 
-        await AuthService.register(user);
+        const userRole = await AuthService.register(user);
+        userRoleContextProps?.setUserRole(userRole);
         navigate("/");
       } catch (error) {
         console.log(error);

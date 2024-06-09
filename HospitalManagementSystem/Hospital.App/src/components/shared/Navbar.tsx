@@ -10,6 +10,9 @@ import {
   useTheme,
 } from "@mui/material";
 import { Link, useNavigate } from "react-router-dom";
+import AuthService from "../../api/services/AuthService";
+import { useContext } from "react";
+import { UserRoleContext } from "../../context/UserRoleContext";
 
 interface NavbarProps {
   open: boolean;
@@ -18,6 +21,7 @@ interface NavbarProps {
 
 function Navbar({ open, onClose }: NavbarProps) {
   const theme = useTheme();
+  const userRoleContextProps = useContext(UserRoleContext);
   const navigate = useNavigate();
 
   const routes = [
@@ -27,6 +31,8 @@ function Navbar({ open, onClose }: NavbarProps) {
   ];
 
   const handleLogout = () => {
+    AuthService.logout();
+    userRoleContextProps?.setUserRole("");
     navigate("/");
   };
 

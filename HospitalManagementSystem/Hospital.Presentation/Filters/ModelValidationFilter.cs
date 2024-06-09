@@ -15,7 +15,7 @@ namespace Hospital.Presentation.Filters
         public void OnActionExecuted(ActionExecutedContext context)
         {
             var requestPath = context.HttpContext.Request.Path;
-            _logger.LogInformation("Path: {Path}\nModel validated succesfully", requestPath);
+            _logger.LogInformation("Path: {Path}\nModel validated successfully", requestPath);
         }
 
         public void OnActionExecuting(ActionExecutingContext context)

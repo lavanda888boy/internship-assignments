@@ -11,11 +11,14 @@ import {
 import usePageTitle from "../hooks/PageTitleHook";
 import { useNavigate, Link } from "react-router-dom";
 import AuthService from "../api/services/AuthService";
+import { useContext } from "react";
+import { UserRoleContext } from "../context/UserRoleContext";
 
 function Login() {
   usePageTitle("Login");
 
   const theme = useTheme();
+  const userRoleContextProps = useContext(UserRoleContext);
   const navigate = useNavigate();
 
   const formik = useFormik({
@@ -38,7 +41,8 @@ function Login() {
           password: values.password,
         };
 
-        await AuthService.login(user);
+        const userRole = await AuthService.login(user);
+        userRoleContextProps?.setUserRole(userRole);
         navigate("/doctors");
       } catch (error) {
         console.log(error);

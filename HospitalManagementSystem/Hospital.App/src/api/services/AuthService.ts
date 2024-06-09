@@ -1,4 +1,5 @@
 import axios from "../axios";
+import { jwtDecode, JwtPayload } from "jwt-decode";
 
 interface RegisterUserDto {
   name: string;
@@ -13,12 +14,18 @@ interface LoginUserDto {
   password: string;
 }
 
+interface CustomJwtPayload extends JwtPayload {
+  "http://schemas.microsoft.com/ws/2008/06/identity/claims/role": string;
+}
+
 class AuthService {
   public async register(user: RegisterUserDto) {
     try {
       const response = await axios.post("/Auth/Register", user);
       const token = response.data;
+
       localStorage.setItem("access-token", token);
+      return this.getUserRoleFromToken(token);
     } catch (error) {
       throw error;
     }
@@ -28,7 +35,9 @@ class AuthService {
     try {
       const response = await axios.post("/Auth/Login", user);
       const token = response.data;
+
       localStorage.setItem("access-token", token);
+      return this.getUserRoleFromToken(token);
     } catch (error) {
       throw error;
     }
@@ -36,6 +45,15 @@ class AuthService {
 
   public logout() {
     localStorage.removeItem("access-token");
+  }
+
+  private getUserRoleFromToken(token: string) {
+    const decodedToken = jwtDecode(token) as CustomJwtPayload;
+    const userRole =
+      decodedToken[
+        "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
+      ];
+    return userRole;
   }
 }
 
