@@ -42,6 +42,17 @@ namespace Hospital.Presentation
 
             builder.Services.AddAutoMapper(typeof(ListAllPaginatedRegularMedicalRecords));
 
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("AllowLocalHostReactApp",
+                    builder =>
+                    {
+                        builder.WithOrigins("http://localhost:5173")
+                               .AllowAnyHeader()
+                               .AllowAnyMethod();
+                    });
+            });
+
             var app = builder.Build();
 
             if (app.Environment.IsDevelopment())
@@ -55,6 +66,8 @@ namespace Hospital.Presentation
             app.UseMiddleware<DbTransactionMiddleware>();
 
             app.UseHttpsRedirection();
+
+            app.UseCors("AllowLocalHostReactApp");
 
             app.UseAuthentication();
 

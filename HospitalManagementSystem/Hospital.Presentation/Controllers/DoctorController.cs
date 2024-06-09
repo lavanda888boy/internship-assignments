@@ -14,24 +14,18 @@ namespace Hospital.Presentation.Controllers
     public class DoctorController : ControllerBase
     {
         private readonly IMediator _mediator;
-        private readonly ILogger<DoctorController> _logger;
 
-        public DoctorController(IMediator mediator, ILogger<DoctorController> logger)
+        public DoctorController(IMediator mediator)
         {
             _mediator = mediator;
-            _logger = logger;
         }
 
         [HttpGet]
         [Authorize(Roles = "Admin, DoctorUser, PatientUser")]
         public async Task<IActionResult> GetPaginatedDoctors([FromQuery] int pageNumber, [FromQuery] int pageSize)
         {
-            _logger.LogInformation("Extracting the list of doctors...");
-
             var command = new ListAllPaginatedDoctors(pageNumber, pageSize);
             var paginatedDoctors = await _mediator.Send(command);
-
-            _logger.LogInformation("Doctors successfully extracted. Page items count: {Count}", paginatedDoctors.Items.Count);
 
             return Ok(paginatedDoctors);
         }
@@ -40,12 +34,8 @@ namespace Hospital.Presentation.Controllers
         [Authorize(Roles = "Admin, DoctorUser, PatientUser")]
         public async Task<IActionResult> GetDoctorById(int id)
         {
-            _logger.LogInformation("Extracting the doctor with id: {Id}...", id);
-
             var command = new GetDoctorById(id);
             var doctor = await _mediator.Send(command);
-
-            _logger.LogInformation("Doctor with id: {Id} successfully extracted", id);
 
             return Ok(doctor);
         } 
@@ -55,13 +45,10 @@ namespace Hospital.Presentation.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> AddDoctor(DoctorRequestDto doctor)
         {
-            _logger.LogInformation("Adding new doctor: {Name} {Surname}...", doctor.Name, doctor.Surname);
-
             var command = new EmployNewDoctor(doctor.Name, doctor.Surname, doctor.Address, doctor.PhoneNumber, doctor.DepartmentId,
                 TimeSpan.Parse(doctor.StartShift), TimeSpan.Parse(doctor.EndShift), doctor.WeekDayIds);
 
             var newDoctor = await _mediator.Send(command);
-            _logger.LogInformation("Doctor: {Name} {Surname} was successfully added", doctor.Name, doctor.Surname);
 
             return StatusCode(201, newDoctor);
         }
@@ -71,14 +58,11 @@ namespace Hospital.Presentation.Controllers
         public async Task<IActionResult> SearchDoctorsByASetOfProperties([FromQuery] int pageNumber, 
             [FromQuery] int pageSize, [FromBody] DoctorFilterRequestDto doctorFilter)
         {
-            _logger.LogInformation("Searching doctors by a set of properties...");
-
             var command = new SearchDoctorsByASetOfPropertiesPaginated(pageNumber, pageSize, 
                 doctorFilter.Name, doctorFilter.Surname, doctorFilter.Address, doctorFilter.PhoneNumber,
                 doctorFilter.DepartmentName);
 
             var doctors = await _mediator.Send(command);
-            _logger.LogInformation("Doctors with such properties were found. Page items count: {Count}", doctors.Items.Count);
 
             return Ok(doctors);
         }
@@ -88,13 +72,10 @@ namespace Hospital.Presentation.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateDoctorPersonalInfo(int id, DoctorRequestDto doctor)
         {
-            _logger.LogInformation("Updating doctor's (id = {Id}) personal info...", id);
-
             var command = new UpdateDoctorPersonalInfo(id, doctor.Name, doctor.Surname, doctor.Address, doctor.PhoneNumber,
                 doctor.DepartmentId, TimeSpan.Parse(doctor.StartShift), TimeSpan.Parse(doctor.EndShift), doctor.WeekDayIds);
 
             var updatedDoctor = await _mediator.Send(command);
-            _logger.LogInformation("Doctor's personal info successfully updated (id = {Id})", id);
 
             return Ok(updatedDoctor);
         }
@@ -103,12 +84,8 @@ namespace Hospital.Presentation.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateDoctorAssignedPatients(int id, [FromQuery] List<int> patientIds)
         {
-            _logger.LogInformation("Updating doctor's (id = {Id}) assigned patients...", id);
-
             var command = new UpdateDoctorAssignedPatients(id, patientIds);
             var updatedDoctor = await _mediator.Send(command);
-
-            _logger.LogInformation("Doctor's assigned patients successfully updated (id = {Id})", id);
 
             return Ok(updatedDoctor);
         }
@@ -117,12 +94,8 @@ namespace Hospital.Presentation.Controllers
         [Authorize(Roles = "Admin")]
         public async Task<IActionResult> DeleteDoctor(int id)
         {
-            _logger.LogInformation("Deleting doctor with id: {Id}...", id);
-
             var command = new RemoveWronglyEmployedDoctor(id);
             var deletedDoctor = await _mediator.Send(command);
-
-            _logger.LogInformation("Doctor with id: {Id} was successfully deleted", id);
 
             return Ok(deletedDoctor);
         }

@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import usePageTitle from "../hooks/PageTitleHook";
 import { useNavigate, Link } from "react-router-dom";
+import AuthService from "../api/services/AuthService";
 
 function Login() {
   usePageTitle("Login");
@@ -27,16 +28,21 @@ function Login() {
       email: Yup.string()
         .email("Invalid email address")
         .required("Email is required"),
-      password: Yup.string()
-        .min(10, "Password must be at least 10 characters long")
-        .matches(/[0-9]/, "Password must contain at least one digit")
-        .matches(/[a-z]/, "Password must contain at least one lowercase letter")
-        .matches(/[A-Z]/, "Password must contain at least one uppercase letter")
-        .required("Password is required"),
+      password: Yup.string().required("Password is required"),
     }),
 
-    onSubmit: () => {
-      navigate("/doctors");
+    onSubmit: async (values) => {
+      try {
+        const user = {
+          email: values.email,
+          password: values.password,
+        };
+
+        await AuthService.login(user);
+        navigate("/doctors");
+      } catch (error) {
+        console.log(error);
+      }
     },
   });
 
@@ -71,7 +77,7 @@ function Login() {
         </Typography>
         <InputLabel htmlFor="email">Email</InputLabel>
         <TextField
-          name="email"
+          id="email"
           type="email"
           value={formik.values.email}
           placeholder="Enter your email address"
@@ -84,7 +90,7 @@ function Login() {
         />
         <InputLabel htmlFor="password">Password</InputLabel>
         <TextField
-          name="password"
+          id="password"
           type="password"
           value={formik.values.password}
           placeholder="Enter your password"

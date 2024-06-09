@@ -10,6 +10,7 @@ import {
 } from "@mui/material";
 import usePageTitle from "../hooks/PageTitleHook";
 import { useNavigate } from "react-router-dom";
+import AuthService from "../api/services/AuthService";
 
 function Registration() {
   usePageTitle("Register");
@@ -47,8 +48,21 @@ function Registration() {
         .required("Confirm password is required"),
     }),
 
-    onSubmit: () => {
-      navigate("/login");
+    onSubmit: async (values) => {
+      try {
+        const user = {
+          name: values.name,
+          surname: values.surname,
+          email: values.email,
+          password: values.password,
+          role: "PatientUser",
+        };
+
+        await AuthService.register(user);
+        navigate("/");
+      } catch (error) {
+        console.log(error);
+      }
     },
   });
 
@@ -83,7 +97,7 @@ function Registration() {
         </Typography>
         <InputLabel htmlFor="name">Name</InputLabel>
         <TextField
-          name="name"
+          id="name"
           value={formik.values.name}
           placeholder="Enter your name"
           onChange={formik.handleChange}
@@ -95,7 +109,7 @@ function Registration() {
         />
         <InputLabel htmlFor="surname">Surname</InputLabel>
         <TextField
-          name="surname"
+          id="surname"
           value={formik.values.surname}
           placeholder="Enter your surname"
           onChange={formik.handleChange}
@@ -107,7 +121,7 @@ function Registration() {
         />
         <InputLabel htmlFor="email">Email</InputLabel>
         <TextField
-          name="email"
+          id="email"
           type="email"
           value={formik.values.email}
           placeholder="Enter your email address"
@@ -120,7 +134,7 @@ function Registration() {
         />
         <InputLabel htmlFor="password">Password</InputLabel>
         <TextField
-          name="password"
+          id="password"
           type="password"
           value={formik.values.password}
           placeholder="Enter your password"
@@ -133,7 +147,7 @@ function Registration() {
         />
         <InputLabel htmlFor="confirmPassword">Confirm password</InputLabel>
         <TextField
-          name="confirmPassword"
+          id="confirmPassword"
           type="password"
           value={formik.values.confirmPassword}
           placeholder="Repeat the password"
