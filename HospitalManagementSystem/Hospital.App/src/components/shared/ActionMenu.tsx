@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { IconButton, Menu, MenuItem } from "@mui/material";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { Patient } from "../../models/Patient";
+import PatientFormDialog from "../patients/PatientFormDialog";
 
 interface ActionMenuProps {
   rowId: number;
+  patient: Patient | null;
   anchorEl: HTMLElement | null;
   handleMenuClick: (
     event: React.MouseEvent<HTMLButtonElement>,
@@ -15,14 +18,28 @@ interface ActionMenuProps {
 
 function ActionMenu({
   rowId,
+  patient,
   anchorEl,
   handleMenuClick,
   handleMenuClose,
   onEntityDelete,
 }: ActionMenuProps) {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const handleOpenDialog = () => {
+    setIsDialogOpen(true);
+  };
+
+  const handleCloseDialog = () => {
+    setIsDialogOpen(false);
+  };
+
+  const handleUpdateEntity = () => {
+    window.location.reload();
+  };
+
   const handleDeleteEntity = () => {
     onEntityDelete();
-    handleMenuClose();
   };
 
   return (
@@ -38,9 +55,18 @@ function ActionMenu({
         open={Boolean(anchorEl)}
         onClose={handleMenuClose}
       >
-        <MenuItem onClick={handleMenuClose}>Update</MenuItem>
+        <MenuItem onClick={handleOpenDialog}>Update</MenuItem>
         <MenuItem onClick={handleDeleteEntity}>Delete</MenuItem>
       </Menu>
+      {patient && (
+        <PatientFormDialog
+          open={isDialogOpen}
+          onClose={handleCloseDialog}
+          onPatientAdded={() => {}}
+          onPatientUpdated={handleUpdateEntity}
+          patient={patient}
+        />
+      )}
     </>
   );
 }

@@ -99,7 +99,7 @@ function DoctorFormDialog({ open, onClose }: DoctorFormDialogProps) {
         >
           <InputLabel htmlFor="name">Name</InputLabel>
           <TextField
-            name="name"
+            id="name"
             value={formik.values.name}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
@@ -110,7 +110,7 @@ function DoctorFormDialog({ open, onClose }: DoctorFormDialogProps) {
           />
           <InputLabel htmlFor="surname">Surname</InputLabel>
           <TextField
-            name="surname"
+            id="surname"
             value={formik.values.surname}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
@@ -121,7 +121,7 @@ function DoctorFormDialog({ open, onClose }: DoctorFormDialogProps) {
           />
           <InputLabel htmlFor="address">Address</InputLabel>
           <TextField
-            name="address"
+            id="address"
             value={formik.values.address}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
@@ -132,7 +132,7 @@ function DoctorFormDialog({ open, onClose }: DoctorFormDialogProps) {
           />
           <InputLabel htmlFor="phoneNumber">Phone number</InputLabel>
           <TextField
-            name="phoneNumber"
+            id="phoneNumber"
             value={formik.values.phoneNumber}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
@@ -145,7 +145,7 @@ function DoctorFormDialog({ open, onClose }: DoctorFormDialogProps) {
           />
           <InputLabel htmlFor="departmentId">Department</InputLabel>
           <TextField
-            name="department"
+            id="department"
             value={formik.values.department}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
@@ -158,7 +158,7 @@ function DoctorFormDialog({ open, onClose }: DoctorFormDialogProps) {
           />
           <InputLabel htmlFor="startShift">Start shift</InputLabel>
           <TextField
-            name="startShift"
+            id="startShift"
             type="time"
             value={formik.values.startShift}
             onChange={formik.handleChange}
@@ -172,7 +172,7 @@ function DoctorFormDialog({ open, onClose }: DoctorFormDialogProps) {
           />
           <InputLabel htmlFor="endShift">End shift</InputLabel>
           <TextField
-            name="endShift"
+            id="endShift"
             type="time"
             value={formik.values.endShift}
             onChange={formik.handleChange}

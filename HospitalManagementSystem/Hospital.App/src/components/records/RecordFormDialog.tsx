@@ -125,7 +125,7 @@ function RecordFormDialog({ open, onClose }: RecordFormDialogProps) {
             />
             <InputLabel htmlFor="examinedPatient">Examined patient</InputLabel>
             <TextField
-              name="examinedPatient"
+              id="examinedPatient"
               value={formik.values.examinedPatient}
               placeholder="Enter examined patient info"
               onChange={formik.handleChange}
@@ -144,7 +144,7 @@ function RecordFormDialog({ open, onClose }: RecordFormDialogProps) {
               Responsible doctor
             </InputLabel>
             <TextField
-              name="responsibleDoctor"
+              id="responsibleDoctor"
               value={formik.values.responsibleDoctor}
               placeholder="Enter responsible doctor info"
               onChange={formik.handleChange}
@@ -164,7 +164,7 @@ function RecordFormDialog({ open, onClose }: RecordFormDialogProps) {
               Examination notes
             </InputLabel>
             <TextField
-              name="examinationNotes"
+              id="examinationNotes"
               value={formik.values.examinationNotes}
               placeholder="Enter some examination notes"
               onChange={formik.handleChange}
@@ -188,7 +188,7 @@ function RecordFormDialog({ open, onClose }: RecordFormDialogProps) {
                   Diagnosed illness
                 </InputLabel>
                 <TextField
-                  name="diagnosedIllness"
+                  id="diagnosedIllness"
                   value={formik.values.diagnosedIllness}
                   placeholder="Enter diagnosed illness"
                   onChange={formik.handleChange}
@@ -208,7 +208,7 @@ function RecordFormDialog({ open, onClose }: RecordFormDialogProps) {
                   Prescribed medicine
                 </InputLabel>
                 <TextField
-                  name="prescribedMedicine"
+                  id="prescribedMedicine"
                   value={formik.values.prescribedMedicine}
                   placeholder="Enter prescribed medicine"
                   onChange={formik.handleChange}
@@ -228,7 +228,7 @@ function RecordFormDialog({ open, onClose }: RecordFormDialogProps) {
                   Treatment duration
                 </InputLabel>
                 <TextField
-                  name="treatmentDuration"
+                  id="treatmentDuration"
                   type="number"
                   value={formik.values.treatmentDuration}
                   placeholder="Enter treatment duration"

@@ -35,19 +35,19 @@ function Patients() {
   const pageSize = 10;
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const [selectedPatientId, setSelectedPatientId] = useState<number>(0);
+  const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
 
   const handleMenuClick = (
     event: React.MouseEvent<HTMLButtonElement>,
-    id: number
+    patient: Patient
   ) => {
     setAnchorEl(event.currentTarget);
-    setSelectedPatientId(id);
+    setSelectedPatient(patient);
   };
 
   const handleMenuClose = () => {
     setAnchorEl(null);
-    setSelectedPatientId(0);
+    setSelectedPatient(null);
   };
 
   useEffect(() => {
@@ -73,7 +73,6 @@ function Patients() {
 
   const handleCreateFormOpen = () => {
     setCreateFormOpen(true);
-    console.log(patients);
   };
 
   const handleCreateFormClose = () => {
@@ -86,10 +85,12 @@ function Patients() {
 
   const handleDeletePatient = async () => {
     try {
-      await PatientService.deletePatient(selectedPatientId);
-      setPatients((prevPatients) =>
-        prevPatients.filter((p) => p.id !== selectedPatientId)
-      );
+      if (selectedPatient) {
+        await PatientService.deletePatient(selectedPatient.id);
+        setPatients((prevPatients) =>
+          prevPatients.filter((p) => p.id !== selectedPatient.id)
+        );
+      }
     } catch (error) {
       const err = error as AxiosError;
       if (err.response && err.response.status === 401) {
@@ -160,9 +161,10 @@ function Patients() {
                   <ActionMenu
                     rowId={patient.id}
                     anchorEl={anchorEl}
-                    handleMenuClick={handleMenuClick}
+                    handleMenuClick={(event) => handleMenuClick(event, patient)}
                     handleMenuClose={handleMenuClose}
                     onEntityDelete={handleDeletePatient}
+                    patient={selectedPatient}
                   />
                 </TableCell>
               </TableRow>

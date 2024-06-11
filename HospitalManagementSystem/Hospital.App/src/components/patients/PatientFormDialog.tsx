@@ -23,7 +23,9 @@ import { useContext } from "react";
 interface PatientFormDialogProps {
   open: boolean;
   onClose: () => void;
-  onPatientAdded: (patient: Patient) => void;
+  onPatientAdded?: (patient: Patient) => void;
+  patient?: Patient;
+  onPatientUpdated?: (id: number) => void;
 }
 
 type NewPatientData = Omit<Patient, "id">;
@@ -32,19 +34,21 @@ function PatientFormDialog({
   open,
   onClose,
   onPatientAdded,
+  patient,
+  onPatientUpdated,
 }: PatientFormDialogProps) {
   const userRoleContextProps = useContext(UserRoleContext);
   const navigate = useNavigate();
 
   const formik = useFormik({
     initialValues: {
-      name: "",
-      surname: "",
-      age: 1,
-      gender: "",
-      address: "",
-      phoneNumber: "",
-      insuranceNumber: "",
+      name: patient?.name || "",
+      surname: patient?.surname || "",
+      age: patient?.age || 1,
+      gender: patient?.gender || "",
+      address: patient?.address || "",
+      phoneNumber: patient?.phoneNumber || "",
+      insuranceNumber: patient?.insuranceNumber || "",
     },
 
     validationSchema: Yup.object({
@@ -75,7 +79,7 @@ function PatientFormDialog({
 
     onSubmit: async (values, { resetForm }) => {
       try {
-        const newPatientData: NewPatientData = {
+        const patientData: NewPatientData = {
           name: values.name,
           surname: values.surname,
           age: values.age,
@@ -85,13 +89,21 @@ function PatientFormDialog({
           insuranceNumber: values.insuranceNumber || undefined,
         };
 
-        const id = await PatientService.addPatient(newPatientData);
-        const addedPatient: Patient = {
-          id: id,
-          ...newPatientData,
-        };
+        if (patient) {
+          const id = await PatientService.updatePatient(
+            patientData,
+            patient.id
+          );
+          onPatientUpdated && onPatientUpdated(id);
+        } else {
+          const id = await PatientService.addPatient(patientData);
+          const newPatient: Patient = {
+            id: id,
+            ...patientData,
+          };
+          onPatientAdded && onPatientAdded(newPatient);
+        }
 
-        onPatientAdded(addedPatient);
         resetForm();
         onClose();
       } catch (error) {
@@ -107,10 +119,11 @@ function PatientFormDialog({
 
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle>Add Patient</DialogTitle>
+      <DialogTitle>Patient registration</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          Please fill out the form below to add a new patient.
+          Please fill out the form below to add a new patient or update an
+          existing one.
         </DialogContentText>
         <Box
           component="form"
@@ -124,7 +137,7 @@ function PatientFormDialog({
         >
           <InputLabel htmlFor="name">Name</InputLabel>
           <TextField
-            name="name"
+            id="name"
             value={formik.values.name}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
@@ -135,7 +148,7 @@ function PatientFormDialog({
           />
           <InputLabel htmlFor="surname">Surname</InputLabel>
           <TextField
-            name="surname"
+            id="surname"
             value={formik.values.surname}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
@@ -146,7 +159,7 @@ function PatientFormDialog({
           />
           <InputLabel htmlFor="age">Age</InputLabel>
           <TextField
-            name="age"
+            id="age"
             type="number"
             value={formik.values.age}
             onChange={formik.handleChange}
@@ -174,7 +187,7 @@ function PatientFormDialog({
           )}
           <InputLabel htmlFor="address">Address</InputLabel>
           <TextField
-            name="address"
+            id="address"
             value={formik.values.address}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
@@ -185,7 +198,7 @@ function PatientFormDialog({
           />
           <InputLabel htmlFor="phoneNumber">Phone number</InputLabel>
           <TextField
-            name="phoneNumber"
+            id="phoneNumber"
             value={formik.values.phoneNumber}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
@@ -198,7 +211,7 @@ function PatientFormDialog({
           />
           <InputLabel htmlFor="insuranceNumber">Insurance number</InputLabel>
           <TextField
-            name="insuranceNumber"
+            id="insuranceNumber"
             value={formik.values.insuranceNumber}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
@@ -216,9 +229,9 @@ function PatientFormDialog({
             type="submit"
             variant="contained"
             color="primary"
-            sx={{ mt: 2, mx: 12 }}
+            sx={{ mt: 2, mx: 18 }}
           >
-            Add Patient
+            Submit form
           </Button>
           <Button onClick={onClose} color="primary" sx={{ mt: 1 }}>
             Cancel
