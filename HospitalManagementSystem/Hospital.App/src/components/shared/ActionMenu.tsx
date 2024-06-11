@@ -10,6 +10,7 @@ interface ActionMenuProps {
     id: number
   ) => void;
   handleMenuClose: () => void;
+  onEntityDelete: () => void;
 }
 
 function ActionMenu({
@@ -17,7 +18,13 @@ function ActionMenu({
   anchorEl,
   handleMenuClick,
   handleMenuClose,
+  onEntityDelete,
 }: ActionMenuProps) {
+  const handleDeleteEntity = () => {
+    onEntityDelete();
+    handleMenuClose();
+  };
+
   return (
     <>
       <IconButton
@@ -32,7 +39,7 @@ function ActionMenu({
         onClose={handleMenuClose}
       >
         <MenuItem onClick={handleMenuClose}>Update</MenuItem>
-        <MenuItem onClick={handleMenuClose}>Delete</MenuItem>
+        <MenuItem onClick={handleDeleteEntity}>Delete</MenuItem>
       </Menu>
     </>
   );

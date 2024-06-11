@@ -19,6 +19,7 @@ import PatientService from "../api/services/PatientService";
 import { Patient } from "../models/Patient";
 import { AxiosError } from "axios";
 import { UserRoleContext } from "../context/UserRoleContext";
+import ActionMenu from "../components/shared/ActionMenu";
 
 function Patients() {
   usePageTitle("Patients");
@@ -32,6 +33,22 @@ function Patients() {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
   const pageSize = 10;
+
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [selectedPatientId, setSelectedPatientId] = useState<number>(0);
+
+  const handleMenuClick = (
+    event: React.MouseEvent<HTMLButtonElement>,
+    id: number
+  ) => {
+    setAnchorEl(event.currentTarget);
+    setSelectedPatientId(id);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+    setSelectedPatientId(0);
+  };
 
   useEffect(() => {
     const fetchPatients = async () => {
@@ -56,10 +73,31 @@ function Patients() {
 
   const handleCreateFormOpen = () => {
     setCreateFormOpen(true);
+    console.log(patients);
   };
 
   const handleCreateFormClose = () => {
     setCreateFormOpen(false);
+  };
+
+  const handleAddPatient = (newPatient: Patient) => {
+    setPatients((prevPatients) => [newPatient, ...prevPatients]);
+  };
+
+  const handleDeletePatient = async () => {
+    try {
+      await PatientService.deletePatient(selectedPatientId);
+      setPatients((prevPatients) =>
+        prevPatients.filter((p) => p.id !== selectedPatientId)
+      );
+    } catch (error) {
+      const err = error as AxiosError;
+      if (err.response && err.response.status === 401) {
+        userRoleContextProps?.setUserRole("");
+        navigate("/");
+      }
+      console.log(err.message);
+    }
   };
 
   const handlePageChange = (
@@ -106,6 +144,7 @@ function Patients() {
               <TableCell align="center">Gender</TableCell>
               <TableCell align="center">Phone number</TableCell>
               <TableCell align="center">Insurance</TableCell>
+              <TableCell align="center">Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -117,6 +156,15 @@ function Patients() {
                 <TableCell align="center">{patient.gender}</TableCell>
                 <TableCell align="center">{patient.phoneNumber}</TableCell>
                 <TableCell align="center">{patient.insuranceNumber}</TableCell>
+                <TableCell align="center">
+                  <ActionMenu
+                    rowId={patient.id}
+                    anchorEl={anchorEl}
+                    handleMenuClick={handleMenuClick}
+                    handleMenuClose={handleMenuClose}
+                    onEntityDelete={handleDeletePatient}
+                  />
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
@@ -132,6 +180,7 @@ function Patients() {
       <PatientFormDialog
         open={createFormOpen}
         onClose={handleCreateFormClose}
+        onPatientAdded={handleAddPatient}
       />
     </Container>
   );

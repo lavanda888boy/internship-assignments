@@ -13,13 +13,29 @@ import {
   Radio,
   InputLabel,
 } from "@mui/material";
+import PatientService from "../../api/services/PatientService";
+import { Patient } from "../../models/Patient";
+import { useNavigate } from "react-router-dom";
+import { AxiosError } from "axios";
+import { UserRoleContext } from "../../context/UserRoleContext";
+import { useContext } from "react";
 
 interface PatientFormDialogProps {
   open: boolean;
   onClose: () => void;
+  onPatientAdded: (patient: Patient) => void;
 }
 
-function PatientFormDialog({ open, onClose }: PatientFormDialogProps) {
+type NewPatientData = Omit<Patient, "id">;
+
+function PatientFormDialog({
+  open,
+  onClose,
+  onPatientAdded,
+}: PatientFormDialogProps) {
+  const userRoleContextProps = useContext(UserRoleContext);
+  const navigate = useNavigate();
+
   const formik = useFormik({
     initialValues: {
       name: "",
@@ -57,8 +73,35 @@ function PatientFormDialog({ open, onClose }: PatientFormDialogProps) {
       insuranceNumber: Yup.string(),
     }),
 
-    onSubmit: () => {
-      onClose();
+    onSubmit: async (values, { resetForm }) => {
+      try {
+        const newPatientData: NewPatientData = {
+          name: values.name,
+          surname: values.surname,
+          age: values.age,
+          gender: values.gender,
+          address: values.address,
+          phoneNumber: values.phoneNumber || undefined,
+          insuranceNumber: values.insuranceNumber || undefined,
+        };
+
+        const id = await PatientService.addPatient(newPatientData);
+        const addedPatient: Patient = {
+          id: id,
+          ...newPatientData,
+        };
+
+        onPatientAdded(addedPatient);
+        resetForm();
+        onClose();
+      } catch (error) {
+        const err = error as AxiosError;
+        if (err.response && err.response.status === 401) {
+          userRoleContextProps?.setUserRole("");
+          navigate("/");
+        }
+        console.log(err.message);
+      }
     },
   });
 
