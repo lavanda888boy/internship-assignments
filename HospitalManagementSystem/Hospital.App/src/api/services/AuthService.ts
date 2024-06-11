@@ -47,7 +47,7 @@ class AuthService {
     localStorage.removeItem("access-token");
   }
 
-  private getUserRoleFromToken(token: string): string {
+  public getUserRoleFromToken(token: string): string {
     const decodedToken = jwtDecode(token) as CustomJwtPayload;
     const userRole =
       decodedToken[

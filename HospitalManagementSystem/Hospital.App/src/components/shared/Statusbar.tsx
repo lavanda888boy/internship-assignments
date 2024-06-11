@@ -4,7 +4,6 @@ import {
   Toolbar,
   IconButton,
   Typography,
-  TextField,
   Button,
   Box,
   useTheme,
@@ -67,13 +66,6 @@ function Statusbar() {
           >
             {pageContextProps?.pageName}
           </Typography>
-          <form>
-            <TextField
-              variant="outlined"
-              size="small"
-              placeholder="Search smth here"
-            />
-          </form>
           <Button
             sx={{
               marginLeft: "auto",

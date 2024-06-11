@@ -1,4 +1,5 @@
 import { createContext, useState, ReactNode } from "react";
+import AuthService from "../api/services/AuthService";
 
 interface UserRoleContextProps {
   userRole: string;
@@ -16,7 +17,9 @@ interface UserRoleContextProviderProps {
 export const UserRoleContextProvider = ({
   children,
 }: UserRoleContextProviderProps) => {
-  const [userRole, setUserRole] = useState("");
+  const [userRole, setUserRole] = useState(
+    AuthService.getUserRoleFromToken(localStorage.getItem("access-token") || "")
+  );
 
   return (
     <UserRoleContext.Provider value={{ userRole, setUserRole }}>
