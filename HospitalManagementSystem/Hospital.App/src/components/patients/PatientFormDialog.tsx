@@ -12,6 +12,7 @@ import {
   FormControlLabel,
   Radio,
   InputLabel,
+  Typography,
 } from "@mui/material";
 import PatientService from "../../api/services/PatientService";
 import { Patient } from "../../models/Patient";
@@ -171,7 +172,7 @@ function PatientFormDialog({
           />
           <InputLabel htmlFor="gender">Gender</InputLabel>
           <RadioGroup
-            name="gender"
+            id="gender"
             value={formik.values.gender}
             onChange={formik.handleChange}
             sx={{ mb: 1 }}
@@ -181,9 +182,9 @@ function PatientFormDialog({
             <FormControlLabel value="Other" control={<Radio />} label="Other" />
           </RadioGroup>
           {formik.touched.gender && formik.errors.gender && (
-            <div style={{ color: "red", marginBottom: "10px" }}>
+            <Typography style={{ color: "red", marginBottom: "10px" }}>
               {formik.errors.gender}
-            </div>
+            </Typography>
           )}
           <InputLabel htmlFor="address">Address</InputLabel>
           <TextField
@@ -233,7 +234,7 @@ function PatientFormDialog({
           >
             Submit form
           </Button>
-          <Button onClick={onClose} color="primary" sx={{ mt: 1 }}>
+          <Button onClick={onClose} color="primary" sx={{ mt: 1, mx: 20 }}>
             Cancel
           </Button>
         </Box>
