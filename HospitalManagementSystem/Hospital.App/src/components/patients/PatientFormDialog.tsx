@@ -229,7 +229,7 @@ function PatientFormDialog({
             type="submit"
             variant="contained"
             color="primary"
-            sx={{ mt: 2, mx: 18 }}
+            sx={{ mt: 2, mx: 20 }}
           >
             Submit form
           </Button>

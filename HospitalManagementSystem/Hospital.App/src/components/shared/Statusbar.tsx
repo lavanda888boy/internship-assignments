@@ -36,7 +36,7 @@ function Statusbar() {
             position: "fixed",
             display: "flex",
             flexDirection: "row",
-            width: "82%",
+            width: "75%",
             height: "5%",
             zIndex: 2,
             padding: "1%",
@@ -86,7 +86,7 @@ function Statusbar() {
             component="img"
             src={person}
             alt="User"
-            sx={{ width: "3%", height: "60%" }}
+            sx={{ width: "3.5%", height: "60%" }}
           />
         </Toolbar>
       </AppBar>

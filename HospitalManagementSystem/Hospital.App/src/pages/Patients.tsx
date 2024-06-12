@@ -10,7 +10,12 @@ import {
   TableRow,
   Paper,
   Pagination,
+  Select,
+  MenuItem,
   useTheme,
+  Typography,
+  SelectChangeEvent,
+  Box,
 } from "@mui/material";
 import usePageTitle from "../hooks/PageTitleHook";
 import CreateActionButton from "../components/shared/CreateActionButton";
@@ -32,7 +37,7 @@ function Patients() {
   const [createFormOpen, setCreateFormOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
-  const pageSize = 10;
+  const [pageSize, setPageSize] = useState(10);
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
@@ -69,7 +74,7 @@ function Patients() {
     };
 
     fetchPatients();
-  }, [currentPage]);
+  }, [currentPage, pageSize]);
 
   const handleCreateFormOpen = () => {
     setCreateFormOpen(true);
@@ -108,24 +113,30 @@ function Patients() {
     setCurrentPage(newPage);
   };
 
+  const handlePageSizeChange = (event: SelectChangeEvent<number>) => {
+    setPageSize(parseInt(event.target.value as string));
+    setCurrentPage(1); // Reset to the first page
+  };
+
   return (
     <Container
       sx={{
         position: "absolute",
-        width: "72%",
         height: "auto",
         zIndex: 1,
-        padding: "1.5% 2% 3% 2%",
+        padding: "1.5% 2% 2% 2%",
         marginTop: "8%",
         marginLeft: "8%",
         borderRadius: "5px",
         backgroundColor: "white",
       }}
     >
-      <CreateActionButton
-        entityName="Patient"
-        clickAction={handleCreateFormOpen}
-      />
+      {userRoleContextProps?.userRole === "Admin" && (
+        <CreateActionButton
+          entityName="Patient"
+          clickAction={handleCreateFormOpen}
+        />
+      )}
       <TableContainer
         component={Paper}
         sx={{
@@ -139,46 +150,110 @@ function Patients() {
         <Table>
           <TableHead>
             <TableRow>
-              <TableCell align="center">Name</TableCell>
-              <TableCell align="center">Surname</TableCell>
-              <TableCell align="center">Age</TableCell>
-              <TableCell align="center">Gender</TableCell>
-              <TableCell align="center">Phone number</TableCell>
-              <TableCell align="center">Insurance</TableCell>
-              <TableCell align="center">Actions</TableCell>
+              <TableCell align="center">
+                <Typography>Name</Typography>
+              </TableCell>
+              <TableCell align="center">
+                <Typography>Surname</Typography>
+              </TableCell>
+              <TableCell align="center">
+                <Typography>Age</Typography>
+              </TableCell>
+              <TableCell align="center">
+                <Typography>Gender</Typography>
+              </TableCell>
+              <TableCell align="center">
+                <Typography>Phone</Typography>
+              </TableCell>
+              <TableCell align="center">
+                <Typography>Insurance</Typography>
+              </TableCell>
+              {userRoleContextProps?.userRole === "Admin" && (
+                <>
+                  <TableCell align="center">
+                    <Typography>Doctors</Typography>
+                  </TableCell>
+                  <TableCell align="center">
+                    <Typography>Actions</Typography>
+                  </TableCell>
+                </>
+              )}
             </TableRow>
           </TableHead>
           <TableBody>
             {patients.map((patient) => (
               <TableRow key={patient.id}>
-                <TableCell align="center">{patient.name}</TableCell>
-                <TableCell align="center">{patient.surname}</TableCell>
-                <TableCell align="center">{patient.age}</TableCell>
-                <TableCell align="center">{patient.gender}</TableCell>
-                <TableCell align="center">{patient.phoneNumber}</TableCell>
-                <TableCell align="center">{patient.insuranceNumber}</TableCell>
                 <TableCell align="center">
-                  <ActionMenu
-                    rowId={patient.id}
-                    anchorEl={anchorEl}
-                    handleMenuClick={(event) => handleMenuClick(event, patient)}
-                    handleMenuClose={handleMenuClose}
-                    onEntityDelete={handleDeletePatient}
-                    patient={selectedPatient}
-                  />
+                  <Typography>{patient.name}</Typography>
                 </TableCell>
+                <TableCell align="center">
+                  <Typography>{patient.surname}</Typography>
+                </TableCell>
+                <TableCell align="center">
+                  <Typography>{patient.age}</Typography>
+                </TableCell>
+                <TableCell align="center">
+                  <Typography>{patient.gender}</Typography>
+                </TableCell>
+                <TableCell align="center">
+                  <Typography>{patient.phoneNumber}</Typography>
+                </TableCell>
+                <TableCell align="center">
+                  <Typography>{patient.insuranceNumber}</Typography>
+                </TableCell>
+                {userRoleContextProps?.userRole === "Admin" && (
+                  <>
+                    <TableCell align="center">
+                      {patient.doctors?.map((doctor) => (
+                        <Typography key={doctor.id}>
+                          {doctor.fullName} ({doctor.department})
+                        </Typography>
+                      ))}
+                    </TableCell>
+                    <TableCell align="center">
+                      <ActionMenu
+                        rowId={patient.id}
+                        anchorEl={anchorEl}
+                        handleMenuClick={(event) =>
+                          handleMenuClick(event, patient)
+                        }
+                        handleMenuClose={handleMenuClose}
+                        onEntityDelete={handleDeletePatient}
+                        patient={selectedPatient}
+                      />
+                    </TableCell>
+                  </>
+                )}
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
-      <Pagination
-        count={Math.ceil(totalItems / pageSize)}
-        page={currentPage}
-        onChange={handlePageChange}
-        color="primary"
-        style={{ marginTop: "20px", display: "flex", justifyContent: "center" }}
-      />
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          mt: 2,
+          ml: 37,
+        }}
+      >
+        <Typography sx={{ mr: 1 }}>Patients per page:</Typography>
+        <Select
+          value={pageSize}
+          onChange={handlePageSizeChange}
+          sx={{ marginRight: "20px" }}
+        >
+          <MenuItem value={5}>5</MenuItem>
+          <MenuItem value={10}>10</MenuItem>
+          <MenuItem value={15}>15</MenuItem>
+        </Select>
+        <Pagination
+          count={Math.ceil(totalItems / pageSize)}
+          page={currentPage}
+          onChange={handlePageChange}
+          color="primary"
+        />
+      </Box>
       <PatientFormDialog
         open={createFormOpen}
         onClose={handleCreateFormClose}

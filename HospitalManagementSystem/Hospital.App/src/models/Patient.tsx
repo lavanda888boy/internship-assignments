@@ -7,4 +7,11 @@ export interface Patient {
   address: string;
   phoneNumber?: string;
   insuranceNumber?: string;
+  doctors?: DoctorShortInfo[];
+}
+
+interface DoctorShortInfo {
+  id: number;
+  fullName: string;
+  department: string;
 }
