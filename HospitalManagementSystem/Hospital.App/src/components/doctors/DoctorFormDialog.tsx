@@ -15,10 +15,6 @@ import {
 } from "@mui/material";
 import { Doctor } from "../../models/Doctor";
 import DoctorService from "../../api/services/DoctorService";
-import { AxiosError } from "axios";
-import { useContext } from "react";
-import { UserRoleContext } from "../../context/UserRoleContext";
-import { useNavigate } from "react-router-dom";
 
 const daysOfWeek = [
   { id: 1, name: "Monday" },
@@ -31,7 +27,7 @@ const daysOfWeek = [
 ];
 
 interface DoctorFormDialogProps {
-  open: boolean;
+  isOpened: boolean;
   onClose: () => void;
   onDoctorAdded?: (doctor: Doctor) => void;
   doctor?: Doctor;
@@ -49,14 +45,11 @@ interface NewDoctorData {
 }
 
 function DoctorFormDialog({
-  open,
+  isOpened: open,
   onClose,
   onDoctorAdded,
   doctor,
 }: DoctorFormDialogProps) {
-  const userRoleContextProps = useContext(UserRoleContext);
-  const navigate = useNavigate();
-
   const doctorService: DoctorService = new DoctorService();
 
   const formik = useFormik({
@@ -126,12 +119,7 @@ function DoctorFormDialog({
         resetForm();
         onClose();
       } catch (error) {
-        const err = error as AxiosError;
-        if (err.response && err.response.status === 401) {
-          userRoleContextProps?.setUserRole("");
-          navigate("/");
-        }
-        console.log(err.message);
+        console.log(error);
       }
     },
   });

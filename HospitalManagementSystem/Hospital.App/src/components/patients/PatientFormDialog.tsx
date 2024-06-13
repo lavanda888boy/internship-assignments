@@ -16,13 +16,9 @@ import {
 } from "@mui/material";
 import PatientService from "../../api/services/PatientService";
 import { Patient } from "../../models/Patient";
-import { useNavigate } from "react-router-dom";
-import { AxiosError } from "axios";
-import { UserRoleContext } from "../../context/UserRoleContext";
-import { useContext } from "react";
 
 interface PatientFormDialogProps {
-  open: boolean;
+  isOpened: boolean;
   onClose: () => void;
   onPatientAdded?: (patient: Patient) => void;
   patient?: Patient;
@@ -32,15 +28,12 @@ interface PatientFormDialogProps {
 type NewPatientData = Omit<Patient, "id">;
 
 function PatientFormDialog({
-  open,
+  isOpened: open,
   onClose,
   onPatientAdded,
   patient,
   onPatientUpdated,
 }: PatientFormDialogProps) {
-  const userRoleContextProps = useContext(UserRoleContext);
-  const navigate = useNavigate();
-
   const patientService: PatientService = new PatientService();
 
   const formik = useFormik({
@@ -110,12 +103,7 @@ function PatientFormDialog({
         resetForm();
         onClose();
       } catch (error) {
-        const err = error as AxiosError;
-        if (err.response && err.response.status === 401) {
-          userRoleContextProps?.setUserRole("");
-          navigate("/");
-        }
-        console.log(err.message);
+        console.log(error);
       }
     },
   });

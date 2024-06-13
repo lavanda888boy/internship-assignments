@@ -60,7 +60,7 @@ function ActionMenu({
       </Menu>
       {patient && (
         <PatientFormDialog
-          open={isDialogOpen}
+          isOpened={isDialogOpen}
           onClose={handleCloseDialog}
           onPatientAdded={() => {}}
           onPatientUpdated={handleUpdateEntity}

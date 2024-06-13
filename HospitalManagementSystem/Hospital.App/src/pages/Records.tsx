@@ -62,7 +62,7 @@ function Records() {
           ))}
         </div>
         <RecordFormDialog
-          open={createFormOpen}
+          isOpened={createFormOpen}
           onClose={handleCreateFormClose}
         />
       </section>

@@ -17,8 +17,10 @@ interface UserRoleContextProviderProps {
 export const UserRoleContextProvider = ({
   children,
 }: UserRoleContextProviderProps) => {
+  const authService: AuthService = new AuthService();
+
   const [userRole, setUserRole] = useState(
-    AuthService.getUserRoleFromToken(localStorage.getItem("access-token") || "")
+    authService.getUserRoleFromToken(localStorage.getItem("access-token") || "")
   );
 
   return (

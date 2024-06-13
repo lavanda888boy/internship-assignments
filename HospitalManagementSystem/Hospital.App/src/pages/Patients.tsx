@@ -1,5 +1,4 @@
 import { useState, useEffect, useContext } from "react";
-import { useNavigate } from "react-router-dom";
 import {
   Container,
   Table,
@@ -22,7 +21,6 @@ import CreateActionButton from "../components/shared/CreateActionButton";
 import PatientFormDialog from "../components/patients/PatientFormDialog";
 import PatientService from "../api/services/PatientService";
 import { Patient } from "../models/Patient";
-import { AxiosError } from "axios";
 import { UserRoleContext } from "../context/UserRoleContext";
 import ActionMenu from "../components/shared/ActionMenu";
 
@@ -31,7 +29,6 @@ function Patients() {
 
   const theme = useTheme();
   const userRoleContextProps = useContext(UserRoleContext);
-  const navigate = useNavigate();
 
   const patientService: PatientService = new PatientService();
 
@@ -54,11 +51,7 @@ function Patients() {
         setPatients(response.items);
         setTotalItems(response.totalItems);
       } catch (error) {
-        const err = error as AxiosError;
-        if (err.response && err.response.status === 401) {
-          userRoleContextProps?.setUserRole("");
-          navigate("/");
-        }
+        console.log(error);
       }
     };
 
@@ -99,12 +92,7 @@ function Patients() {
         );
       }
     } catch (error) {
-      const err = error as AxiosError;
-      if (err.response && err.response.status === 401) {
-        userRoleContextProps?.setUserRole("");
-        navigate("/");
-      }
-      console.log(err.message);
+      console.log(error);
     }
   };
 
@@ -257,7 +245,7 @@ function Patients() {
         />
       </Box>
       <PatientFormDialog
-        open={createFormOpen}
+        isOpened={createFormOpen}
         onClose={handleCreateFormClose}
         onPatientAdded={handleAddPatient}
       />

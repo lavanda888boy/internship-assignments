@@ -5,9 +5,7 @@ import CreateActionButton from "../components/shared/CreateActionButton";
 import { useContext, useEffect, useState } from "react";
 import DoctorFormDialog from "../components/doctors/DoctorFormDialog";
 import DoctorService from "../api/services/DoctorService";
-import { AxiosError } from "axios";
 import { UserRoleContext } from "../context/UserRoleContext";
-import { useNavigate } from "react-router-dom";
 import {
   Box,
   SelectChangeEvent,
@@ -22,7 +20,6 @@ function Doctors() {
   usePageTitle("Doctors");
 
   const userRoleContextProps = useContext(UserRoleContext);
-  const navigate = useNavigate();
 
   const doctorService: DoctorService = new DoctorService();
 
@@ -42,11 +39,7 @@ function Doctors() {
         setDoctors(response.items);
         setTotalItems(response.totalItems);
       } catch (error) {
-        const err = error as AxiosError;
-        if (err.response && err.response.status === 401) {
-          userRoleContextProps?.setUserRole("");
-          navigate("/");
-        }
+        console.log(error);
       }
     };
 
@@ -135,7 +128,7 @@ function Doctors() {
         />
       </Box>
       <DoctorFormDialog
-        open={createFormOpen}
+        isOpened={createFormOpen}
         onClose={handleCreateFormClose}
         onDoctorAdded={handleAddDoctor}
       />

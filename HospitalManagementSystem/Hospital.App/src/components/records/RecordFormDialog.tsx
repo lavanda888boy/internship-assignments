@@ -14,11 +14,11 @@ import {
 } from "@mui/material";
 
 interface RecordFormDialogProps {
-  open: boolean;
+  isOpened: boolean;
   onClose: () => void;
 }
 
-function RecordFormDialog({ open, onClose }: RecordFormDialogProps) {
+function RecordFormDialog({ isOpened: open, onClose }: RecordFormDialogProps) {
   const formik = useFormik({
     initialValues: {
       isDiagnosis: false,
