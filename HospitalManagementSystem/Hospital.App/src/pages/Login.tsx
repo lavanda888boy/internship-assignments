@@ -17,6 +17,8 @@ import { UserRoleContext } from "../context/UserRoleContext";
 function Login() {
   usePageTitle("Login");
 
+  const authService: AuthService = new AuthService();
+
   const theme = useTheme();
   const userRoleContextProps = useContext(UserRoleContext);
   const navigate = useNavigate();
@@ -41,7 +43,7 @@ function Login() {
           password: values.password,
         };
 
-        const userRole = await AuthService.login(user);
+        const userRole = await authService.login(user);
         userRoleContextProps?.setUserRole(userRole);
         navigate("/doctors");
       } catch (error) {

@@ -32,7 +32,7 @@ function DoctorCard({ doctor }: DoctorCardProps) {
   return (
     <Card
       sx={{
-        width: "18%",
+        width: "20%",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",

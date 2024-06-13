@@ -17,6 +17,8 @@ import { UserRoleContext } from "../context/UserRoleContext";
 function Registration() {
   usePageTitle("Register");
 
+  const authService: AuthService = new AuthService();
+
   const theme = useTheme();
   const userRoleContextProps = useContext(UserRoleContext);
   const navigate = useNavigate();
@@ -61,7 +63,7 @@ function Registration() {
           role: "PatientUser",
         };
 
-        const userRole = await AuthService.register(user);
+        const userRole = await authService.register(user);
         userRoleContextProps?.setUserRole(userRole);
         navigate("/");
       } catch (error) {

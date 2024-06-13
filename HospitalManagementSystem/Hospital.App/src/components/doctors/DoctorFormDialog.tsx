@@ -11,7 +11,14 @@ import {
   InputLabel,
   FormControlLabel,
   Checkbox,
+  Typography,
 } from "@mui/material";
+import { Doctor } from "../../models/Doctor";
+import DoctorService from "../../api/services/DoctorService";
+import { AxiosError } from "axios";
+import { useContext } from "react";
+import { UserRoleContext } from "../../context/UserRoleContext";
+import { useNavigate } from "react-router-dom";
 
 const daysOfWeek = [
   { id: 1, name: "Monday" },
@@ -26,9 +33,32 @@ const daysOfWeek = [
 interface DoctorFormDialogProps {
   open: boolean;
   onClose: () => void;
+  onDoctorAdded?: (doctor: Doctor) => void;
+  doctor?: Doctor;
 }
 
-function DoctorFormDialog({ open, onClose }: DoctorFormDialogProps) {
+interface NewDoctorData {
+  name: string;
+  surname: string;
+  address: string;
+  phoneNumber: string;
+  departmentId: number;
+  startShift: string;
+  endShift: string;
+  weekDayIds: number[];
+}
+
+function DoctorFormDialog({
+  open,
+  onClose,
+  onDoctorAdded,
+  doctor,
+}: DoctorFormDialogProps) {
+  const userRoleContextProps = useContext(UserRoleContext);
+  const navigate = useNavigate();
+
+  const doctorService: DoctorService = new DoctorService();
+
   const formik = useFormik({
     initialValues: {
       name: "",
@@ -36,8 +66,8 @@ function DoctorFormDialog({ open, onClose }: DoctorFormDialogProps) {
       address: "",
       phoneNumber: "",
       department: "",
-      startShift: null,
-      endShift: null,
+      startShift: "",
+      endShift: "",
       weekDays: [] as number[],
     },
 
@@ -64,12 +94,45 @@ function DoctorFormDialog({ open, onClose }: DoctorFormDialogProps) {
         .required("Department name is required"),
       startShift: Yup.string().required("Start shift is required"),
       endShift: Yup.string().required("End shift is required"),
-      weekDays: Yup.array().min(1, "Select at least one weekday"),
+      weekDays: Yup.array().min(1, "Select at least one week day"),
     }),
 
-    onSubmit: (values) => {
-      console.log(values);
-      onClose();
+    onSubmit: async (values, { resetForm }) => {
+      try {
+        const doctorData: NewDoctorData = {
+          name: values.name,
+          surname: values.surname,
+          address: values.address,
+          phoneNumber: values.phoneNumber,
+          startShift: values.startShift,
+          endShift: values.endShift,
+          weekDayIds: values.weekDays,
+        };
+
+        if (doctor) {
+          const id = await doctorService.updateDoctor(doctorData, doctor.id);
+          //onPatientUpdated && onPatientUpdated(id);
+        } else {
+          const id = await doctorService.addDoctor(doctorData);
+
+          try {
+            const newDoctor = await doctorService.getDoctorById(id);
+            onDoctorAdded && onDoctorAdded(newDoctor);
+          } catch (error) {
+            throw error;
+          }
+        }
+
+        resetForm();
+        onClose();
+      } catch (error) {
+        const err = error as AxiosError;
+        if (err.response && err.response.status === 401) {
+          userRoleContextProps?.setUserRole("");
+          navigate("/");
+        }
+        console.log(err.message);
+      }
     },
   });
 
@@ -196,9 +259,9 @@ function DoctorFormDialog({ open, onClose }: DoctorFormDialogProps) {
             />
           ))}
           {formik.touched.weekDays && formik.errors.weekDays && (
-            <div style={{ color: "red", marginTop: "10px" }}>
+            <Typography style={{ color: "red", marginBottom: "10px" }}>
               {formik.errors.weekDays}
-            </div>
+            </Typography>
           )}
           <Button
             type="submit"
@@ -208,7 +271,7 @@ function DoctorFormDialog({ open, onClose }: DoctorFormDialogProps) {
           >
             Add Doctor
           </Button>
-          <Button onClick={onClose} color="primary" sx={{ mt: 1 }}>
+          <Button onClick={onClose} color="primary" sx={{ mt: 1, mx: 12 }}>
             Cancel
           </Button>
         </Box>

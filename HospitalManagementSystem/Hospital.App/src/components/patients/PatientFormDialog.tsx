@@ -41,6 +41,8 @@ function PatientFormDialog({
   const userRoleContextProps = useContext(UserRoleContext);
   const navigate = useNavigate();
 
+  const patientService: PatientService = new PatientService();
+
   const formik = useFormik({
     initialValues: {
       name: patient?.name || "",
@@ -91,13 +93,13 @@ function PatientFormDialog({
         };
 
         if (patient) {
-          const id = await PatientService.updatePatient(
+          const id = await patientService.updatePatient(
             patientData,
             patient.id
           );
           onPatientUpdated && onPatientUpdated(id);
         } else {
-          const id = await PatientService.addPatient(patientData);
+          const id = await patientService.addPatient(patientData);
           const newPatient: Patient = {
             id: id,
             ...patientData,

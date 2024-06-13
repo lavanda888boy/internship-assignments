@@ -24,6 +24,8 @@ function Doctors() {
   const userRoleContextProps = useContext(UserRoleContext);
   const navigate = useNavigate();
 
+  const doctorService: DoctorService = new DoctorService();
+
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [createFormOpen, setCreateFormOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -33,7 +35,7 @@ function Doctors() {
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
-        const response = await DoctorService.getAllDoctors(
+        const response = await doctorService.getAllDoctors(
           currentPage,
           pageSize
         );
@@ -57,6 +59,10 @@ function Doctors() {
 
   const handleCreateFormClose = () => {
     setCreateFormOpen(false);
+  };
+
+  const handleAddDoctor = (newDoctor: Doctor) => {
+    setDoctors((prevDoctors) => [newDoctor, ...prevDoctors]);
   };
 
   const handlePageChange = (
@@ -85,10 +91,12 @@ function Doctors() {
         backgroundColor: "white",
       }}
     >
-      <CreateActionButton
-        entityName="Doctor"
-        clickAction={handleCreateFormOpen}
-      />
+      {userRoleContextProps?.userRole === "Admin" && (
+        <CreateActionButton
+          entityName="Doctor"
+          clickAction={handleCreateFormOpen}
+        />
+      )}
       <Box
         sx={{
           display: "flex",
@@ -126,7 +134,11 @@ function Doctors() {
           color="primary"
         />
       </Box>
-      <DoctorFormDialog open={createFormOpen} onClose={handleCreateFormClose} />
+      <DoctorFormDialog
+        open={createFormOpen}
+        onClose={handleCreateFormClose}
+        onDoctorAdded={handleAddDoctor}
+      />
     </Container>
   );
 }

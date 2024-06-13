@@ -33,6 +33,8 @@ function Patients() {
   const userRoleContextProps = useContext(UserRoleContext);
   const navigate = useNavigate();
 
+  const patientService: PatientService = new PatientService();
+
   const [patients, setPatients] = useState<Patient[]>([]);
   const [createFormOpen, setCreateFormOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -45,7 +47,7 @@ function Patients() {
   useEffect(() => {
     const fetchPatients = async () => {
       try {
-        const response = await PatientService.getAllPatients(
+        const response = await patientService.getAllPatients(
           currentPage,
           pageSize
         );
@@ -91,7 +93,7 @@ function Patients() {
   const handleDeletePatient = async () => {
     try {
       if (selectedPatient) {
-        await PatientService.deletePatient(selectedPatient.id);
+        await patientService.deletePatient(selectedPatient.id);
         setPatients((prevPatients) =>
           prevPatients.filter((p) => p.id !== selectedPatient.id)
         );

@@ -20,27 +20,19 @@ interface CustomJwtPayload extends JwtPayload {
 
 class AuthService {
   public async register(user: RegisterUserDto): Promise<string> {
-    try {
-      const response = await api.post("/Auth/Register", user);
-      const token = response.data;
+    const response = await api.post("/Auth/Register", user);
+    const token = response.data;
 
-      localStorage.setItem("access-token", token);
-      return this.getUserRoleFromToken(token);
-    } catch (error) {
-      throw error;
-    }
+    localStorage.setItem("access-token", token);
+    return this.getUserRoleFromToken(token);
   }
 
   public async login(user: LoginUserDto): Promise<string> {
-    try {
-      const response = await api.post("/Auth/Login", user);
-      const token = response.data;
+    const response = await api.post("/Auth/Login", user);
+    const token = response.data;
 
-      localStorage.setItem("access-token", token);
-      return this.getUserRoleFromToken(token);
-    } catch (error) {
-      throw error;
-    }
+    localStorage.setItem("access-token", token);
+    return this.getUserRoleFromToken(token);
   }
 
   public logout() {
@@ -57,4 +49,4 @@ class AuthService {
   }
 }
 
-export default new AuthService();
+export default AuthService;

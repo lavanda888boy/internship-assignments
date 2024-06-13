@@ -55,13 +55,11 @@ function Navbar({ open, onClose }: NavbarProps) {
             </ListItem>
           )}
 
-          {userRoleContextProps?.userRole !== "DoctorUser" && (
-            <ListItem key="Doctors" disablePadding sx={{ marginY: 1 }}>
-              <ListItemButton component={Link} to="/doctors">
-                <ListItemText primary="Doctors" />
-              </ListItemButton>
-            </ListItem>
-          )}
+          <ListItem key="Doctors" disablePadding sx={{ marginY: 1 }}>
+            <ListItemButton component={Link} to="/doctors">
+              <ListItemText primary="Doctors" />
+            </ListItemButton>
+          </ListItem>
 
           <ListItem key="Records" disablePadding sx={{ marginY: 1 }}>
             <ListItemButton component={Link} to="/records">
