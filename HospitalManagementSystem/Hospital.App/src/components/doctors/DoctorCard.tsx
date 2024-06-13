@@ -5,6 +5,8 @@ import {
   CardActions,
   CardContent,
   CardMedia,
+  Divider,
+  Box,
   Typography,
   useTheme,
 } from "@mui/material";
@@ -39,30 +41,56 @@ function DoctorCard({ doctor }: DoctorCardProps) {
         borderWidth: "5px",
         borderRadius: "5px",
         padding: "2% 3% 1% 3%",
-        my: "3%",
+        mt: 3,
+        mb: 0.5,
       }}
     >
       <CardMedia
         component="img"
         sx={{ width: "100px", marginBottom: "5%" }}
         image={person}
-        alt={`${doctor.Name} ${doctor.Surname}`}
+        alt={`${doctor.name} ${doctor.surname}`}
       />
       <CardContent sx={{ textAlign: "center", padding: "0" }}>
-        <Typography gutterBottom variant="h6" component="div">
-          {doctor.Name} {doctor.Surname}
+        <Typography variant="h6" component="div">
+          {doctor.name} {doctor.surname}
         </Typography>
-        <Typography variant="body2" color="text.secondary">
-          {doctor.Department}
+        <Typography gutterBottom variant="body1" color="text.secondary">
+          {doctor.department}
         </Typography>
+        <Typography variant="body2">
+          {doctor.phoneNumber}, {doctor.address}
+        </Typography>
+        <Divider sx={{ mt: 1, mb: 1 }} />
+        {doctor.workingHours && (
+          <Box sx={{ marginBottom: "0.5rem" }}>
+            <Typography variant="body1">Working Hours:</Typography>
+            <Typography variant="body2">
+              {doctor.workingHours.startShift.slice(0, -3)} -{" "}
+              {doctor.workingHours.endShift.slice(0, -3)}
+            </Typography>
+            <Typography variant="body2">
+              {doctor.workingHours.weekDays.join(", ")}
+            </Typography>
+          </Box>
+        )}
+        <Divider sx={{ mt: 1, mb: 1 }} />
+        <Typography variant="body1" sx={{ mb: 0.5 }}>
+          Patients:
+        </Typography>
+        {doctor.patients?.map((patient) => (
+          <Typography key={patient.id} variant="body2">
+            {patient.fullName}
+          </Typography>
+        ))}
       </CardContent>
       <CardActions>
-        <ActionMenu
+        {/* <ActionMenu
           rowId={doctor.id}
           anchorEl={anchorEl}
           handleMenuClick={handleMenuClick}
           handleMenuClose={handleMenuClose}
-        />
+        /> */}
       </CardActions>
     </Card>
   );

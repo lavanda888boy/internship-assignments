@@ -42,19 +42,6 @@ function Patients() {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
 
-  const handleMenuClick = (
-    event: React.MouseEvent<HTMLButtonElement>,
-    patient: Patient
-  ) => {
-    setAnchorEl(event.currentTarget);
-    setSelectedPatient(patient);
-  };
-
-  const handleMenuClose = () => {
-    setAnchorEl(null);
-    setSelectedPatient(null);
-  };
-
   useEffect(() => {
     const fetchPatients = async () => {
       try {
@@ -75,6 +62,19 @@ function Patients() {
 
     fetchPatients();
   }, [currentPage, pageSize]);
+
+  const handleMenuClick = (
+    event: React.MouseEvent<HTMLButtonElement>,
+    patient: Patient
+  ) => {
+    setAnchorEl(event.currentTarget);
+    setSelectedPatient(patient);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+    setSelectedPatient(null);
+  };
 
   const handleCreateFormOpen = () => {
     setCreateFormOpen(true);
@@ -115,7 +115,7 @@ function Patients() {
 
   const handlePageSizeChange = (event: SelectChangeEvent<number>) => {
     setPageSize(parseInt(event.target.value as string));
-    setCurrentPage(1); // Reset to the first page
+    setCurrentPage(1);
   };
 
   return (

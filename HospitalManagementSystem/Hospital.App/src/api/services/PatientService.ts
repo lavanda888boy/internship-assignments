@@ -1,10 +1,6 @@
+import { PaginatedResult } from "../../models/PaginatedResult";
 import { Patient } from "../../models/Patient";
 import api from "../axios";
-
-interface PaginatedResult<T> {
-  totalItems: number;
-  items: T[];
-}
 
 class PatientService {
   public async getAllPatients(

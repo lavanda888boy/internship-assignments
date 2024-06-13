@@ -45,6 +45,7 @@ namespace Hospital.Infrastructure.Repository
                                                 .ThenInclude(dsw => dsw.WeekDay)
                                                 .Skip((pageNumber - 1) * pageSize)
                                                 .Take(pageSize)
+                                                .OrderBy(d => d.Department)
                                                 .ToListAsync();
 
             return new PaginatedResult<Doctor>

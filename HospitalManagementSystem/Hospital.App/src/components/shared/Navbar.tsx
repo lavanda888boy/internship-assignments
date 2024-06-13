@@ -24,12 +24,6 @@ function Navbar({ open, onClose }: NavbarProps) {
   const userRoleContextProps = useContext(UserRoleContext);
   const navigate = useNavigate();
 
-  const routes = [
-    { text: "Patients", path: "/patients" },
-    { text: "Doctors", path: "/doctors" },
-    { text: "Records", path: "/records" },
-  ];
-
   const handleLogout = () => {
     AuthService.logout();
     userRoleContextProps?.setUserRole("");
@@ -53,13 +47,27 @@ function Navbar({ open, onClose }: NavbarProps) {
         onClick={onClose}
       >
         <List>
-          {routes.map((route) => (
-            <ListItem key={route.text} disablePadding sx={{ marginY: 1 }}>
-              <ListItemButton component={Link} to={route.path}>
-                <ListItemText primary={route.text} />
+          {userRoleContextProps?.userRole !== "PatientUser" && (
+            <ListItem key="Patients" disablePadding sx={{ marginY: 1 }}>
+              <ListItemButton component={Link} to="/patients">
+                <ListItemText primary="Patients" />
               </ListItemButton>
             </ListItem>
-          ))}
+          )}
+
+          {userRoleContextProps?.userRole !== "DoctorUser" && (
+            <ListItem key="Doctors" disablePadding sx={{ marginY: 1 }}>
+              <ListItemButton component={Link} to="/doctors">
+                <ListItemText primary="Doctors" />
+              </ListItemButton>
+            </ListItem>
+          )}
+
+          <ListItem key="Records" disablePadding sx={{ marginY: 1 }}>
+            <ListItemButton component={Link} to="/records">
+              <ListItemText primary="Records" />
+            </ListItemButton>
+          </ListItem>
         </List>
       </Box>
       <Box

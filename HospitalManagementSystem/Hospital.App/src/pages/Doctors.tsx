@@ -1,15 +1,55 @@
 import DoctorCard from "../components/doctors/DoctorCard";
 import { Doctor } from "../models/Doctor";
-import "./Doctors.css";
 import usePageTitle from "../hooks/PageTitleHook";
 import CreateActionButton from "../components/shared/CreateActionButton";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import DoctorFormDialog from "../components/doctors/DoctorFormDialog";
+import DoctorService from "../api/services/DoctorService";
+import { AxiosError } from "axios";
+import { UserRoleContext } from "../context/UserRoleContext";
+import { useNavigate } from "react-router-dom";
+import {
+  Box,
+  SelectChangeEvent,
+  Pagination,
+  MenuItem,
+  Typography,
+  Select,
+  Container,
+} from "@mui/material";
 
 function Doctors() {
   usePageTitle("Doctors");
 
+  const userRoleContextProps = useContext(UserRoleContext);
+  const navigate = useNavigate();
+
+  const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [createFormOpen, setCreateFormOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
+  const [pageSize, setPageSize] = useState(10);
+
+  useEffect(() => {
+    const fetchDoctors = async () => {
+      try {
+        const response = await DoctorService.getAllDoctors(
+          currentPage,
+          pageSize
+        );
+        setDoctors(response.items);
+        setTotalItems(response.totalItems);
+      } catch (error) {
+        const err = error as AxiosError;
+        if (err.response && err.response.status === 401) {
+          userRoleContextProps?.setUserRole("");
+          navigate("/");
+        }
+      }
+    };
+
+    fetchDoctors();
+  }, [currentPage, pageSize]);
 
   const handleCreateFormOpen = () => {
     setCreateFormOpen(true);
@@ -19,63 +59,75 @@ function Doctors() {
     setCreateFormOpen(false);
   };
 
-  const doctors: Doctor[] = [
-    {
-      id: 1,
-      Name: "John",
-      Surname: "Peters",
-      Department: "Cardiology",
-    },
-    {
-      id: 2,
-      Name: "Jane",
-      Surname: "Smith",
-      Department: "Neurology",
-    },
-    {
-      id: 3,
-      Name: "Alice",
-      Surname: "Johnson",
-      Department: "Pediatrics",
-    },
-    {
-      id: 4,
-      Name: "John",
-      Surname: "Peters",
-      Department: "Cardiology",
-    },
-    {
-      id: 5,
-      Name: "Jane",
-      Surname: "Smith",
-      Department: "Neurology",
-    },
-    {
-      id: 6,
-      Name: "Alice",
-      Surname: "Johnson",
-      Department: "Pediatrics",
-    },
-  ];
+  const handlePageChange = (
+    _event: React.ChangeEvent<unknown>,
+    newPage: number
+  ) => {
+    setCurrentPage(newPage);
+  };
+
+  const handlePageSizeChange = (event: SelectChangeEvent<number>) => {
+    setPageSize(parseInt(event.target.value as string));
+    setCurrentPage(1);
+  };
 
   return (
-    <>
-      <section className="doctors-content">
-        <div className="content-list">
-          <CreateActionButton
-            entityName="Doctor"
-            clickAction={handleCreateFormOpen}
-          />
-          {doctors.map((doctor, index) => (
-            <DoctorCard key={index} doctor={doctor} />
-          ))}
-        </div>
-        <DoctorFormDialog
-          open={createFormOpen}
-          onClose={handleCreateFormClose}
+    <Container
+      sx={{
+        position: "absolute",
+        width: "78.15%",
+        height: "auto",
+        zIndex: 1,
+        padding: "1.5% 1% 2% 1%",
+        marginTop: "8%",
+        marginLeft: "8%",
+        borderRadius: "5px",
+        backgroundColor: "white",
+      }}
+    >
+      <CreateActionButton
+        entityName="Doctor"
+        clickAction={handleCreateFormOpen}
+      />
+      <Box
+        sx={{
+          display: "flex",
+          flexWrap: "wrap",
+          justifyContent: "center",
+          gap: "3%",
+        }}
+      >
+        {doctors.map((doctor, index) => (
+          <DoctorCard key={index} doctor={doctor} />
+        ))}
+      </Box>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          mt: 2,
+          ml: 37,
+        }}
+      >
+        <Typography sx={{ mr: 1 }}>Doctors per page:</Typography>
+        <Select
+          value={pageSize}
+          onChange={handlePageSizeChange}
+          sx={{ marginRight: "20px" }}
+        >
+          <MenuItem value={5}>5</MenuItem>
+          <MenuItem value={10}>10</MenuItem>
+          <MenuItem value={15}>15</MenuItem>
+        </Select>
+        <Pagination
+          count={Math.ceil(totalItems / pageSize)}
+          page={currentPage}
+          onChange={handlePageChange}
+          color="primary"
         />
-      </section>
-    </>
+      </Box>
+      <DoctorFormDialog open={createFormOpen} onClose={handleCreateFormClose} />
+    </Container>
   );
 }
 
