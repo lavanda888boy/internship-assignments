@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import { IconButton, Menu, MenuItem } from "@mui/material";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { Patient } from "../../models/Patient";
 import PatientFormDialog from "../patients/PatientFormDialog";
+import { MoreHoriz } from "@mui/icons-material";
+import { Doctor } from "../../models/Doctor";
+import DoctorFormDialog from "../doctors/DoctorFormDialog";
 
 interface ActionMenuProps {
   rowId: number;
-  patient: Patient | null;
+  patient?: Patient | null;
+  doctor?: Doctor | null;
   anchorEl: HTMLElement | null;
   handleMenuClick: (
     event: React.MouseEvent<HTMLButtonElement>,
@@ -19,6 +22,7 @@ interface ActionMenuProps {
 function ActionMenu({
   rowId,
   patient,
+  doctor,
   anchorEl,
   handleMenuClick,
   handleMenuClose,
@@ -48,7 +52,7 @@ function ActionMenu({
         aria-label="actions"
         onClick={(event) => handleMenuClick(event, rowId)}
       >
-        <MoreVertIcon />
+        <MoreHoriz />
       </IconButton>
       <Menu
         anchorEl={anchorEl}
@@ -65,6 +69,15 @@ function ActionMenu({
           onPatientAdded={() => {}}
           onPatientUpdated={handleUpdateEntity}
           patient={patient}
+        />
+      )}
+      {doctor && (
+        <DoctorFormDialog
+          isOpened={isDialogOpen}
+          onClose={handleCloseDialog}
+          onDoctorAdded={() => {}}
+          doctor={doctor}
+          onDoctorUpdated={handleUpdateEntity}
         />
       )}
     </>

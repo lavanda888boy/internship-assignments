@@ -14,7 +14,7 @@ const api = axios.create({
   },
 });
 
-const AxiosInterceptor = ({ children }: { children: ReactNode }) => {
+const AxiosInterceptorWrapper = ({ children }: { children: ReactNode }) => {
   const userRoleContextProps = useContext(UserRoleContext);
   const navigate = useNavigate();
 
@@ -63,4 +63,4 @@ const AxiosInterceptor = ({ children }: { children: ReactNode }) => {
 };
 
 export default api;
-export { AxiosInterceptor };
+export { AxiosInterceptorWrapper };

@@ -34,21 +34,21 @@ namespace Hospital.Application.Patients.Commands
                 InsuranceNumber = request.InsuranceNumber
             };
 
-            var doctors = await _doctorRepository.GetAllAsync();
+            var doctors = await _doctorRepository.SearchByPropertyPaginatedAsync(d => d.Department.Name == "Therapy", 1, 30);
 
-            if (doctors.Count == 0)
+            if (doctors.Items.Count == 0)
             {
                 throw new NoEntityFoundException("There are no available doctors to be assigned to the patient");
             }
 
             Random r = new Random();
-            int doctorIndex = r.Next(0, doctors.Count);
+            int doctorIndex = r.Next(0, doctors.Items.Count);
 
             patient.DoctorsPatients = new List<DoctorsPatients>()
             {
                 new DoctorsPatients()
                 {
-                    DoctorId = doctors[doctorIndex].Id,
+                    DoctorId = doctors.Items[doctorIndex].Id,
                 }
             };
 

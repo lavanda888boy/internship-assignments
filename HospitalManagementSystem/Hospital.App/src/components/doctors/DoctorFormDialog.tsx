@@ -12,9 +12,14 @@ import {
   FormControlLabel,
   Checkbox,
   Typography,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import { Doctor } from "../../models/Doctor";
 import DoctorService from "../../api/services/DoctorService";
+import DepartmentService from "../../api/services/DepartmentService";
+import { useState, useEffect } from "react";
+import { Department } from "../../models/Department";
 
 const daysOfWeek = [
   { id: 1, name: "Monday" },
@@ -31,6 +36,7 @@ interface DoctorFormDialogProps {
   onClose: () => void;
   onDoctorAdded?: (doctor: Doctor) => void;
   doctor?: Doctor;
+  onDoctorUpdated?: () => void;
 }
 
 interface NewDoctorData {
@@ -41,7 +47,7 @@ interface NewDoctorData {
   departmentId: number;
   startShift: string;
   endShift: string;
-  weekDayIds: number[];
+  weekDayIds: (number | undefined)[];
 }
 
 function DoctorFormDialog({
@@ -49,19 +55,39 @@ function DoctorFormDialog({
   onClose,
   onDoctorAdded,
   doctor,
+  onDoctorUpdated,
 }: DoctorFormDialogProps) {
   const doctorService: DoctorService = new DoctorService();
+  const departmentService: DepartmentService = new DepartmentService();
+
+  const [departments, setDepartments] = useState<Department[]>([]);
+
+  useEffect(() => {
+    const fetchDepartments = async () => {
+      try {
+        const response = await departmentService.getAllDepartments();
+        setDepartments(response);
+      } catch (error) {
+        console.error("Failed to fetch departments", error);
+      }
+    };
+
+    fetchDepartments();
+  }, []);
 
   const formik = useFormik({
     initialValues: {
-      name: "",
-      surname: "",
-      address: "",
-      phoneNumber: "",
-      department: "",
-      startShift: "",
-      endShift: "",
-      weekDays: [] as number[],
+      name: doctor?.name || "",
+      surname: doctor?.surname || "",
+      address: doctor?.address || "",
+      phoneNumber: doctor?.phoneNumber || "",
+      departmentId: 0,
+      startShift: doctor?.workingHours?.startShift.slice(0, -3) || "",
+      endShift: doctor?.workingHours?.endShift.slice(0, -3) || "",
+      weekDays:
+        doctor?.workingHours?.weekDays.map(
+          (day) => daysOfWeek.find((d) => d.name === day)?.id
+        ) || ([] as number[]),
     },
 
     validationSchema: Yup.object({
@@ -82,9 +108,7 @@ function DoctorFormDialog({
           "Phone number is not valid"
         )
         .required("Phone number is required"),
-      department: Yup.string()
-        .max(30, "Department name must be no longer than 50 characters")
-        .required("Department name is required"),
+      departmentId: Yup.number().required("Department is required"),
       startShift: Yup.string().required("Start shift is required"),
       endShift: Yup.string().required("End shift is required"),
       weekDays: Yup.array().min(1, "Select at least one week day"),
@@ -97,25 +121,21 @@ function DoctorFormDialog({
           surname: values.surname,
           address: values.address,
           phoneNumber: values.phoneNumber,
+          departmentId: values.departmentId,
           startShift: values.startShift,
           endShift: values.endShift,
           weekDayIds: values.weekDays,
         };
-
         if (doctor) {
-          const id = await doctorService.updateDoctor(doctorData, doctor.id);
-          //onPatientUpdated && onPatientUpdated(id);
+          console.log(doctorData);
+          await doctorService.updateDoctor(doctorData, doctor.id);
+          onDoctorUpdated && onDoctorUpdated();
         } else {
           const id = await doctorService.addDoctor(doctorData);
-
-          try {
-            const newDoctor = await doctorService.getDoctorById(id);
-            onDoctorAdded && onDoctorAdded(newDoctor);
-          } catch (error) {
-            throw error;
-          }
+          0;
+          const newDoctor = await doctorService.getDoctorById(id);
+          onDoctorAdded && onDoctorAdded(newDoctor);
         }
-
         resetForm();
         onClose();
       } catch (error) {
@@ -133,10 +153,11 @@ function DoctorFormDialog({
 
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle>Add Doctor</DialogTitle>
+      <DialogTitle>Doctor registration</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          Please fill out the form below to add a new doctor.
+          Please fill out the form below to add a new doctor or update an
+          existing one.
         </DialogContentText>
         <Box
           component="form"
@@ -195,18 +216,29 @@ function DoctorFormDialog({
             sx={{ mt: 1, mb: 1 }}
           />
           <InputLabel htmlFor="departmentId">Department</InputLabel>
-          <TextField
-            id="department"
-            value={formik.values.department}
+          <Select
+            id="departmentId"
+            name="departmentId"
+            value={formik.values.departmentId}
             onChange={formik.handleChange}
             onBlur={formik.handleBlur}
             error={
-              formik.touched.department && Boolean(formik.errors.department)
+              formik.touched.departmentId && Boolean(formik.errors.departmentId)
             }
-            helperText={formik.touched.department && formik.errors.department}
             fullWidth
-            sx={{ mt: 1, mb: 1 }}
-          />
+            sx={{ mb: 2 }}
+          >
+            {departments.map((department) => (
+              <MenuItem key={department.id} value={department.id}>
+                {department.name}
+              </MenuItem>
+            ))}
+          </Select>
+          {formik.touched.departmentId && formik.errors.departmentId && (
+            <Typography color="error" variant="body2" sx={{ mb: 2 }}>
+              {formik.errors.departmentId}
+            </Typography>
+          )}
           <InputLabel htmlFor="startShift">Start shift</InputLabel>
           <TextField
             id="startShift"
@@ -255,11 +287,11 @@ function DoctorFormDialog({
             type="submit"
             variant="contained"
             color="primary"
-            sx={{ mt: 2, mx: 12 }}
+            sx={{ mt: 2, mx: 20 }}
           >
-            Add Doctor
+            Submit form
           </Button>
-          <Button onClick={onClose} color="primary" sx={{ mt: 1, mx: 12 }}>
+          <Button onClick={onClose} color="primary" sx={{ mt: 1, mx: 20 }}>
             Cancel
           </Button>
         </Box>

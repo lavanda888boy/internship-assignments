@@ -8,18 +8,19 @@ namespace Hospital.Presentation.Dto.Patient
         {
             var valueString = value as string;
 
-            if (valueString != null)
+            if (valueString == null)
             {
-                return valueString switch
-                {
-                    "M" => true,
-                    "F" => true,
-                    "Other" => true,
-                    _ => false,
-                };
+                ErrorMessage = "Invalid gender value";
+                return false;
             }
-            ErrorMessage = "Invalid gender value";
-            return false;
+
+            return valueString switch
+            {
+                "M" => true,
+                "F" => true,
+                "Other" => true,
+                _ => false,
+            };
         }
     }
 }

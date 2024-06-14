@@ -27,11 +27,11 @@ namespace Hospital.Presentation.Dto.Doctor
         public required int DepartmentId { get; set; }
 
         [Required]
-        [RegularExpression(@"^(\d+\.?\d*):(\d+\.?\d*):(\d+\.?\d*)$")]
+        [RegularExpression(@"^(\d+\.?\d*):(\d+\.?\d*)$")]
         public required string StartShift { get; set; }
 
         [Required]
-        [RegularExpression(@"^(\d+\.?\d*):(\d+\.?\d*):(\d+\.?\d*)$")]
+        [RegularExpression(@"^(\d+\.?\d*):(\d+\.?\d*)$")]
         public required string EndShift { get; set; }
 
         [Required]

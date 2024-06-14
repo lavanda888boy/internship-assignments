@@ -15,6 +15,8 @@ import {
   Select,
   Container,
 } from "@mui/material";
+import { Department } from "../models/Department";
+import DepartmentService from "../api/services/DepartmentService";
 
 function Doctors() {
   usePageTitle("Doctors");
@@ -22,6 +24,7 @@ function Doctors() {
   const userRoleContextProps = useContext(UserRoleContext);
 
   const doctorService: DoctorService = new DoctorService();
+  const departmentService: DepartmentService = new DepartmentService();
 
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [createFormOpen, setCreateFormOpen] = useState(false);
@@ -29,13 +32,23 @@ function Doctors() {
   const [totalItems, setTotalItems] = useState(0);
   const [pageSize, setPageSize] = useState(10);
 
+  const [departments, setDepartments] = useState<Department[]>([]);
+  const [selectedDepartment, setSelectedDepartment] = useState("");
+
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
-        const response = await doctorService.getAllDoctors(
-          currentPage,
-          pageSize
-        );
+        let response;
+        if (selectedDepartment) {
+          response = await doctorService.searchDoctorsByDepartment(
+            currentPage,
+            pageSize,
+            selectedDepartment
+          );
+        } else {
+          response = await doctorService.getAllDoctors(currentPage, pageSize);
+        }
+
         setDoctors(response.items);
         setTotalItems(response.totalItems);
       } catch (error) {
@@ -44,7 +57,20 @@ function Doctors() {
     };
 
     fetchDoctors();
-  }, [currentPage, pageSize]);
+  }, [currentPage, pageSize, selectedDepartment]);
+
+  useEffect(() => {
+    const fetchDepartments = async () => {
+      try {
+        const response = await departmentService.getAllDepartments();
+        setDepartments(response);
+      } catch (error) {
+        console.error("Failed to fetch departments", error);
+      }
+    };
+
+    fetchDepartments();
+  }, []);
 
   const handleCreateFormOpen = () => {
     setCreateFormOpen(true);
@@ -58,6 +84,19 @@ function Doctors() {
     setDoctors((prevDoctors) => [newDoctor, ...prevDoctors]);
   };
 
+  const handleDeleteDoctor = async (selectedDoctor: Doctor) => {
+    try {
+      if (selectedDoctor) {
+        await doctorService.deleteDoctor(selectedDoctor.id);
+        setDoctors((prevDoctors) =>
+          prevDoctors.filter((d) => d.id !== selectedDoctor.id)
+        );
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handlePageChange = (
     _event: React.ChangeEvent<unknown>,
     newPage: number
@@ -68,6 +107,10 @@ function Doctors() {
   const handlePageSizeChange = (event: SelectChangeEvent<number>) => {
     setPageSize(parseInt(event.target.value as string));
     setCurrentPage(1);
+  };
+
+  const handleDepartmentChange = (event: SelectChangeEvent<string>) => {
+    setSelectedDepartment(event.target.value);
   };
 
   return (
@@ -99,7 +142,11 @@ function Doctors() {
         }}
       >
         {doctors.map((doctor, index) => (
-          <DoctorCard key={index} doctor={doctor} />
+          <DoctorCard
+            key={index}
+            doctor={doctor}
+            onDoctorDelete={handleDeleteDoctor}
+          />
         ))}
       </Box>
       <Box
@@ -126,6 +173,31 @@ function Doctors() {
           onChange={handlePageChange}
           color="primary"
         />
+      </Box>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          mt: 2,
+          ml: 37,
+        }}
+      >
+        <Typography sx={{ mr: 1 }}>Filter by department:</Typography>
+        <Select
+          value={selectedDepartment}
+          onChange={handleDepartmentChange}
+          displayEmpty
+          sx={{ marginRight: "20px" }}
+        >
+          <MenuItem value="">
+            <Typography>All</Typography>
+          </MenuItem>
+          {departments.map((dept) => (
+            <MenuItem key={dept.id} value={dept.id}>
+              {dept.name}
+            </MenuItem>
+          ))}
+        </Select>
       </Box>
       <DoctorFormDialog
         isOpened={createFormOpen}

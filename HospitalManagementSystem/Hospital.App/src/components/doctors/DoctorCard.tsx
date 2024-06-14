@@ -10,23 +10,38 @@ import {
   Typography,
   useTheme,
 } from "@mui/material";
-import React from "react";
+import React, { useState, useContext } from "react";
 import ActionMenu from "../shared/ActionMenu";
+import { UserRoleContext } from "../../context/UserRoleContext";
 
 interface DoctorCardProps {
   doctor: Doctor;
+  onDoctorDelete: (doctor: Doctor) => void;
 }
 
-function DoctorCard({ doctor }: DoctorCardProps) {
+function DoctorCard({ doctor, onDoctorDelete }: DoctorCardProps) {
   const theme = useTheme();
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const userRoleContextProps = useContext(UserRoleContext);
 
-  const handleMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [selectedDoctor, setSelectedDoctor] = useState<Doctor | null>(null);
+
+  const handleMenuClick = (
+    event: React.MouseEvent<HTMLButtonElement>,
+    doctor: Doctor
+  ) => {
     setAnchorEl(event.currentTarget);
+    setSelectedDoctor(doctor);
   };
 
   const handleMenuClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleDeleteDoctor = () => {
+    if (selectedDoctor) {
+      onDoctorDelete(selectedDoctor);
+    }
   };
 
   return (
@@ -84,14 +99,18 @@ function DoctorCard({ doctor }: DoctorCardProps) {
           </Typography>
         ))}
       </CardContent>
-      <CardActions>
-        {/* <ActionMenu
-          rowId={doctor.id}
-          anchorEl={anchorEl}
-          handleMenuClick={handleMenuClick}
-          handleMenuClose={handleMenuClose}
-        /> */}
-      </CardActions>
+      {userRoleContextProps?.userRole === "Admin" && (
+        <CardActions>
+          <ActionMenu
+            rowId={doctor.id}
+            anchorEl={anchorEl}
+            handleMenuClick={(event) => handleMenuClick(event, doctor)}
+            handleMenuClose={handleMenuClose}
+            onEntityDelete={handleDeleteDoctor}
+            doctor={selectedDoctor}
+          />
+        </CardActions>
+      )}
     </Card>
   );
 }

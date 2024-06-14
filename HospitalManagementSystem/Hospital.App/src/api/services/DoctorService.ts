@@ -18,6 +18,24 @@ class DoctorService {
     return response.data;
   }
 
+  public async searchDoctorsByDepartment(
+    pageNumber: number,
+    pageSize: number,
+    department: string
+  ): Promise<PaginatedResult<Doctor>> {
+    const response = await api.post(
+      "/Doctor/Search",
+      {
+        params: {
+          pageNumber,
+          pageSize,
+        },
+      }
+      // { departmentName: department }
+    );
+    return response.data;
+  }
+
   public async addDoctor(doctor: any): Promise<number> {
     const response = await api.post("/Doctor", doctor);
     return response.data;

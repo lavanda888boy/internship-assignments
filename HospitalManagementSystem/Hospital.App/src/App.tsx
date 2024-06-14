@@ -7,7 +7,7 @@ import Registration from "./pages/Registration";
 import Login from "./pages/Login";
 import PageLayout from "./routes/PageLayout";
 import { UserRoleContextProvider } from "./context/UserRoleContext";
-import { AxiosInterceptor } from "./api/axios";
+import { AxiosInterceptorWrapper } from "./api/axios";
 
 function App() {
   return (
@@ -15,13 +15,13 @@ function App() {
       <PageContextProvider>
         <UserRoleContextProvider>
           <BrowserRouter>
-            <AxiosInterceptor>
+            <AxiosInterceptorWrapper>
               <Routes>
                 <Route index element={<Login />} />
                 <Route path="/registration" element={<Registration />} />
                 <Route path="*" element={<PageLayout />} />
               </Routes>
-            </AxiosInterceptor>
+            </AxiosInterceptorWrapper>
           </BrowserRouter>
         </UserRoleContextProvider>
       </PageContextProvider>

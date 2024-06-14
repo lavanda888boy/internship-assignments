@@ -44,7 +44,7 @@ namespace Hospital.Application.Doctors.Queries
             return await Task.FromResult(new PaginatedResult<DoctorFullInfoDto>
             {
                 TotalItems = paginatedDoctors.TotalItems,
-                Items = _mapper.Map<List<DoctorFullInfoDto>>(paginatedDoctors.TotalItems)
+                Items = _mapper.Map<List<DoctorFullInfoDto>>(paginatedDoctors.Items)
             });
         }
     }

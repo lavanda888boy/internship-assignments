@@ -22,7 +22,7 @@ interface PatientFormDialogProps {
   onClose: () => void;
   onPatientAdded?: (patient: Patient) => void;
   patient?: Patient;
-  onPatientUpdated?: (id: number) => void;
+  onPatientUpdated?: () => void;
 }
 
 type NewPatientData = Omit<Patient, "id">;
@@ -86,11 +86,8 @@ function PatientFormDialog({
         };
 
         if (patient) {
-          const id = await patientService.updatePatient(
-            patientData,
-            patient.id
-          );
-          onPatientUpdated && onPatientUpdated(id);
+          await patientService.updatePatient(patientData, patient.id);
+          onPatientUpdated && onPatientUpdated();
         } else {
           const id = await patientService.addPatient(patientData);
           const newPatient: Patient = {
