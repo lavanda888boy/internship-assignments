@@ -24,8 +24,10 @@ function Navbar({ open, onClose }: NavbarProps) {
   const userRoleContextProps = useContext(UserRoleContext);
   const navigate = useNavigate();
 
+  const authService: AuthService = new AuthService();
+
   const handleLogout = () => {
-    AuthService.logout();
+    authService.logout();
     userRoleContextProps?.setUserRole("");
     navigate("/");
   };

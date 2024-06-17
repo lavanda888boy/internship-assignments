@@ -5,6 +5,7 @@ using Hospital.Presentation.Filters;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Hospital.Presentation.Controllers
 {
@@ -24,7 +25,14 @@ namespace Hospital.Presentation.Controllers
         [Authorize(Roles = "Admin, DoctorUser, PatientUser")]
         public async Task<IActionResult> GetPaginatedDoctors([FromQuery] int pageNumber, [FromQuery] int pageSize)
         {
-            var command = new ListAllPaginatedDoctors(pageNumber, pageSize);
+            var userRole = User.FindFirst(ClaimTypes.Role)?.Value;
+
+            if (userRole == null)
+            {
+                return Unauthorized("The access token does not contain the user role");
+            }
+
+            var command = new ListAllPaginatedDoctors(pageNumber, pageSize, userRole);
             var paginatedDoctors = await _mediator.Send(command);
 
             return Ok(paginatedDoctors);

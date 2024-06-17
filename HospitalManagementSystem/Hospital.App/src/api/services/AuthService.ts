@@ -40,12 +40,17 @@ class AuthService {
   }
 
   public getUserRoleFromToken(token: string): string {
-    const decodedToken = jwtDecode(token) as CustomJwtPayload;
-    const userRole =
-      decodedToken[
+    if (!token) return "";
+
+    try {
+      const decodedToken = jwtDecode<CustomJwtPayload>(token);
+      return decodedToken[
         "http://schemas.microsoft.com/ws/2008/06/identity/claims/role"
       ];
-    return userRole;
+    } catch (error) {
+      console.error("Invalid token:", error);
+      return "";
+    }
   }
 }
 

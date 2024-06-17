@@ -19,9 +19,7 @@ namespace Hospital.Application.Profiles
                     WeekDays = src.WorkingHours.DoctorScheduleWeekDay.Select(dsw => dsw.WeekDay.DayOfWeek).ToList()
                 }));
 
-            CreateMap<Patient, PatientShortInfoDto>()
-                .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => src.Name + " " + src.Surname));
-
+            CreateMap<Patient, PatientShortInfoDto>();
             CreateMap<DoctorSchedule, DoctorScheduleDto>();
         }
     }

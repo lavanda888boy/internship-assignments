@@ -7,9 +7,9 @@ using MediatR;
 
 namespace Hospital.Application.Doctors.Queries
 {
-    public record ListAllPaginatedDoctors(int PageNumber, int PageSize) : IRequest<PaginatedResult<DoctorFullInfoDto>>;
+    public record ListAllPaginatedDoctors(int PageNumber, int PageSize, string UserRole) : IRequest<object>;
 
-    public class ListAllPaginatedDoctorsHandler : IRequestHandler<ListAllPaginatedDoctors, PaginatedResult<DoctorFullInfoDto>>
+    public class ListAllPaginatedDoctorsHandler : IRequestHandler<ListAllPaginatedDoctors, object>
     {
         private readonly IRepository<Doctor> _doctorRepository;
         private readonly IMapper _mapper;
@@ -20,14 +20,25 @@ namespace Hospital.Application.Doctors.Queries
             _mapper = mapper;
         }
 
-        public async Task<PaginatedResult<DoctorFullInfoDto>> Handle(ListAllPaginatedDoctors request, CancellationToken cancellationToken)
+        public async Task<object> Handle(ListAllPaginatedDoctors request, CancellationToken cancellationToken)
         {
             var paginatedDoctors = await _doctorRepository.GetAllPaginatedAsync(request.PageNumber, request.PageSize);
-            return await Task.FromResult(new PaginatedResult<DoctorFullInfoDto>
+            
+            if (request.UserRole == "PatientUser")
             {
-                TotalItems = paginatedDoctors.TotalItems,
-                Items = _mapper.Map<List<DoctorFullInfoDto>>(paginatedDoctors.Items)
-            });
+                return await Task.FromResult(new PaginatedResult<DoctorShortInfoDto>
+                {
+                    TotalItems = paginatedDoctors.TotalItems,
+                    Items = _mapper.Map<List<DoctorShortInfoDto>>(paginatedDoctors.Items)
+                });
+            } else
+            {
+                return await Task.FromResult(new PaginatedResult<DoctorFullInfoDto>
+                {
+                    TotalItems = paginatedDoctors.TotalItems,
+                    Items = _mapper.Map<List<DoctorFullInfoDto>>(paginatedDoctors.Items)
+                });
+            }
         }
     }
 }

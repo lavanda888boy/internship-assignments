@@ -73,31 +73,35 @@ function DoctorCard({ doctor, onDoctorDelete }: DoctorCardProps) {
         <Typography gutterBottom variant="body1" color="text.secondary">
           {doctor.department}
         </Typography>
-        <Typography variant="body2">
-          {doctor.phoneNumber}, {doctor.address}
-        </Typography>
-        <Divider sx={{ mt: 1, mb: 1 }} />
-        {doctor.workingHours && (
-          <Box sx={{ marginBottom: "0.5rem" }}>
-            <Typography variant="body1">Working Hours:</Typography>
+        {userRoleContextProps?.userRole !== "PatientUser" && (
+          <>
             <Typography variant="body2">
-              {doctor.workingHours.startShift.slice(0, -3)} -{" "}
-              {doctor.workingHours.endShift.slice(0, -3)}
+              {doctor.phoneNumber}, {doctor.address}
             </Typography>
-            <Typography variant="body2">
-              {doctor.workingHours.weekDays.join(", ")}
+            <Divider sx={{ mt: 1, mb: 1 }} />
+            {doctor.workingHours && (
+              <Box sx={{ marginBottom: "0.5rem" }}>
+                <Typography variant="body1">Working Hours:</Typography>
+                <Typography variant="body2">
+                  {doctor.workingHours.startShift.slice(0, -3)} -{" "}
+                  {doctor.workingHours.endShift.slice(0, -3)}
+                </Typography>
+                <Typography variant="body2">
+                  {doctor.workingHours.weekDays.join(", ")}
+                </Typography>
+              </Box>
+            )}
+            <Divider sx={{ mt: 1, mb: 1 }} />
+            <Typography variant="body1" sx={{ mb: 0.5 }}>
+              Patients:
             </Typography>
-          </Box>
+            {doctor.patients?.map((patient) => (
+              <Typography key={patient.id} variant="body2">
+                {patient.fullName}
+              </Typography>
+            ))}
+          </>
         )}
-        <Divider sx={{ mt: 1, mb: 1 }} />
-        <Typography variant="body1" sx={{ mb: 0.5 }}>
-          Patients:
-        </Typography>
-        {doctor.patients?.map((patient) => (
-          <Typography key={patient.id} variant="body2">
-            {patient.fullName}
-          </Typography>
-        ))}
       </CardContent>
       {userRoleContextProps?.userRole === "Admin" && (
         <CardActions>

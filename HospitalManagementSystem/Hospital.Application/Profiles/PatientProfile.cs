@@ -15,7 +15,6 @@ namespace Hospital.Application.Profiles
                 .ForMember(dest => dest.Doctors, opt => opt.MapFrom(src => src.DoctorsPatients.Select(dp => dp.Doctor)));
 
             CreateMap<Doctor, DoctorShortInfoDto>()
-                .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => src.Name + " " + src.Surname))
                 .ForMember(dest => dest.Department, opt => opt.MapFrom(src => src.Department.Name));
         }
     }
