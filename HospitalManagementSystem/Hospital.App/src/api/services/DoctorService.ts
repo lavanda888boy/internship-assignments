@@ -25,13 +25,13 @@ class DoctorService {
   ): Promise<PaginatedResult<Doctor>> {
     const response = await api.post(
       "/Doctor/Search",
+      { departmentName: department },
       {
         params: {
           pageNumber,
           pageSize,
         },
       }
-      // { departmentName: department }
     );
     return response.data;
   }

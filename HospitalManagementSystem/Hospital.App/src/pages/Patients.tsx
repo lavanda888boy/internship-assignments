@@ -231,7 +231,7 @@ function Patients() {
         <Select
           value={pageSize}
           onChange={handlePageSizeChange}
-          sx={{ marginRight: "20px" }}
+          sx={{ mr: 0.65 }}
         >
           <MenuItem value={5}>5</MenuItem>
           <MenuItem value={10}>10</MenuItem>

@@ -17,6 +17,7 @@ import {
 } from "@mui/material";
 import { Department } from "../models/Department";
 import DepartmentService from "../api/services/DepartmentService";
+import { AxiosError } from "axios";
 
 function Doctors() {
   usePageTitle("Doctors");
@@ -52,7 +53,11 @@ function Doctors() {
         setDoctors(response.items);
         setTotalItems(response.totalItems);
       } catch (error) {
-        console.log(error);
+        const err = error as AxiosError;
+
+        if (err.response && err.response.status === 404) {
+          setDoctors([]);
+        } else console.log(err.message);
       }
     };
 
@@ -127,12 +132,47 @@ function Doctors() {
         backgroundColor: "white",
       }}
     >
-      {userRoleContextProps?.userRole === "Admin" && (
-        <CreateActionButton
-          entityName="Doctor"
-          clickAction={handleCreateFormOpen}
-        />
-      )}
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        {userRoleContextProps?.userRole === "Admin" && (
+          <CreateActionButton
+            entityName="Doctor"
+            clickAction={handleCreateFormOpen}
+          />
+        )}
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+          }}
+        >
+          <Typography sx={{ mr: 1 }}>Department:</Typography>
+          <Select
+            value={selectedDepartment}
+            onChange={handleDepartmentChange}
+            displayEmpty
+            sx={{
+              overflow: "hidden",
+              textOverflow: "ellipsis",
+              whiteSpace: "nowrap",
+            }}
+          >
+            <MenuItem value="">
+              <Typography>All</Typography>
+            </MenuItem>
+            {departments.map((dept) => (
+              <MenuItem key={dept.id} value={dept.name}>
+                {dept.name}
+              </MenuItem>
+            ))}
+          </Select>
+        </Box>
+      </Box>
       <Box
         sx={{
           display: "flex",
@@ -161,7 +201,7 @@ function Doctors() {
         <Select
           value={pageSize}
           onChange={handlePageSizeChange}
-          sx={{ marginRight: "20px" }}
+          sx={{ mr: 0.65 }}
         >
           <MenuItem value={5}>5</MenuItem>
           <MenuItem value={10}>10</MenuItem>
@@ -173,31 +213,6 @@ function Doctors() {
           onChange={handlePageChange}
           color="primary"
         />
-      </Box>
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          mt: 2,
-          ml: 37,
-        }}
-      >
-        <Typography sx={{ mr: 1 }}>Filter by department:</Typography>
-        <Select
-          value={selectedDepartment}
-          onChange={handleDepartmentChange}
-          displayEmpty
-          sx={{ marginRight: "20px" }}
-        >
-          <MenuItem value="">
-            <Typography>All</Typography>
-          </MenuItem>
-          {departments.map((dept) => (
-            <MenuItem key={dept.id} value={dept.id}>
-              {dept.name}
-            </MenuItem>
-          ))}
-        </Select>
       </Box>
       <DoctorFormDialog
         isOpened={createFormOpen}

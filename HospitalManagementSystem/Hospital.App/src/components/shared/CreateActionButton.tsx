@@ -10,12 +10,7 @@ function CreateActionButton({
   clickAction,
 }: CreateActionButtonProps) {
   return (
-    <Button
-      variant="contained"
-      color="primary"
-      sx={{ mr: 86, textAlign: "left" }}
-      onClick={clickAction}
-    >
+    <Button variant="contained" color="primary" onClick={clickAction}>
       Add {entityName}
     </Button>
   );
