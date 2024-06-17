@@ -22,7 +22,7 @@ namespace Hospital.Application.Profiles
                 .ForMember(dest => dest.Department, opt => opt.MapFrom(src => src.Department.Name));
 
             CreateMap<Illness, IllnessRecordDto>()
-                .ForMember(dest => dest.IllnessSeverity, opt => opt.MapFrom(src => Enum.GetName(typeof(IllnessSeverity), src.Severity)));
+                .ForMember(dest => dest.Severity, opt => opt.MapFrom(src => Enum.GetName(typeof(IllnessSeverity), src.Severity)));
 
             CreateMap<Treatment, TreatmentRecordDto>();
         }

@@ -196,7 +196,7 @@ function Patients() {
                     <TableCell align="center">
                       {patient.doctors?.map((doctor) => (
                         <Typography key={doctor.id}>
-                          {doctor.fullName} ({doctor.department})
+                          {doctor.name} {doctor.surname} ({doctor.department})
                         </Typography>
                       ))}
                     </TableCell>

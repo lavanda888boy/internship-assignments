@@ -2,7 +2,6 @@
 using Hospital.Application.Illnesses.Responses;
 using Hospital.Application.Patients.Responses;
 using Hospital.Application.Treatments.Responses;
-using Hospital.Domain.Models;
 
 namespace Hospital.Application.MedicalRecords.Responses
 {

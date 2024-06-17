@@ -1,3 +1,5 @@
+import { PatientPartial } from "./PatientPartial";
+
 export interface Doctor {
   id: number;
   name: string;
@@ -6,16 +8,11 @@ export interface Doctor {
   phoneNumber: string;
   department: string;
   workingHours?: DoctorSchedule;
-  patients?: PatientShortInfo[];
+  patients?: PatientPartial[];
 }
 
 interface DoctorSchedule {
   startShift: string;
   endShift: string;
   weekDays: string[];
-}
-
-interface PatientShortInfo {
-  id: number;
-  fullName: string;
 }

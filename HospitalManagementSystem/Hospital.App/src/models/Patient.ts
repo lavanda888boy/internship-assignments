@@ -1,3 +1,5 @@
+import { DoctorPartial } from "./DoctorPartial";
+
 export interface Patient {
   id: number;
   name: string;
@@ -7,11 +9,5 @@ export interface Patient {
   address: string;
   phoneNumber?: string;
   insuranceNumber?: string;
-  doctors?: DoctorShortInfo[];
-}
-
-interface DoctorShortInfo {
-  id: number;
-  fullName: string;
-  department: string;
+  doctors?: DoctorPartial[];
 }

@@ -1,4 +1,4 @@
-import { Record } from "../../models/Record";
+import { DiagnosisRecord } from "../../models/DiagnosisRecord";
 import {
   Card,
   CardHeader,
@@ -11,7 +11,7 @@ import ActionMenu from "../shared/ActionMenu";
 import React from "react";
 
 interface RecordCardProps {
-  record: Record;
+  record: DiagnosisRecord;
 }
 
 function RecordCard({ record }: RecordCardProps) {
