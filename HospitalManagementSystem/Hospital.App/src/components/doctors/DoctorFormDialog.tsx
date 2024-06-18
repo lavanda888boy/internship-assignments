@@ -44,7 +44,7 @@ interface NewDoctorData {
   surname: string;
   address: string;
   phoneNumber: string;
-  departmentId: number;
+  departmentId: number | null;
   startShift: string;
   endShift: string;
   weekDayIds: (number | undefined)[];
@@ -81,7 +81,7 @@ function DoctorFormDialog({
       surname: doctor?.surname || "",
       address: doctor?.address || "",
       phoneNumber: doctor?.phoneNumber || "",
-      departmentId: 0,
+      departmentId: null,
       startShift: doctor?.workingHours?.startShift.slice(0, -3) || "",
       endShift: doctor?.workingHours?.endShift.slice(0, -3) || "",
       weekDays:
@@ -127,12 +127,10 @@ function DoctorFormDialog({
           weekDayIds: values.weekDays,
         };
         if (doctor) {
-          console.log(doctorData);
           await doctorService.updateDoctor(doctorData, doctor.id);
           onDoctorUpdated && onDoctorUpdated();
         } else {
           const id = await doctorService.addDoctor(doctorData);
-          0;
           const newDoctor = await doctorService.getDoctorById(id);
           onDoctorAdded && onDoctorAdded(newDoctor);
         }

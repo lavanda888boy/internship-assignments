@@ -1,13 +1,9 @@
+import { Illness } from "./Illness";
 import { RegularRecord } from "./RegularRecord";
 
 export interface DiagnosisRecord extends RegularRecord {
-  diagnosedIllness?: IllnessDto;
+  diagnosedIllness?: Illness;
   proposedTreatment?: TreatmentDto;
-}
-
-interface IllnessDto {
-  name: string;
-  severity: string;
 }
 
 interface TreatmentDto {

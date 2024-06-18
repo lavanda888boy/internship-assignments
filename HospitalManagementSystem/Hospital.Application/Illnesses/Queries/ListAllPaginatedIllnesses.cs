@@ -6,7 +6,7 @@ using MediatR;
 
 namespace Hospital.Application.Illnesses.Queries
 {
-    public record ListAllPaginatedIllnesses(int PageNumber, int PageSize) : IRequest<PaginatedResult<IllnessDto>>;
+    public record ListAllPaginatedIllnesses(int PageNumber = 1, int PageSize = 20) : IRequest<PaginatedResult<IllnessDto>>;
 
     public class ListAllPaginatedIllnessesHandler : IRequestHandler<ListAllPaginatedIllnesses, PaginatedResult<IllnessDto>>
     {

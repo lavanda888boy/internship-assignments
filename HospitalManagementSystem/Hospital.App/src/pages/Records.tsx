@@ -83,6 +83,12 @@ function Records() {
     setCreateFormOpen(false);
   };
 
+  const handleAddRecord = (newRecord: any) => {
+    if (newRecord.diagnosedIllness) {
+      setDiagnosisRecords((prevRecords) => [newRecord, ...prevRecords]);
+    } else setRegularRecords((prevRecords) => [newRecord, ...prevRecords]);
+  };
+
   const handlePageChange = (
     _event: React.ChangeEvent<unknown>,
     newPage: number
@@ -188,6 +194,7 @@ function Records() {
       <RecordFormDialog
         isOpened={createFormOpen}
         onClose={handleCreateFormClose}
+        onRecordAdded={handleAddRecord}
       />
     </Container>
   );
