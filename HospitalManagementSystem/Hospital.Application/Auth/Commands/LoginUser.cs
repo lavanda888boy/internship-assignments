@@ -39,6 +39,7 @@ namespace Hospital.Application.Auth.Commands
             }
 
             var userClaims = (await _userManager.GetClaimsAsync(user)).Where(c => 
+                c.Type == ClaimTypes.Name || c.Type == ClaimTypes.Surname ||
                 c.Type == ClaimTypes.Email || c.Type == ClaimTypes.Role
             );
 

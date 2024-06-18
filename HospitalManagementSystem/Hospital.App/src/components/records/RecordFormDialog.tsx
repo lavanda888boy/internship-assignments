@@ -22,8 +22,6 @@ import { Illness } from "../../models/Illness";
 import IllnessService from "../../api/services/IllnessService";
 import PatientService from "../../api/services/PatientService";
 import { Patient } from "../../models/Patient";
-import { DiagnosisRecord } from "../../models/DiagnosisRecord";
-import { esES } from "@mui/material/locale";
 
 interface RecordFormDialogProps {
   isOpened: boolean;
@@ -330,7 +328,7 @@ function RecordFormDialog({
               color="primary"
               sx={{ mt: 2, mx: 20 }}
             >
-              Add Record
+              Submit form
             </Button>
             <Button onClick={onClose} color="primary" sx={{ mt: 1, mx: 20 }}>
               Cancel

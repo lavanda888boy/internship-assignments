@@ -52,12 +52,7 @@ namespace Hospital.Application.Auth.Commands
                 };
 
                 await _userManager.AddClaimsAsync(newUser, newClaims);
-
-                var token = _jwtGenerationService.GenerateAccessToken(new List<Claim>()
-                {
-                    new(ClaimTypes.Email, request.Email),
-                    new(ClaimTypes.Role, request.Role)
-                });
+                var token = _jwtGenerationService.GenerateAccessToken(newClaims);
 
                 return await Task.FromResult(token);
             }

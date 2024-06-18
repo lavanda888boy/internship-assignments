@@ -4,7 +4,6 @@ import {
   Toolbar,
   IconButton,
   Typography,
-  Button,
   Box,
   useTheme,
 } from "@mui/material";
@@ -12,20 +11,16 @@ import MenuIcon from "@mui/icons-material/Menu";
 import person from "../../assets/person.jpg";
 import { PageContext } from "../../context/PageContext";
 import Navbar from "./Navbar";
-import { useNavigate } from "react-router-dom";
+import { UserRoleContext } from "../../context/UserRoleContext";
 
 function Statusbar() {
   const theme = useTheme();
-  const navigate = useNavigate();
+  const userRoleContextProps = useContext(UserRoleContext);
   const pageContextProps = useContext(PageContext);
   const [navbarOpen, setNavbarOpen] = useState(false);
 
   const toggleNavbar = (open: boolean) => () => {
     setNavbarOpen(open);
-  };
-
-  const handleLoginButton = () => {
-    navigate("/");
   };
 
   return (
@@ -66,22 +61,22 @@ function Statusbar() {
           >
             {pageContextProps?.pageName}
           </Typography>
-          <Button
+          <Typography
             sx={{
               marginLeft: "auto",
               marginRight: "1%",
-              padding: "0.5% 1% 0.5% 1%",
               backgroundColor: "#9381ff",
+              padding: "0.5%",
+              borderRadius: "5px",
               color: "white",
               "&:hover": {
                 backgroundColor: theme.palette.primary.light,
                 color: "white",
               },
             }}
-            onClick={handleLoginButton}
           >
-            Login
-          </Button>
+            {userRoleContextProps?.userCredentials}
+          </Typography>
           <Box
             component="img"
             src={person}

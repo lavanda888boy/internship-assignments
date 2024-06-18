@@ -36,6 +36,7 @@ const AxiosInterceptorWrapper = ({ children }: { children: ReactNode }) => {
     const errorInterceptor = (error: AxiosError) => {
       if (error.response && error.response.status === 401) {
         userRoleContextProps?.setUserRole("");
+        userRoleContextProps?.setUserCredentials("");
         navigate("/");
       }
       return Promise.reject(error);

@@ -29,6 +29,7 @@ function Navbar({ open, onClose }: NavbarProps) {
   const handleLogout = () => {
     authService.logout();
     userRoleContextProps?.setUserRole("");
+    userRoleContextProps?.setUserCredentials("");
     navigate("/");
   };
 

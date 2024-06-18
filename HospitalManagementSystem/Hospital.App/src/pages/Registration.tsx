@@ -63,8 +63,9 @@ function Registration() {
           role: "PatientUser",
         };
 
-        const userRole = await authService.register(user);
-        userRoleContextProps?.setUserRole(userRole);
+        const userData = await authService.register(user);
+        userRoleContextProps?.setUserRole(userData[0]);
+        userRoleContextProps?.setUserCredentials(userData[1]);
         navigate("/");
       } catch (error) {
         console.log(error);

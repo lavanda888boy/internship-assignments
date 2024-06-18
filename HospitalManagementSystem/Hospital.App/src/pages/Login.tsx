@@ -43,8 +43,9 @@ function Login() {
           password: values.password,
         };
 
-        const userRole = await authService.login(user);
-        userRoleContextProps?.setUserRole(userRole);
+        const userData = await authService.login(user);
+        userRoleContextProps?.setUserRole(userData[0]);
+        userRoleContextProps?.setUserCredentials(userData[1]);
         navigate("/doctors");
       } catch (error) {
         console.log(error);
