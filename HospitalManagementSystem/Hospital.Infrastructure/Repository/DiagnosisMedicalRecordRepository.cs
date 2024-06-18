@@ -44,6 +44,7 @@ namespace Hospital.Infrastructure.Repository
                                                          .Include(r => r.ProposedTreatment)
                                                          .Skip((pageNumber - 1) * pageSize)
                                                          .Take(pageSize)
+                                                         .OrderByDescending(r => r.DateOfExamination)
                                                          .ToListAsync();
 
             return new PaginatedResult<DiagnosisMedicalRecord>

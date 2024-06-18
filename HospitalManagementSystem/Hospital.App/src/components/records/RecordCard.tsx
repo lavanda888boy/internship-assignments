@@ -36,39 +36,46 @@ function RecordCard({ record }: RecordCardProps) {
       }}
     >
       <CardHeader
-        title={record.DateOfExamination}
-        subheader={`Examined patient: ${record.PatientFullName} | Responsible doctor: ${record.DoctorFullName}`}
-        subheaderTypographyProps={{ style: { color: "white" } }}
-        sx={{ backgroundColor: theme.palette.primary.main, color: "white" }}
+        title={new Date(record.dateOfExamination).toDateString()}
+        subheader={`Examined patient: ${record.examinedPatient.fullName} | Responsible doctor: ${record.responsibleDoctor.name} ${record.responsibleDoctor.surname}`}
+        subheaderTypographyProps={{
+          style: { color: "white" },
+        }}
+        sx={{
+          backgroundColor: theme.palette.primary.main,
+          color: "white",
+        }}
       />
       <CardContent
         sx={{
-          padding: "2%",
           "&:last-child": {
             paddingBottom: "0.5%",
           },
         }}
       >
-        <Typography variant="body2" color="textSecondary" component="p">
-          Examination notes: {record.ExaminationNotes}
+        <Typography variant="h6" color="textSecondary" component="p">
+          Examination notes: {record.examinationNotes}
         </Typography>
-        {record.DiagnosedIllness && (
-          <Typography variant="body2" color="textSecondary" component="p">
-            Diagnosis: {record.DiagnosedIllness}
-          </Typography>
-        )}
-        {record.ProposedTreatment && (
-          <Typography variant="body2" color="textSecondary" component="p">
-            Treatment: {record.ProposedTreatment}
-          </Typography>
-        )}
+        <Box sx={{ display: "flex", gap: 2 }}>
+          {record.diagnosedIllness && (
+            <Typography variant="h6" color="textSecondary" component="p">
+              Diagnosis: {record.diagnosedIllness.name};
+            </Typography>
+          )}
+          {record.proposedTreatment && (
+            <Typography variant="h6" color="textSecondary" component="p">
+              Treatment: {record.proposedTreatment.prescribedMedicine},{" "}
+              {record.proposedTreatment.durationInDays} days
+            </Typography>
+          )}
+        </Box>
         <Box sx={{ textAlign: "right" }}>
-          <ActionMenu
+          {/* <ActionMenu
             rowId={record.id}
             anchorEl={anchorEl}
             handleMenuClick={handleMenuClick}
             handleMenuClose={handleMenuClose}
-          />
+          /> */}
         </Box>
       </CardContent>
     </Card>

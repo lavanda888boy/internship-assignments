@@ -7,7 +7,7 @@ class DiagnosisRecordService {
     pageNumber: number,
     pageSize: number
   ): Promise<PaginatedResult<DiagnosisRecord>> {
-    const response = await api.get("/Patient", {
+    const response = await api.get("/DiagnosisMedicalRecord", {
       params: { pageNumber, pageSize },
     });
     return response.data;

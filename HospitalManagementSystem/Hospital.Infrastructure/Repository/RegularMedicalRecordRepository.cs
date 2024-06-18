@@ -39,6 +39,7 @@ namespace Hospital.Infrastructure.Repository
                                                        .ThenInclude(d => d.Department)
                                                        .Skip((pageNumber - 1) * pageSize)
                                                        .Take(pageSize)
+                                                       .OrderByDescending(r => r.DateOfExamination)
                                                        .ToListAsync();
 
             return new PaginatedResult<RegularMedicalRecord>

@@ -7,7 +7,7 @@ class RegularRecordService {
     pageNumber: number,
     pageSize: number
   ): Promise<PaginatedResult<RegularRecord>> {
-    const response = await api.get("/Patient", {
+    const response = await api.get("/RegularMedicalRecord", {
       params: { pageNumber, pageSize },
     });
     return response.data;
