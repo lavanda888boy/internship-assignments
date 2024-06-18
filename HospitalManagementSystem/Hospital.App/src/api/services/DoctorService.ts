@@ -18,6 +18,23 @@ class DoctorService {
     return response.data;
   }
 
+  public async searchDoctorByNameAndSurname(
+    name: string,
+    surname: string
+  ): Promise<Doctor> {
+    const response = await api.post(
+      "/Doctor/Search",
+      { name: name, surname: surname },
+      {
+        params: {
+          pageNumber: 1,
+          pageSize: 50,
+        },
+      }
+    );
+    return response.data[0];
+  }
+
   public async searchDoctorsByDepartment(
     pageNumber: number,
     pageSize: number,

@@ -69,10 +69,6 @@ function Statusbar() {
               padding: "0.5%",
               borderRadius: "5px",
               color: "white",
-              "&:hover": {
-                backgroundColor: theme.palette.primary.light,
-                color: "white",
-              },
             }}
           >
             {userRoleContextProps?.userCredentials}
