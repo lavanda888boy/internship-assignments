@@ -18,6 +18,24 @@ class DiagnosisRecordService {
     return response.data;
   }
 
+  public async searchDiagnosisRecordsByPatientId(
+    id: number,
+    pageNumber: number,
+    pageSize: number
+  ): Promise<PaginatedResult<DiagnosisRecord>> {
+    const response = await api.post(
+      "/DiagnosisMedicalRecord/Search",
+      { examinedPatientId: id },
+      {
+        params: {
+          pageNumber,
+          pageSize,
+        },
+      }
+    );
+    return response.data;
+  }
+
   public async addDiagnosisRecord(record: any): Promise<number> {
     const response = await api.post("/DiagnosisMedicalRecord", record);
     return response.data;

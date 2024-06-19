@@ -169,16 +169,15 @@ function RecordFormDialog({
             userRoleContextProps?.userCredentials.split(" ");
 
           if (doctorCredentials) {
-            console.log(doctorCredentials);
-            const currentDoctor =
-              await doctorService.searchDoctorByNameAndSurname(
+            const currentDoctorId =
+              await doctorService.searchDoctorIdByNameAndSurname(
                 doctorCredentials[0],
                 doctorCredentials[1]
               );
 
             let recordData: NewRecordData = {
               patientId: values.examinedPatientId,
-              doctorId: currentDoctor.id,
+              doctorId: currentDoctorId,
               examinationNotes: values.examinationNotes,
             };
             let newRecord;

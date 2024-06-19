@@ -2,7 +2,7 @@ import RecordCard from "../components/records/RecordCard";
 import { DiagnosisRecord } from "../models/DiagnosisRecord";
 import usePageTitle from "../hooks/PageTitleHook";
 import CreateActionButton from "../components/shared/CreateActionButton";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import RecordFormDialog from "../components/records/RecordFormDialog";
 import RegularRecordService from "../api/services/RegularRecordService";
 import DiagnosisRecordService from "../api/services/DiagnosisRecordService";
@@ -16,6 +16,8 @@ import {
   SelectChangeEvent,
 } from "@mui/material";
 import { RegularRecord } from "../models/RegularRecord";
+import { UserRoleContext } from "../context/UserRoleContext";
+import PatientService from "../api/services/PatientService";
 
 function Records() {
   usePageTitle("Medical Records");
@@ -23,6 +25,7 @@ function Records() {
   const regularRecordService: RegularRecordService = new RegularRecordService();
   const diagnosisRecordsService: DiagnosisRecordService =
     new DiagnosisRecordService();
+  const patientService: PatientService = new PatientService();
 
   const [regularRecords, setRegularRecords] = useState<RegularRecord[]>([]);
   const [diagnosisRecords, setDiagnosisRecords] = useState<DiagnosisRecord[]>(
@@ -37,14 +40,36 @@ function Records() {
 
   const [selectedRecordType, setSelectedRecordType] = useState("");
 
+  const userRoleContextProps = useContext(UserRoleContext);
+
   useEffect(() => {
     if (selectedRecordType === "Regular" || selectedRecordType === "") {
       const fetchRegularRecords = async () => {
         try {
-          const response = await regularRecordService.getAllRegularRecords(
-            currentPage,
-            Math.floor(pageSize / 2)
-          );
+          let response;
+
+          if (userRoleContextProps?.userRole === "PatientUser") {
+            const patientCredentials =
+              userRoleContextProps?.userCredentials.split(" ");
+            const patientId =
+              await patientService.searchPatientIdByNameAndSurname(
+                patientCredentials[0],
+                patientCredentials[1]
+              );
+
+            response =
+              await regularRecordService.searchRegularRecordsByPatientId(
+                patientId,
+                currentPage,
+                Math.floor(pageSize / 2)
+              );
+          } else {
+            response = await regularRecordService.getAllRegularRecords(
+              currentPage,
+              Math.floor(pageSize / 2)
+            );
+          }
+
           setRegularRecords(response.items);
           setTotalRegularRecords(response.totalItems);
         } catch (error) {
@@ -60,10 +85,30 @@ function Records() {
     if (selectedRecordType === "Diagnosis" || selectedRecordType === "") {
       const fetchDiagnosisRecords = async () => {
         try {
-          const response = await diagnosisRecordsService.getAllDiagnosisRecords(
-            currentPage,
-            Math.floor(pageSize / 2)
-          );
+          let response;
+
+          if (userRoleContextProps?.userRole === "PatientUser") {
+            const patientCredentials =
+              userRoleContextProps?.userCredentials.split(" ");
+            const patientId =
+              await patientService.searchPatientIdByNameAndSurname(
+                patientCredentials[0],
+                patientCredentials[1]
+              );
+
+            response =
+              await diagnosisRecordsService.searchDiagnosisRecordsByPatientId(
+                patientId,
+                currentPage,
+                Math.floor(pageSize / 2)
+              );
+          } else {
+            response = await diagnosisRecordsService.getAllDiagnosisRecords(
+              currentPage,
+              Math.floor(pageSize / 2)
+            );
+          }
+
           setDiagnosisRecords(response.items);
           setTotalDiagnosisRecords(response.totalItems);
         } catch (error) {
@@ -150,10 +195,12 @@ function Records() {
           mb: 2,
         }}
       >
-        <CreateActionButton
-          entityName="Record"
-          clickAction={handleCreateFormOpen}
-        />
+        {userRoleContextProps?.userRole !== "PatientUser" && (
+          <CreateActionButton
+            entityName="Record"
+            clickAction={handleCreateFormOpen}
+          />
+        )}
         <Box
           sx={{
             display: "flex",
@@ -222,11 +269,13 @@ function Records() {
           color="primary"
         />
       </Box>
-      <RecordFormDialog
-        isOpened={createFormOpen}
-        onClose={handleCreateFormClose}
-        onRecordAdded={handleAddRecord}
-      />
+      {userRoleContextProps?.userRole !== "PatientUser" && (
+        <RecordFormDialog
+          isOpened={createFormOpen}
+          onClose={handleCreateFormClose}
+          onRecordAdded={handleAddRecord}
+        />
+      )}
     </Container>
   );
 }

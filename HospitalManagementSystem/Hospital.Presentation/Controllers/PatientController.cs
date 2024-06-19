@@ -54,7 +54,7 @@ namespace Hospital.Presentation.Controllers
         }
 
         [HttpPost("Search")]
-        [Authorize(Roles = "Admin, DoctorUser")]
+        [Authorize(Roles = "Admin, DoctorUser, PatientUser")]
         public async Task<IActionResult> SearchPatientsByASetOfProperties([FromQuery] int pageNumber,
             [FromQuery] int pageSize, [FromBody] PatientFilterRequestDto patientFilter)
         {

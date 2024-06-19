@@ -18,6 +18,24 @@ class RegularRecordService {
     return response.data;
   }
 
+  public async searchRegularRecordsByPatientId(
+    id: number,
+    pageNumber: number,
+    pageSize: number
+  ): Promise<PaginatedResult<RegularRecord>> {
+    const response = await api.post(
+      "/RegularMedicalRecord/Search",
+      { examinedPatientId: id },
+      {
+        params: {
+          pageNumber,
+          pageSize,
+        },
+      }
+    );
+    return response.data;
+  }
+
   public async addRegularRecord(record: any): Promise<number> {
     const response = await api.post("/RegularMedicalRecord", record);
     return response.data;

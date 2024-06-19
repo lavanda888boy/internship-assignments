@@ -21,7 +21,7 @@ namespace Hospital.Presentation.Controllers
         }
 
         [HttpGet]
-        [Authorize(Roles = "Admin, DoctorUser")]
+        [Authorize(Roles = "Admin, DoctorUser, PatientUser")]
         public async Task<IActionResult> GetPaginatedRegularMedicalRecords([FromQuery] int pageNumber, [FromQuery] int pageSize)
         {
             var command = new ListAllPaginatedRegularMedicalRecords(pageNumber, pageSize);
@@ -54,7 +54,7 @@ namespace Hospital.Presentation.Controllers
         }
 
         [HttpPost("Search")]
-        [Authorize(Roles = "Admin, DoctorUser")]
+        [Authorize(Roles = "Admin, DoctorUser, PatientUser")]
         public async Task<IActionResult> SearchRegularMedicalRecordsByASetOfProperties([FromQuery] int pageNumber,
             [FromQuery] int pageSize, [FromBody] RegularMedicalRecordFilterRequestDto recordFilter)
         {

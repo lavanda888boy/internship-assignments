@@ -18,10 +18,10 @@ class DoctorService {
     return response.data;
   }
 
-  public async searchDoctorByNameAndSurname(
+  public async searchDoctorIdByNameAndSurname(
     name: string,
     surname: string
-  ): Promise<Doctor> {
+  ): Promise<number> {
     const response = await api.post(
       "/Doctor/Search",
       { name: name, surname: surname },
@@ -32,7 +32,7 @@ class DoctorService {
         },
       }
     );
-    return response.data.items[0];
+    return response.data.items[0].id;
   }
 
   public async searchDoctorsByDepartment(
