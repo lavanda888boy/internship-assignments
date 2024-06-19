@@ -44,6 +44,7 @@ function ActionMenu({
 
   const handleDeleteEntity = () => {
     onEntityDelete();
+    handleMenuClose();
   };
 
   return (

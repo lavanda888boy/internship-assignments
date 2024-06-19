@@ -89,6 +89,29 @@ function Records() {
     } else setRegularRecords((prevRecords) => [newRecord, ...prevRecords]);
   };
 
+  const handleDeleteRecord = async (selectedRecord: any) => {
+    try {
+      if (selectedRecord) {
+        console.log(selectedRecord);
+        if (selectedRecord.diagnosedIllness) {
+          await diagnosisRecordsService.deleteDiagnosisRecord(
+            selectedRecord.id
+          );
+          setDiagnosisRecords((prevRecords) =>
+            prevRecords.filter((r) => r.id !== selectedRecord.id)
+          );
+        } else {
+          await regularRecordService.deleteRegularRecord(selectedRecord.id);
+          setRegularRecords((prevRecords) =>
+            prevRecords.filter((r) => r.id !== selectedRecord.id)
+          );
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handlePageChange = (
     _event: React.ChangeEvent<unknown>,
     newPage: number
@@ -158,10 +181,18 @@ function Records() {
       </Box>
       <Box sx={{ display: "flex", flexDirection: "column", gap: "30px" }}>
         {regularRecords.map((record, index) => (
-          <RecordCard key={index} record={record} />
+          <RecordCard
+            key={index}
+            record={record}
+            onRecordDelete={handleDeleteRecord}
+          />
         ))}
         {diagnosisRecords.map((record, index) => (
-          <RecordCard key={index} record={record} />
+          <RecordCard
+            key={index}
+            record={record}
+            onRecordDelete={handleDeleteRecord}
+          />
         ))}
       </Box>
       <Box

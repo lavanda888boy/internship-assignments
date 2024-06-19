@@ -8,22 +8,37 @@ import {
   useTheme,
 } from "@mui/material";
 import ActionMenu from "../shared/ActionMenu";
-import React from "react";
+import { useContext, useState } from "react";
+import { UserRoleContext } from "../../context/UserRoleContext";
 
 interface RecordCardProps {
   record: DiagnosisRecord;
+  onRecordDelete: (record: any) => void;
 }
 
-function RecordCard({ record }: RecordCardProps) {
+function RecordCard({ record, onRecordDelete }: RecordCardProps) {
   const theme = useTheme();
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const userRoleContextProps = useContext(UserRoleContext);
 
-  const handleMenuClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const [selectedRecord, setSelectedRecord] = useState<any | null>(null);
+
+  const handleMenuClick = (
+    event: React.MouseEvent<HTMLButtonElement>,
+    record: any
+  ) => {
     setAnchorEl(event.currentTarget);
+    setSelectedRecord(record);
   };
 
   const handleMenuClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleDeleteRecord = () => {
+    if (selectedRecord) {
+      onRecordDelete(selectedRecord);
+    }
   };
 
   return (
@@ -69,14 +84,17 @@ function RecordCard({ record }: RecordCardProps) {
             </Typography>
           )}
         </Box>
-        <Box sx={{ textAlign: "right" }}>
-          {/* <ActionMenu
-            rowId={record.id}
-            anchorEl={anchorEl}
-            handleMenuClick={handleMenuClick}
-            handleMenuClose={handleMenuClose}
-          /> */}
-        </Box>
+        {userRoleContextProps?.userRole === "Admin" && (
+          <Box sx={{ textAlign: "right" }}>
+            <ActionMenu
+              rowId={record.id}
+              anchorEl={anchorEl}
+              handleMenuClick={(event) => handleMenuClick(event, record)}
+              handleMenuClose={handleMenuClose}
+              onEntityDelete={handleDeleteRecord}
+            />
+          </Box>
+        )}
       </CardContent>
     </Card>
   );
