@@ -32,12 +32,12 @@ interface RecordFormDialogProps {
 }
 
 interface NewRecordData {
-  examinedPatientId: number | null;
-  responsibleDoctorId: number;
+  patientId: number | null;
+  doctorId: number;
   examinationNotes: string;
-  diagnosedIllnessId?: number | null;
+  illnessId?: number | null;
   prescribedMedicine?: string;
-  treatmentDuration?: number;
+  duration?: number;
 }
 
 function RecordFormDialog({
@@ -132,6 +132,7 @@ function RecordFormDialog({
           userRoleContextProps?.userCredentials.split(" ");
 
         if (doctorCredentials) {
+          console.log(doctorCredentials);
           const currentDoctor =
             await doctorService.searchDoctorByNameAndSurname(
               doctorCredentials[0],
@@ -139,8 +140,8 @@ function RecordFormDialog({
             );
 
           let recordData: NewRecordData = {
-            examinedPatientId: values.examinedPatientId,
-            responsibleDoctorId: currentDoctor.id,
+            patientId: values.examinedPatientId,
+            doctorId: currentDoctor.id,
             examinationNotes: values.examinationNotes,
           };
           let newRecord;
@@ -149,9 +150,9 @@ function RecordFormDialog({
             const id = await regularRecordService.addRegularRecord(recordData);
             newRecord = await regularRecordService.getRegularRecordById(id);
           } else {
-            recordData.diagnosedIllnessId = values.diagnosedIllnessId;
+            recordData.illnessId = values.diagnosedIllnessId;
             recordData.prescribedMedicine = values.prescribedMedicine;
-            recordData.treatmentDuration = values.treatmentDuration;
+            recordData.duration = values.treatmentDuration;
 
             const id = await diagnosisRecordsService.addDiagnosisRecord(
               recordData

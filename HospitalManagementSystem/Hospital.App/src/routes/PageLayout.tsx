@@ -25,7 +25,7 @@ function PageLayout() {
           element={
             <ProtectedRoute
               element={<Doctors />}
-              requiredRoles={["Admin", "PatientUser"]}
+              requiredRoles={["Admin", "DoctorUser", "PatientUser"]}
             />
           }
         />

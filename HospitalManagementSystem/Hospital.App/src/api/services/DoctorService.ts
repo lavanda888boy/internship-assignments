@@ -32,7 +32,7 @@ class DoctorService {
         },
       }
     );
-    return response.data[0];
+    return response.data.items[0];
   }
 
   public async searchDoctorsByDepartment(
