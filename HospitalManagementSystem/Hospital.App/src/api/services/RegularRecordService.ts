@@ -23,10 +23,15 @@ class RegularRecordService {
     return response.data;
   }
 
-  //   public async updatePatient(patient: any, id: number): Promise<number> {
-  //     const response = await api.put(`/Patient/Info/${id}`, patient);
-  //     return response.data;
-  //   }
+  public async updateRegularRecordExaminationNotes(
+    id: number,
+    notes: string
+  ): Promise<number> {
+    const response = await api.put(`/RegularMedicalRecord/${id}`, null, {
+      params: { notes: notes },
+    });
+    return response.data;
+  }
 
   public async deleteRegularRecord(id: number): Promise<number> {
     const response = await api.delete(`/RegularMedicalRecord/${id}`);

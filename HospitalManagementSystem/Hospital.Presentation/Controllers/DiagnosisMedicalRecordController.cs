@@ -68,7 +68,7 @@ namespace Hospital.Presentation.Controllers
         }
 
         [HttpPut("ExaminationNotes/{id}")]
-        [Authorize(Roles = "Admin, DoctorUser")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateDiagnosisMedicalRecordExaminationNotes(int id, [FromQuery] string notes)
         {
             var command = new AdjustDiagnosisMedicalRecordExaminationNotes(id, notes);
@@ -79,7 +79,7 @@ namespace Hospital.Presentation.Controllers
 
         [HttpPut("Treatment/{id}")]
         [ServiceFilter(typeof(ModelValidationFilter))]
-        [Authorize(Roles = "Admin, DoctorUser")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateDiagnosisMedicalRecordTreatmentDetails(int id, TreatmentDto treatment)
         {
             var command = new AdjustTreatmentDetailsWithinDiagnosisMedicalRecord(id, treatment.IllnessId,

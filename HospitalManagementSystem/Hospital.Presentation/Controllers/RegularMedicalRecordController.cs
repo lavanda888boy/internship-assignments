@@ -68,7 +68,7 @@ namespace Hospital.Presentation.Controllers
         }
 
         [HttpPut("{id}")]
-        [Authorize(Roles = "Admin, DoctorUser")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> UpdateRegularMedicalRecordExaminationNotes(int id, [FromQuery] string notes)
         {
             var command = new AdjustRegularMedicalRecordExaminationNotes(id, notes);

@@ -23,10 +23,32 @@ class DiagnosisRecordService {
     return response.data;
   }
 
-  //   public async updatePatient(patient: any, id: number): Promise<number> {
-  //     const response = await api.put(`/Patient/Info/${id}`, patient);
-  //     return response.data;
-  //   }
+  public async updateDiagnosisRecordExaminationNotes(
+    id: number,
+    notes: string
+  ): Promise<number> {
+    console.log(notes);
+    const response = await api.put(
+      `/DiagnosisMedicalRecord/ExaminationNotes/${id}`,
+      null,
+      { params: { notes: notes } }
+    );
+    return response.data;
+  }
+
+  public async updateDiagnosisRecordTreatmentDetails(
+    id: number,
+    illnessId: number | null,
+    medicine: string,
+    duration: number
+  ): Promise<number> {
+    const response = await api.put(`/DiagnosisMedicalRecord/Treatment/${id}`, {
+      illnessId: illnessId,
+      prescribedMedicine: medicine,
+      duration: duration,
+    });
+    return response.data;
+  }
 
   public async deleteDiagnosisRecord(id: number): Promise<number> {
     const response = await api.delete(`/DiagnosisMedicalRecord/${id}`);

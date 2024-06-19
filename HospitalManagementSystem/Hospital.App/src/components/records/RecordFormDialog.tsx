@@ -29,6 +29,8 @@ interface RecordFormDialogProps {
   isOpened: boolean;
   onClose: () => void;
   onRecordAdded?: (record: any) => void;
+  record?: any;
+  onRecordUpdated?: () => void;
 }
 
 interface NewRecordData {
@@ -44,6 +46,8 @@ function RecordFormDialog({
   isOpened: open,
   onClose,
   onRecordAdded,
+  record,
+  onRecordUpdated,
 }: RecordFormDialogProps) {
   const regularRecordService: RegularRecordService = new RegularRecordService();
   const diagnosisRecordsService: DiagnosisRecordService =
@@ -86,16 +90,25 @@ function RecordFormDialog({
 
   const formik = useFormik({
     initialValues: {
-      isDiagnosis: false,
+      isDiagnosis: record?.diagnosedIllness || false,
       examinedPatientId: null,
-      examinationNotes: "",
+      examinationNotes: record?.examinationNotes || "",
       diagnosedIllnessId: null,
-      prescribedMedicine: "",
-      treatmentDuration: 1,
+      prescribedMedicine: record?.proposedTreatment
+        ? record?.proposedTreatment.prescribedMedicine
+        : "",
+      treatmentDuration: record?.proposedTreatment
+        ? record?.proposedTreatment.durationInDays
+        : 1,
     },
 
     validationSchema: Yup.object({
-      examinedPatientId: Yup.number().required("Patient is required"),
+      examinedPatientId: Yup.lazy(() => {
+        if (!record) {
+          return Yup.number().required("Patient is required");
+        }
+        return Yup.number().nullable();
+      }),
       examinationNotes: Yup.string()
         .max(1800, "Examination notes must be precise")
         .required("Examination notes are required"),
@@ -128,41 +141,68 @@ function RecordFormDialog({
 
     onSubmit: async (values, { resetForm }) => {
       try {
-        const doctorCredentials =
-          userRoleContextProps?.userCredentials.split(" ");
+        if (record) {
+          if (values.isDiagnosis) {
+            if (record.examinationNotes !== values.examinationNotes) {
+              await diagnosisRecordsService.updateDiagnosisRecordExaminationNotes(
+                record.id,
+                values.examinationNotes
+              );
+            }
 
-        if (doctorCredentials) {
-          console.log(doctorCredentials);
-          const currentDoctor =
-            await doctorService.searchDoctorByNameAndSurname(
-              doctorCredentials[0],
-              doctorCredentials[1]
+            await diagnosisRecordsService.updateDiagnosisRecordTreatmentDetails(
+              record.id,
+              values.diagnosedIllnessId,
+              values.prescribedMedicine,
+              values.treatmentDuration
             );
-
-          let recordData: NewRecordData = {
-            patientId: values.examinedPatientId,
-            doctorId: currentDoctor.id,
-            examinationNotes: values.examinationNotes,
-          };
-          let newRecord;
-
-          if (!values.isDiagnosis) {
-            const id = await regularRecordService.addRegularRecord(recordData);
-            newRecord = await regularRecordService.getRegularRecordById(id);
           } else {
-            recordData.illnessId = values.diagnosedIllnessId;
-            recordData.prescribedMedicine = values.prescribedMedicine;
-            recordData.duration = values.treatmentDuration;
-
-            const id = await diagnosisRecordsService.addDiagnosisRecord(
-              recordData
-            );
-            newRecord = await diagnosisRecordsService.getDiagnosisRecordById(
-              id
+            await regularRecordService.updateRegularRecordExaminationNotes(
+              record.id,
+              values.examinationNotes
             );
           }
 
-          onRecordAdded && onRecordAdded(newRecord);
+          onRecordUpdated && onRecordUpdated();
+        } else {
+          const doctorCredentials =
+            userRoleContextProps?.userCredentials.split(" ");
+
+          if (doctorCredentials) {
+            console.log(doctorCredentials);
+            const currentDoctor =
+              await doctorService.searchDoctorByNameAndSurname(
+                doctorCredentials[0],
+                doctorCredentials[1]
+              );
+
+            let recordData: NewRecordData = {
+              patientId: values.examinedPatientId,
+              doctorId: currentDoctor.id,
+              examinationNotes: values.examinationNotes,
+            };
+            let newRecord;
+
+            if (!values.isDiagnosis) {
+              const id = await regularRecordService.addRegularRecord(
+                recordData
+              );
+              newRecord = await regularRecordService.getRegularRecordById(id);
+            } else {
+              recordData.illnessId = values.diagnosedIllnessId;
+              recordData.prescribedMedicine = values.prescribedMedicine;
+              recordData.duration = values.treatmentDuration;
+
+              const id = await diagnosisRecordsService.addDiagnosisRecord(
+                recordData
+              );
+              newRecord = await diagnosisRecordsService.getDiagnosisRecordById(
+                id
+              );
+            }
+
+            onRecordAdded && onRecordAdded(newRecord);
+          }
 
           resetForm();
           onClose();
@@ -191,41 +231,49 @@ function RecordFormDialog({
           }}
           onSubmit={formik.handleSubmit}
         >
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={formik.values.isDiagnosis}
-                onChange={formik.handleChange("isDiagnosis")}
+          {!record && (
+            <>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={formik.values.isDiagnosis}
+                    onChange={formik.handleChange("isDiagnosis")}
+                  />
+                }
+                label="Is this a diagnosis record?"
               />
-            }
-            label="Is this a diagnosis record?"
-          />
-          <InputLabel htmlFor="examinedPatientId">Examined patient</InputLabel>
-          <Select
-            id="examinedPatientId"
-            name="examinedPatientId"
-            value={formik.values.examinedPatientId}
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            error={
-              formik.touched.examinedPatientId &&
-              Boolean(formik.errors.examinedPatientId)
-            }
-            fullWidth
-            sx={{ mb: 2 }}
-          >
-            {patients.map((patient) => (
-              <MenuItem key={patient.id} value={patient.id}>
-                {patient.name} {patient.surname}
-              </MenuItem>
-            ))}
-          </Select>
-          {formik.touched.examinedPatientId &&
-            formik.errors.examinedPatientId && (
-              <Typography color="error" variant="body2" sx={{ mb: 2 }}>
-                {formik.errors.examinedPatientId}
-              </Typography>
-            )}
+
+              <InputLabel htmlFor="examinedPatientId">
+                Examined patient
+              </InputLabel>
+              <Select
+                id="examinedPatientId"
+                name="examinedPatientId"
+                value={formik.values.examinedPatientId}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                error={
+                  formik.touched.examinedPatientId &&
+                  Boolean(formik.errors.examinedPatientId)
+                }
+                fullWidth
+                sx={{ mb: 2 }}
+              >
+                {patients.map((patient) => (
+                  <MenuItem key={patient.id} value={patient.id}>
+                    {patient.name} {patient.surname}
+                  </MenuItem>
+                ))}
+              </Select>
+              {formik.touched.examinedPatientId &&
+                formik.errors.examinedPatientId && (
+                  <Typography color="error" variant="body2" sx={{ mb: 2 }}>
+                    {formik.errors.examinedPatientId}
+                  </Typography>
+                )}
+            </>
+          )}
+
           <InputLabel htmlFor="examinationNotes">Examination notes</InputLabel>
           <TextField
             id="examinationNotes"
@@ -238,7 +286,9 @@ function RecordFormDialog({
               Boolean(formik.errors.examinationNotes)
             }
             helperText={
-              formik.touched.examinationNotes && formik.errors.examinationNotes
+              formik.touched.examinationNotes &&
+              typeof formik.errors.examinationNotes === "string" &&
+              formik.errors.examinationNotes
             }
             fullWidth
             multiline
@@ -290,6 +340,7 @@ function RecordFormDialog({
                 }
                 helperText={
                   formik.touched.prescribedMedicine &&
+                  typeof formik.errors.prescribedMedicine === "string" &&
                   formik.errors.prescribedMedicine
                 }
                 fullWidth
@@ -311,6 +362,7 @@ function RecordFormDialog({
                 }
                 helperText={
                   formik.touched.treatmentDuration &&
+                  typeof formik.errors.treatmentDuration === "string" &&
                   formik.errors.treatmentDuration
                 }
                 fullWidth

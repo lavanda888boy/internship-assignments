@@ -92,6 +92,7 @@ function RecordCard({ record, onRecordDelete }: RecordCardProps) {
               handleMenuClick={(event) => handleMenuClick(event, record)}
               handleMenuClose={handleMenuClose}
               onEntityDelete={handleDeleteRecord}
+              record={selectedRecord}
             />
           </Box>
         )}

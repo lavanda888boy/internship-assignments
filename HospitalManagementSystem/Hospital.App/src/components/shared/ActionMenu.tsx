@@ -5,11 +5,13 @@ import PatientFormDialog from "../patients/PatientFormDialog";
 import { MoreHoriz } from "@mui/icons-material";
 import { Doctor } from "../../models/Doctor";
 import DoctorFormDialog from "../doctors/DoctorFormDialog";
+import RecordFormDialog from "../records/RecordFormDialog";
 
 interface ActionMenuProps {
   rowId: number;
   patient?: Patient | null;
   doctor?: Doctor | null;
+  record?: any;
   anchorEl: HTMLElement | null;
   handleMenuClick: (
     event: React.MouseEvent<HTMLButtonElement>,
@@ -23,6 +25,7 @@ function ActionMenu({
   rowId,
   patient,
   doctor,
+  record,
   anchorEl,
   handleMenuClick,
   handleMenuClose,
@@ -79,6 +82,15 @@ function ActionMenu({
           onDoctorAdded={() => {}}
           doctor={doctor}
           onDoctorUpdated={handleUpdateEntity}
+        />
+      )}
+      {record && (
+        <RecordFormDialog
+          isOpened={isDialogOpen}
+          onClose={handleCloseDialog}
+          onRecordAdded={() => {}}
+          record={record}
+          onRecordUpdated={handleUpdateEntity}
         />
       )}
     </>
