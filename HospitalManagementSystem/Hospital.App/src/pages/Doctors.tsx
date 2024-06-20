@@ -18,12 +18,17 @@ import {
 import { Department } from "../models/Department";
 import DepartmentService from "../api/services/DepartmentService";
 import { AxiosError } from "axios";
+import MedicalAdviceService from "../api/services/MedicalAdviceService";
+import PatientService from "../api/services/PatientService";
+import MedicalAdviceDialog from "../components/doctors/MedicalAdviceDialog";
 
 function Doctors() {
   usePageTitle("Doctors");
 
   const userRoleContextProps = useContext(UserRoleContext);
 
+  const medicalAdviceService: MedicalAdviceService = new MedicalAdviceService();
+  const patientService: PatientService = new PatientService();
   const doctorService: DoctorService = new DoctorService();
   const departmentService: DepartmentService = new DepartmentService();
 
@@ -35,6 +40,37 @@ function Doctors() {
 
   const [departments, setDepartments] = useState<Department[]>([]);
   const [selectedDepartment, setSelectedDepartment] = useState("");
+
+  const [advice, setAdvice] = useState<string | null>(null);
+  const [adviceDialogOpen, setAdviceDialogOpen] = useState(false);
+
+  useEffect(() => {
+    const fetchMedicalAdvice = async () => {
+      try {
+        if (userRoleContextProps?.userRole === "PatientUser") {
+          const patientCredentials =
+            userRoleContextProps?.userCredentials.split(" ");
+
+          const patientId =
+            await patientService.searchPatientIdByNameAndSurname(
+              patientCredentials[0],
+              patientCredentials[1]
+            );
+
+          const advice = await medicalAdviceService.getMedicalAdviceByPatientId(
+            patientId
+          );
+
+          setAdvice(advice);
+          setAdviceDialogOpen(true);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchMedicalAdvice();
+  }, []);
 
   useEffect(() => {
     const fetchDoctors = async () => {
@@ -218,6 +254,11 @@ function Doctors() {
         isOpened={createFormOpen}
         onClose={handleCreateFormClose}
         onDoctorAdded={handleAddDoctor}
+      />
+      <MedicalAdviceDialog
+        open={adviceDialogOpen}
+        onClose={() => setAdviceDialogOpen(false)}
+        advice={advice}
       />
     </Container>
   );

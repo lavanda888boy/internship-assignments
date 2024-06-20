@@ -1,7 +1,6 @@
 ﻿using Hospital.Application.Abstractions;
 using OpenAI_API;
 using OpenAI_API.Chat;
-using System.IO;
 
 namespace Hospital.Infrastructure.AI
 {
