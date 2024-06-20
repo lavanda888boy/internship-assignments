@@ -22,8 +22,13 @@ namespace Hospital.Infrastructure.AI
             APIAuthentication apiAuthentication = new APIAuthentication(_apiKey);
             OpenAIAPI api = new OpenAIAPI(apiAuthentication);
 
-            string prompt = $"Generate a single practical and friendly medical advice to make the patient feel better " + 
-                $"without mentioning directly his/her illnesses for the patient who recently had the following illnesses: {string.Join(", ", patientRecentIllnesses)}";
+            string prompt = "Generate a single practical and friendly medical advice to make the patient feel better " + 
+                "without mentioning directly his/her illnesses for the patient";
+
+            if (patientRecentIllnesses.Count() != 0) 
+            {
+                prompt += $" who recently had the following illnesses: { string.Join(", ", patientRecentIllnesses)}";
+            }
 
             var chatRequest = new ChatRequest
             {
