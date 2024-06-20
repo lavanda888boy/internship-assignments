@@ -3,6 +3,7 @@ using Hospital.Application.Departments.Commands;
 using Hospital.Application.MedicalRecords.Queries;
 using Hospital.Domain.Models;
 using Hospital.Infrastructure;
+using Hospital.Infrastructure.AI;
 using Hospital.Infrastructure.Repository;
 using Hospital.Presentation.Extensions;
 using Hospital.Presentation.Filters;
@@ -15,6 +16,8 @@ namespace Hospital.Presentation
     {
         public static void Main(string[] args)
         {
+            DotNetEnv.Env.Load();
+
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddControllers(options =>
@@ -41,6 +44,8 @@ namespace Hospital.Presentation
                             .AddScoped<IRepository<Treatment>, TreatmentRepository>();
 
             builder.Services.AddAutoMapper(typeof(ListAllPaginatedRegularMedicalRecords));
+
+            builder.Services.AddScoped<IMedicalAdviceGenerationService, MedicalAdviceGenerationService>();
 
             builder.Services.AddCors(options =>
             {
