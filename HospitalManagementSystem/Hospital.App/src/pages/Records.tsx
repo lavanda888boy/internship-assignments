@@ -18,6 +18,8 @@ import {
 import { RegularRecord } from "../models/RegularRecord";
 import { UserRoleContext } from "../context/UserRoleContext";
 import PatientService from "../api/services/PatientService";
+import { NotificationState } from "../models/utils/NotificationState";
+import ActionResultNotification from "../components/shared/ActionResultNotification";
 
 function Records() {
   usePageTitle("Medical Records");
@@ -41,6 +43,12 @@ function Records() {
   const [selectedRecordType, setSelectedRecordType] = useState("");
 
   const userRoleContextProps = useContext(UserRoleContext);
+
+  const [notification, setNotification] = useState<NotificationState>({
+    open: false,
+    message: "",
+    severity: "error",
+  });
 
   useEffect(() => {
     if (selectedRecordType === "Regular" || selectedRecordType === "") {
@@ -153,6 +161,12 @@ function Records() {
         }
       }
     } catch (error) {
+      setNotification({
+        open: true,
+        message: "Failed to remove record.",
+        severity: "error",
+      });
+
       console.log(error);
     }
   };
@@ -173,6 +187,10 @@ function Records() {
     setSelectedRecordType(event.target.value);
   };
 
+  const handleCloseNotification = () => {
+    setNotification((prev: NotificationState) => ({ ...prev, open: false }));
+  };
+
   return (
     <Container
       sx={{
@@ -187,6 +205,10 @@ function Records() {
         backgroundColor: "white",
       }}
     >
+      <ActionResultNotification
+        state={notification}
+        onClose={handleCloseNotification}
+      />
       <Box
         sx={{
           display: "flex",

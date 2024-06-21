@@ -11,8 +11,10 @@ import {
 import usePageTitle from "../hooks/PageTitleHook";
 import { useNavigate, Link } from "react-router-dom";
 import AuthService from "../api/services/AuthService";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { UserRoleContext } from "../context/UserRoleContext";
+import { NotificationState } from "../models/utils/NotificationState";
+import ActionResultNotification from "../components/shared/ActionResultNotification";
 
 function Login() {
   usePageTitle("Login");
@@ -22,6 +24,12 @@ function Login() {
   const theme = useTheme();
   const userRoleContextProps = useContext(UserRoleContext);
   const navigate = useNavigate();
+
+  const [notification, setNotification] = useState<NotificationState>({
+    open: false,
+    message: "",
+    severity: "error",
+  });
 
   const formik = useFormik({
     initialValues: {
@@ -46,12 +54,23 @@ function Login() {
         const userData = await authService.login(user);
         userRoleContextProps?.setUserRole(userData[0]);
         userRoleContextProps?.setUserCredentials(userData[1]);
+
         navigate("/doctors");
       } catch (error) {
+        setNotification({
+          open: true,
+          message: "Login failed. Check your credentials.",
+          severity: "error",
+        });
+
         console.log(error);
       }
     },
   });
+
+  const handleCloseNotification = () => {
+    setNotification((prev: NotificationState) => ({ ...prev, open: false }));
+  };
 
   return (
     <Box
@@ -64,6 +83,10 @@ function Login() {
         backgroundColor: theme.palette.secondary.main,
       }}
     >
+      <ActionResultNotification
+        state={notification}
+        onClose={handleCloseNotification}
+      />
       <Box
         component="form"
         sx={{

@@ -23,6 +23,8 @@ import PatientService from "../api/services/PatientService";
 import { Patient } from "../models/Patient";
 import { UserRoleContext } from "../context/UserRoleContext";
 import ActionMenu from "../components/shared/ActionMenu";
+import { NotificationState } from "../models/utils/NotificationState";
+import ActionResultNotification from "../components/shared/ActionResultNotification";
 
 function Patients() {
   usePageTitle("Patients");
@@ -40,6 +42,12 @@ function Patients() {
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
+
+  const [notification, setNotification] = useState<NotificationState>({
+    open: false,
+    message: "",
+    severity: "error",
+  });
 
   useEffect(() => {
     const fetchPatients = async () => {
@@ -92,6 +100,12 @@ function Patients() {
         );
       }
     } catch (error) {
+      setNotification({
+        open: true,
+        message: "Failed to remove patient.",
+        severity: "error",
+      });
+
       console.log(error);
     }
   };
@@ -108,6 +122,10 @@ function Patients() {
     setCurrentPage(1);
   };
 
+  const handleCloseNotification = () => {
+    setNotification((prev: NotificationState) => ({ ...prev, open: false }));
+  };
+
   return (
     <Container
       sx={{
@@ -121,6 +139,10 @@ function Patients() {
         backgroundColor: "white",
       }}
     >
+      <ActionResultNotification
+        state={notification}
+        onClose={handleCloseNotification}
+      />
       {userRoleContextProps?.userRole === "Admin" && (
         <CreateActionButton
           entityName="Patient"

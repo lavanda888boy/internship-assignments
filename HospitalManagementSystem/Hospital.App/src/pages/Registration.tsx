@@ -11,8 +11,10 @@ import {
 import usePageTitle from "../hooks/PageTitleHook";
 import { useNavigate } from "react-router-dom";
 import AuthService from "../api/services/AuthService";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { UserRoleContext } from "../context/UserRoleContext";
+import { NotificationState } from "../models/utils/NotificationState";
+import ActionResultNotification from "../components/shared/ActionResultNotification";
 
 function Registration() {
   usePageTitle("Register");
@@ -22,6 +24,12 @@ function Registration() {
   const theme = useTheme();
   const userRoleContextProps = useContext(UserRoleContext);
   const navigate = useNavigate();
+
+  const [notification, setNotification] = useState<NotificationState>({
+    open: false,
+    message: "",
+    severity: "error",
+  });
 
   const formik = useFormik({
     initialValues: {
@@ -66,12 +74,31 @@ function Registration() {
         const userData = await authService.register(user);
         userRoleContextProps?.setUserRole(userData[0]);
         userRoleContextProps?.setUserCredentials(userData[1]);
-        navigate("/");
+
+        setNotification({
+          open: true,
+          message: "Registration was successful!",
+          severity: "success",
+        });
+
+        setTimeout(() => {
+          navigate("/");
+        }, 2000);
       } catch (error) {
+        setNotification({
+          open: true,
+          message: "Registration failed. The user might already exist.",
+          severity: "error",
+        });
+
         console.log(error);
       }
     },
   });
+
+  const handleCloseNotification = () => {
+    setNotification((prev: NotificationState) => ({ ...prev, open: false }));
+  };
 
   return (
     <Box
@@ -84,6 +111,10 @@ function Registration() {
         backgroundColor: theme.palette.secondary.main,
       }}
     >
+      <ActionResultNotification
+        state={notification}
+        onClose={handleCloseNotification}
+      />
       <Box
         component="form"
         sx={{

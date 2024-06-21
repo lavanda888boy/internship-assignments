@@ -21,6 +21,8 @@ import { AxiosError } from "axios";
 import MedicalAdviceService from "../api/services/MedicalAdviceService";
 import PatientService from "../api/services/PatientService";
 import MedicalAdviceDialog from "../components/doctors/MedicalAdviceDialog";
+import { NotificationState } from "../models/utils/NotificationState";
+import ActionResultNotification from "../components/shared/ActionResultNotification";
 
 function Doctors() {
   usePageTitle("Doctors");
@@ -43,6 +45,12 @@ function Doctors() {
 
   const [advice, setAdvice] = useState<string | null>(null);
   const [adviceDialogOpen, setAdviceDialogOpen] = useState(false);
+
+  const [notification, setNotification] = useState<NotificationState>({
+    open: false,
+    message: "",
+    severity: "error",
+  });
 
   useEffect(() => {
     const fetchMedicalAdvice = async () => {
@@ -134,6 +142,13 @@ function Doctors() {
         );
       }
     } catch (error) {
+      setNotification({
+        open: true,
+        message:
+          "Failed to remove doctor. He/she might have assigned patients.",
+        severity: "error",
+      });
+
       console.log(error);
     }
   };
@@ -154,6 +169,10 @@ function Doctors() {
     setSelectedDepartment(event.target.value);
   };
 
+  const handleCloseNotification = () => {
+    setNotification((prev: NotificationState) => ({ ...prev, open: false }));
+  };
+
   return (
     <Container
       sx={{
@@ -168,6 +187,10 @@ function Doctors() {
         backgroundColor: "white",
       }}
     >
+      <ActionResultNotification
+        state={notification}
+        onClose={handleCloseNotification}
+      />
       <Box
         sx={{
           display: "flex",
