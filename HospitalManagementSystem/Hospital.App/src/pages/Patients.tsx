@@ -11,7 +11,6 @@ import {
   Pagination,
   Select,
   MenuItem,
-  useTheme,
   Typography,
   SelectChangeEvent,
   Box,
@@ -29,7 +28,6 @@ import ActionResultNotification from "../components/shared/ActionResultNotificat
 function Patients() {
   usePageTitle("Patients");
 
-  const theme = useTheme();
   const userRoleContextProps = useContext(UserRoleContext);
 
   const patientService: PatientService = new PatientService();
@@ -153,14 +151,11 @@ function Patients() {
         component={Paper}
         sx={{
           mt: 3,
-          borderColor: theme.palette.primary.light,
-          borderStyle: "solid",
-          borderWidth: "5px",
-          borderRadius: "5px",
+          borderRadius: "10px",
         }}
       >
         <Table>
-          <TableHead>
+          <TableHead sx={{ backgroundColor: "lightgray" }}>
             <TableRow>
               <TableCell align="center">
                 <Typography>Name</Typography>

@@ -44,10 +44,10 @@ function RecordCard({ record, onRecordDelete }: RecordCardProps) {
   return (
     <Card
       sx={{
-        borderColor: theme.palette.primary.light,
+        borderColor: theme.palette.primary.main,
         borderStyle: "solid",
         borderWidth: "5px",
-        borderRadius: "5px",
+        borderRadius: "10px",
       }}
     >
       <CardHeader
@@ -57,7 +57,7 @@ function RecordCard({ record, onRecordDelete }: RecordCardProps) {
           style: { color: "white" },
         }}
         sx={{
-          backgroundColor: theme.palette.primary.main,
+          backgroundColor: theme.palette.primary.light,
           color: "white",
         }}
       />

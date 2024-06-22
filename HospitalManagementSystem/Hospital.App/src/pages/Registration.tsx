@@ -1,13 +1,6 @@
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import {
-  TextField,
-  Typography,
-  Box,
-  Button,
-  useTheme,
-  InputLabel,
-} from "@mui/material";
+import { TextField, Typography, Box, Button, InputLabel } from "@mui/material";
 import usePageTitle from "../hooks/PageTitleHook";
 import { useNavigate } from "react-router-dom";
 import AuthService from "../api/services/AuthService";
@@ -21,7 +14,6 @@ function Registration() {
 
   const authService: AuthService = new AuthService();
 
-  const theme = useTheme();
   const userRoleContextProps = useContext(UserRoleContext);
   const navigate = useNavigate();
 
@@ -108,7 +100,7 @@ function Registration() {
         alignItems: "center",
         justifyContent: "center",
         minHeight: "100vh",
-        backgroundColor: theme.palette.secondary.main,
+        backgroundImage: `url("src/assets/login_image.jpg")`,
       }}
     >
       <ActionResultNotification
@@ -125,7 +117,6 @@ function Registration() {
           padding: 3,
           backgroundColor: "white",
           borderRadius: 3,
-          border: "5px solid " + theme.palette.primary.light,
           boxShadow: 1,
         }}
         onSubmit={formik.handleSubmit}
