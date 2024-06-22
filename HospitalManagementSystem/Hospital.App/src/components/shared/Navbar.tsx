@@ -42,7 +42,7 @@ function Navbar({ open, onClose }: NavbarProps) {
           width: 125,
           height: "100%",
           paddingTop: "10%",
-          backgroundColor: theme.palette.primary.light,
+          backgroundColor: theme.palette.primary.main,
           color: "white",
           textAlign: "center",
         }}
@@ -75,7 +75,7 @@ function Navbar({ open, onClose }: NavbarProps) {
         sx={{
           height: "10%",
           textAlign: "center",
-          backgroundColor: theme.palette.primary.light,
+          backgroundColor: theme.palette.primary.main,
           color: "white",
         }}
       >

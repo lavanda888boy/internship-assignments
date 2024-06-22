@@ -57,7 +57,7 @@ function RecordCard({ record, onRecordDelete }: RecordCardProps) {
           style: { color: "white" },
         }}
         sx={{
-          backgroundColor: theme.palette.primary.light,
+          backgroundColor: theme.palette.primary.main,
           color: "white",
         }}
       />

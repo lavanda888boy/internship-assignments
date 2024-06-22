@@ -65,7 +65,7 @@ function Statusbar() {
             sx={{
               marginLeft: "auto",
               marginRight: "1%",
-              backgroundColor: "#7B2CBF",
+              backgroundColor: theme.palette.primary.main,
               padding: "0.5%",
               borderRadius: "5px",
               color: "white",
