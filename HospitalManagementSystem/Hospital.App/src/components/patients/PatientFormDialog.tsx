@@ -111,8 +111,7 @@ function PatientFormDialog({
       } catch (error) {
         setNotification({
           open: true,
-          message:
-            "Failed to introduce patient information. The data may be incorrect.",
+          message: "Failed to introduce patient information.",
           severity: "error",
         });
 
@@ -126,139 +125,132 @@ function PatientFormDialog({
   };
 
   return (
-    <>
+    <Dialog open={open} onClose={onClose}>
       <ActionResultNotification
         state={notification}
         onClose={handleCloseNotification}
       />
-      <Dialog open={open} onClose={onClose}>
-        <DialogTitle>Patient registration</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Please fill out the form below to add a new patient or update an
-            existing one.
-          </DialogContentText>
-          <Box
-            component="form"
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              padding: "3% 3% 0% 3%",
-              backgroundColor: "white",
-            }}
-            onSubmit={formik.handleSubmit}
+      <DialogTitle>Patient registration</DialogTitle>
+      <DialogContent>
+        <DialogContentText>
+          Please fill out the form below to add a new patient or update an
+          existing one.
+        </DialogContentText>
+        <Box
+          component="form"
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            padding: "3% 3% 0% 3%",
+            backgroundColor: "white",
+          }}
+          onSubmit={formik.handleSubmit}
+        >
+          <InputLabel htmlFor="name">Name</InputLabel>
+          <TextField
+            id="name"
+            value={formik.values.name}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={formik.touched.name && Boolean(formik.errors.name)}
+            helperText={formik.touched.name && formik.errors.name}
+            fullWidth
+            sx={{ mt: 1, mb: 1 }}
+          />
+          <InputLabel htmlFor="surname">Surname</InputLabel>
+          <TextField
+            id="surname"
+            value={formik.values.surname}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={formik.touched.surname && Boolean(formik.errors.surname)}
+            helperText={formik.touched.surname && formik.errors.surname}
+            fullWidth
+            sx={{ mt: 1, mb: 1 }}
+          />
+          <InputLabel htmlFor="age">Age</InputLabel>
+          <TextField
+            id="age"
+            type="number"
+            value={formik.values.age}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={formik.touched.age && Boolean(formik.errors.age)}
+            helperText={formik.touched.age && formik.errors.age}
+            fullWidth
+            sx={{ mt: 1, mb: 1 }}
+          />
+          <InputLabel htmlFor="gender">Gender</InputLabel>
+          <RadioGroup
+            id="gender"
+            name="gender"
+            value={formik.values.gender}
+            onChange={formik.handleChange}
+            sx={{ mb: 1 }}
           >
-            <InputLabel htmlFor="name">Name</InputLabel>
-            <TextField
-              id="name"
-              value={formik.values.name}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={formik.touched.name && Boolean(formik.errors.name)}
-              helperText={formik.touched.name && formik.errors.name}
-              fullWidth
-              sx={{ mt: 1, mb: 1 }}
-            />
-            <InputLabel htmlFor="surname">Surname</InputLabel>
-            <TextField
-              id="surname"
-              value={formik.values.surname}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={formik.touched.surname && Boolean(formik.errors.surname)}
-              helperText={formik.touched.surname && formik.errors.surname}
-              fullWidth
-              sx={{ mt: 1, mb: 1 }}
-            />
-            <InputLabel htmlFor="age">Age</InputLabel>
-            <TextField
-              id="age"
-              type="number"
-              value={formik.values.age}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={formik.touched.age && Boolean(formik.errors.age)}
-              helperText={formik.touched.age && formik.errors.age}
-              fullWidth
-              sx={{ mt: 1, mb: 1 }}
-            />
-            <InputLabel htmlFor="gender">Gender</InputLabel>
-            <RadioGroup
-              id="gender"
-              value={formik.values.gender}
-              onChange={formik.handleChange}
-              sx={{ mb: 1 }}
-            >
-              <FormControlLabel value="M" control={<Radio />} label="Male" />
-              <FormControlLabel value="F" control={<Radio />} label="Female" />
-              <FormControlLabel
-                value="Other"
-                control={<Radio />}
-                label="Other"
-              />
-            </RadioGroup>
-            {formik.touched.gender && formik.errors.gender && (
-              <Typography style={{ color: "red", marginBottom: "10px" }}>
-                {formik.errors.gender}
-              </Typography>
-            )}
-            <InputLabel htmlFor="address">Address</InputLabel>
-            <TextField
-              id="address"
-              value={formik.values.address}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={formik.touched.address && Boolean(formik.errors.address)}
-              helperText={formik.touched.address && formik.errors.address}
-              fullWidth
-              sx={{ mt: 1, mb: 1 }}
-            />
-            <InputLabel htmlFor="phoneNumber">Phone number</InputLabel>
-            <TextField
-              id="phoneNumber"
-              value={formik.values.phoneNumber}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={
-                formik.touched.phoneNumber && Boolean(formik.errors.phoneNumber)
-              }
-              helperText={
-                formik.touched.phoneNumber && formik.errors.phoneNumber
-              }
-              fullWidth
-              sx={{ mt: 1, mb: 1 }}
-            />
-            <InputLabel htmlFor="insuranceNumber">Insurance number</InputLabel>
-            <TextField
-              id="insuranceNumber"
-              value={formik.values.insuranceNumber}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={
-                formik.touched.insuranceNumber &&
-                Boolean(formik.errors.insuranceNumber)
-              }
-              helperText={
-                formik.touched.insuranceNumber && formik.errors.insuranceNumber
-              }
-              fullWidth
-              sx={{ mt: 1, mb: 1 }}
-            />
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              sx={{ mt: 2, mx: 20 }}
-            >
-              Submit form
-            </Button>
-            <Button onClick={onClose} color="primary" sx={{ mt: 1, mx: 20 }}>
-              Cancel
-            </Button>
-          </Box>
-        </DialogContent>
-      </Dialog>
-    </>
+            <FormControlLabel value="M" control={<Radio />} label="Male" />
+            <FormControlLabel value="F" control={<Radio />} label="Female" />
+            <FormControlLabel value="Other" control={<Radio />} label="Other" />
+          </RadioGroup>
+          {formik.touched.gender && formik.errors.gender && (
+            <Typography style={{ color: "red", marginBottom: "10px" }}>
+              {formik.errors.gender}
+            </Typography>
+          )}
+          <InputLabel htmlFor="address">Address</InputLabel>
+          <TextField
+            id="address"
+            value={formik.values.address}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={formik.touched.address && Boolean(formik.errors.address)}
+            helperText={formik.touched.address && formik.errors.address}
+            fullWidth
+            sx={{ mt: 1, mb: 1 }}
+          />
+          <InputLabel htmlFor="phoneNumber">Phone number</InputLabel>
+          <TextField
+            id="phoneNumber"
+            value={formik.values.phoneNumber}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={
+              formik.touched.phoneNumber && Boolean(formik.errors.phoneNumber)
+            }
+            helperText={formik.touched.phoneNumber && formik.errors.phoneNumber}
+            fullWidth
+            sx={{ mt: 1, mb: 1 }}
+          />
+          <InputLabel htmlFor="insuranceNumber">Insurance number</InputLabel>
+          <TextField
+            id="insuranceNumber"
+            value={formik.values.insuranceNumber}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={
+              formik.touched.insuranceNumber &&
+              Boolean(formik.errors.insuranceNumber)
+            }
+            helperText={
+              formik.touched.insuranceNumber && formik.errors.insuranceNumber
+            }
+            fullWidth
+            sx={{ mt: 1, mb: 1 }}
+          />
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            sx={{ mt: 2, mx: 20 }}
+          >
+            Submit form
+          </Button>
+          <Button onClick={onClose} color="primary" sx={{ mt: 1, mx: 20 }}>
+            Cancel
+          </Button>
+        </Box>
+      </DialogContent>
+    </Dialog>
   );
 }
 

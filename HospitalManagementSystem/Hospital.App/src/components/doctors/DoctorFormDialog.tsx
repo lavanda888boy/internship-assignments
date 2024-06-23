@@ -147,8 +147,7 @@ function DoctorFormDialog({
       } catch (error) {
         setNotification({
           open: true,
-          message:
-            "Failed to introduce doctor information. The data may be incorrect.",
+          message: "Failed to introduce doctor information.",
           severity: "error",
         });
 
@@ -169,160 +168,155 @@ function DoctorFormDialog({
   };
 
   return (
-    <>
+    <Dialog open={open} onClose={onClose}>
       <ActionResultNotification
         state={notification}
         onClose={handleCloseNotification}
       />
-      <Dialog open={open} onClose={onClose}>
-        <DialogTitle>Doctor registration</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Please fill out the form below to add a new doctor or update an
-            existing one.
-          </DialogContentText>
-          <Box
-            component="form"
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              padding: "3% 3% 0% 3%",
-              backgroundColor: "white",
-            }}
-            onSubmit={formik.handleSubmit}
+      <DialogTitle>Doctor registration</DialogTitle>
+      <DialogContent>
+        <DialogContentText>
+          Please fill out the form below to add a new doctor or update an
+          existing one.
+        </DialogContentText>
+        <Box
+          component="form"
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            padding: "3% 3% 0% 3%",
+            backgroundColor: "white",
+          }}
+          onSubmit={formik.handleSubmit}
+        >
+          <InputLabel htmlFor="name">Name</InputLabel>
+          <TextField
+            id="name"
+            value={formik.values.name}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={formik.touched.name && Boolean(formik.errors.name)}
+            helperText={formik.touched.name && formik.errors.name}
+            fullWidth
+            sx={{ mt: 1, mb: 1 }}
+          />
+          <InputLabel htmlFor="surname">Surname</InputLabel>
+          <TextField
+            id="surname"
+            value={formik.values.surname}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={formik.touched.surname && Boolean(formik.errors.surname)}
+            helperText={formik.touched.surname && formik.errors.surname}
+            fullWidth
+            sx={{ mt: 1, mb: 1 }}
+          />
+          <InputLabel htmlFor="address">Address</InputLabel>
+          <TextField
+            id="address"
+            value={formik.values.address}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={formik.touched.address && Boolean(formik.errors.address)}
+            helperText={formik.touched.address && formik.errors.address}
+            fullWidth
+            sx={{ mt: 1, mb: 1 }}
+          />
+          <InputLabel htmlFor="phoneNumber">Phone number</InputLabel>
+          <TextField
+            id="phoneNumber"
+            value={formik.values.phoneNumber}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={
+              formik.touched.phoneNumber && Boolean(formik.errors.phoneNumber)
+            }
+            helperText={formik.touched.phoneNumber && formik.errors.phoneNumber}
+            fullWidth
+            sx={{ mt: 1, mb: 1 }}
+          />
+          <InputLabel htmlFor="departmentId">Department</InputLabel>
+          <Select
+            id="departmentId"
+            name="departmentId"
+            value={formik.values.departmentId}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={
+              formik.touched.departmentId && Boolean(formik.errors.departmentId)
+            }
+            fullWidth
+            sx={{ mb: 2 }}
           >
-            <InputLabel htmlFor="name">Name</InputLabel>
-            <TextField
-              id="name"
-              value={formik.values.name}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={formik.touched.name && Boolean(formik.errors.name)}
-              helperText={formik.touched.name && formik.errors.name}
-              fullWidth
-              sx={{ mt: 1, mb: 1 }}
-            />
-            <InputLabel htmlFor="surname">Surname</InputLabel>
-            <TextField
-              id="surname"
-              value={formik.values.surname}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={formik.touched.surname && Boolean(formik.errors.surname)}
-              helperText={formik.touched.surname && formik.errors.surname}
-              fullWidth
-              sx={{ mt: 1, mb: 1 }}
-            />
-            <InputLabel htmlFor="address">Address</InputLabel>
-            <TextField
-              id="address"
-              value={formik.values.address}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={formik.touched.address && Boolean(formik.errors.address)}
-              helperText={formik.touched.address && formik.errors.address}
-              fullWidth
-              sx={{ mt: 1, mb: 1 }}
-            />
-            <InputLabel htmlFor="phoneNumber">Phone number</InputLabel>
-            <TextField
-              id="phoneNumber"
-              value={formik.values.phoneNumber}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={
-                formik.touched.phoneNumber && Boolean(formik.errors.phoneNumber)
-              }
-              helperText={
-                formik.touched.phoneNumber && formik.errors.phoneNumber
-              }
-              fullWidth
-              sx={{ mt: 1, mb: 1 }}
-            />
-            <InputLabel htmlFor="departmentId">Department</InputLabel>
-            <Select
-              id="departmentId"
-              name="departmentId"
-              value={formik.values.departmentId}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={
-                formik.touched.departmentId &&
-                Boolean(formik.errors.departmentId)
-              }
-              fullWidth
-              sx={{ mb: 2 }}
-            >
-              {departments.map((department) => (
-                <MenuItem key={department.id} value={department.id}>
-                  {department.name}
-                </MenuItem>
-              ))}
-            </Select>
-            {formik.touched.departmentId && formik.errors.departmentId && (
-              <Typography color="error" variant="body2" sx={{ mb: 2 }}>
-                {formik.errors.departmentId}
-              </Typography>
-            )}
-            <InputLabel htmlFor="startShift">Start shift</InputLabel>
-            <TextField
-              id="startShift"
-              type="time"
-              value={formik.values.startShift}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={
-                formik.touched.startShift && Boolean(formik.errors.startShift)
-              }
-              helperText={formik.touched.startShift && formik.errors.startShift}
-              fullWidth
-              sx={{ mt: 1, mb: 1 }}
-            />
-            <InputLabel htmlFor="endShift">End shift</InputLabel>
-            <TextField
-              id="endShift"
-              type="time"
-              value={formik.values.endShift}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={formik.touched.endShift && Boolean(formik.errors.endShift)}
-              helperText={formik.touched.endShift && formik.errors.endShift}
-              fullWidth
-              sx={{ mt: 1, mb: 1 }}
-            />
-            <InputLabel>Week Days</InputLabel>
-            {daysOfWeek.map((day) => (
-              <FormControlLabel
-                key={day.id}
-                control={
-                  <Checkbox
-                    checked={formik.values.weekDays.includes(day.id)}
-                    onChange={() => handleWeekdayChange(day.id)}
-                  />
-                }
-                label={day.name}
-              />
+            {departments.map((department) => (
+              <MenuItem key={department.id} value={department.id}>
+                {department.name}
+              </MenuItem>
             ))}
-            {formik.touched.weekDays && formik.errors.weekDays && (
-              <Typography style={{ color: "red", marginBottom: "10px" }}>
-                {formik.errors.weekDays}
-              </Typography>
-            )}
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              sx={{ mt: 2, mx: 20 }}
-            >
-              Submit form
-            </Button>
-            <Button onClick={onClose} color="primary" sx={{ mt: 1, mx: 20 }}>
-              Cancel
-            </Button>
-          </Box>
-        </DialogContent>
-      </Dialog>
-    </>
+          </Select>
+          {formik.touched.departmentId && formik.errors.departmentId && (
+            <Typography color="error" variant="body2" sx={{ mb: 2 }}>
+              {formik.errors.departmentId}
+            </Typography>
+          )}
+          <InputLabel htmlFor="startShift">Start shift</InputLabel>
+          <TextField
+            id="startShift"
+            type="time"
+            value={formik.values.startShift}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={
+              formik.touched.startShift && Boolean(formik.errors.startShift)
+            }
+            helperText={formik.touched.startShift && formik.errors.startShift}
+            fullWidth
+            sx={{ mt: 1, mb: 1 }}
+          />
+          <InputLabel htmlFor="endShift">End shift</InputLabel>
+          <TextField
+            id="endShift"
+            type="time"
+            value={formik.values.endShift}
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={formik.touched.endShift && Boolean(formik.errors.endShift)}
+            helperText={formik.touched.endShift && formik.errors.endShift}
+            fullWidth
+            sx={{ mt: 1, mb: 1 }}
+          />
+          <InputLabel>Week Days</InputLabel>
+          {daysOfWeek.map((day) => (
+            <FormControlLabel
+              key={day.id}
+              control={
+                <Checkbox
+                  checked={formik.values.weekDays.includes(day.id)}
+                  onChange={() => handleWeekdayChange(day.id)}
+                />
+              }
+              label={day.name}
+            />
+          ))}
+          {formik.touched.weekDays && formik.errors.weekDays && (
+            <Typography style={{ color: "red", marginBottom: "10px" }}>
+              {formik.errors.weekDays}
+            </Typography>
+          )}
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            sx={{ mt: 2, mx: 20 }}
+          >
+            Submit form
+          </Button>
+          <Button onClick={onClose} color="primary" sx={{ mt: 1, mx: 20 }}>
+            Cancel
+          </Button>
+        </Box>
+      </DialogContent>
+    </Dialog>
   );
 }
 

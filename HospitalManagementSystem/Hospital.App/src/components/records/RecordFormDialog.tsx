@@ -217,8 +217,7 @@ function RecordFormDialog({
       } catch (error) {
         setNotification({
           open: true,
-          message:
-            "Failed to introduce record information. The data may be incorrect.",
+          message: "Failed to introduce record information.",
           severity: "error",
         });
 
@@ -232,184 +231,180 @@ function RecordFormDialog({
   };
 
   return (
-    <>
+    <Dialog open={open} onClose={onClose}>
       <ActionResultNotification
         state={notification}
         onClose={handleCloseNotification}
       />
-      <Dialog open={open} onClose={onClose}>
-        <DialogTitle>Record creation/edit</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
-            Please fill out the form below to add a new record or update an
-            existing one.
-          </DialogContentText>
-          <Box
-            component="form"
-            sx={{
-              display: "flex",
-              flexDirection: "column",
-              padding: "3% 3% 0% 3%",
-              backgroundColor: "white",
-            }}
-            onSubmit={formik.handleSubmit}
+      <DialogTitle>Record creation/edit</DialogTitle>
+      <DialogContent>
+        <DialogContentText>
+          Please fill out the form below to add a new record or update an
+          existing one.
+        </DialogContentText>
+        <Box
+          component="form"
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            padding: "3% 3% 0% 3%",
+            backgroundColor: "white",
+          }}
+          onSubmit={formik.handleSubmit}
+        >
+          {!record && (
+            <>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={formik.values.isDiagnosis}
+                    onChange={formik.handleChange("isDiagnosis")}
+                  />
+                }
+                label="Is this a diagnosis record?"
+              />
+
+              <InputLabel htmlFor="examinedPatientId">
+                Examined patient
+              </InputLabel>
+              <Select
+                id="examinedPatientId"
+                name="examinedPatientId"
+                value={formik.values.examinedPatientId}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                error={
+                  formik.touched.examinedPatientId &&
+                  Boolean(formik.errors.examinedPatientId)
+                }
+                fullWidth
+                sx={{ mb: 2 }}
+              >
+                {patients.map((patient) => (
+                  <MenuItem key={patient.id} value={patient.id}>
+                    {patient.name} {patient.surname}
+                  </MenuItem>
+                ))}
+              </Select>
+              {formik.touched.examinedPatientId &&
+                formik.errors.examinedPatientId && (
+                  <Typography color="error" variant="body2" sx={{ mb: 2 }}>
+                    {formik.errors.examinedPatientId}
+                  </Typography>
+                )}
+            </>
+          )}
+
+          <InputLabel htmlFor="examinationNotes">Examination notes</InputLabel>
+          <TextField
+            id="examinationNotes"
+            value={formik.values.examinationNotes}
+            placeholder="Enter some examination notes"
+            onChange={formik.handleChange}
+            onBlur={formik.handleBlur}
+            error={
+              formik.touched.examinationNotes &&
+              Boolean(formik.errors.examinationNotes)
+            }
+            helperText={
+              formik.touched.examinationNotes &&
+              typeof formik.errors.examinationNotes === "string" &&
+              formik.errors.examinationNotes
+            }
+            fullWidth
+            multiline
+            rows={3}
+            sx={{ mt: 0, mb: 1 }}
+          />
+          {formik.values.isDiagnosis && (
+            <>
+              <InputLabel htmlFor="diagnosedIllnessId">
+                Diagnosed illness
+              </InputLabel>
+              <Select
+                id="diagnosedIllnessId"
+                name="diagnosedIllnessId"
+                value={formik.values.diagnosedIllnessId}
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                error={
+                  formik.touched.diagnosedIllnessId &&
+                  Boolean(formik.errors.diagnosedIllnessId)
+                }
+                fullWidth
+                sx={{ mb: 2 }}
+              >
+                {illnesses.map((illness) => (
+                  <MenuItem key={illness.id} value={illness.id}>
+                    {illness.name}
+                  </MenuItem>
+                ))}
+              </Select>
+              {formik.touched.diagnosedIllnessId &&
+                formik.errors.diagnosedIllnessId && (
+                  <Typography color="error" variant="body2" sx={{ mb: 2 }}>
+                    {formik.errors.diagnosedIllnessId}
+                  </Typography>
+                )}
+              <InputLabel htmlFor="prescribedMedicine">
+                Prescribed medicine
+              </InputLabel>
+              <TextField
+                id="prescribedMedicine"
+                value={formik.values.prescribedMedicine}
+                placeholder="Enter prescribed medicine"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                error={
+                  formik.touched.prescribedMedicine &&
+                  Boolean(formik.errors.prescribedMedicine)
+                }
+                helperText={
+                  formik.touched.prescribedMedicine &&
+                  typeof formik.errors.prescribedMedicine === "string" &&
+                  formik.errors.prescribedMedicine
+                }
+                fullWidth
+                sx={{ mt: 0, mb: 1 }}
+              />
+              <InputLabel htmlFor="treatmentDuration">
+                Treatment duration
+              </InputLabel>
+              <TextField
+                id="treatmentDuration"
+                type="number"
+                value={formik.values.treatmentDuration}
+                placeholder="Enter treatment duration"
+                onChange={formik.handleChange}
+                onBlur={formik.handleBlur}
+                error={
+                  formik.touched.treatmentDuration &&
+                  Boolean(formik.errors.treatmentDuration)
+                }
+                helperText={
+                  formik.touched.treatmentDuration &&
+                  typeof formik.errors.treatmentDuration === "string" &&
+                  formik.errors.treatmentDuration
+                }
+                fullWidth
+                sx={{ mt: 0, mb: 1 }}
+              />
+            </>
+          )}
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            sx={{ mt: 2, mx: 20 }}
           >
-            {!record && (
-              <>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={formik.values.isDiagnosis}
-                      onChange={formik.handleChange("isDiagnosis")}
-                    />
-                  }
-                  label="Is this a diagnosis record?"
-                />
-
-                <InputLabel htmlFor="examinedPatientId">
-                  Examined patient
-                </InputLabel>
-                <Select
-                  id="examinedPatientId"
-                  name="examinedPatientId"
-                  value={formik.values.examinedPatientId}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  error={
-                    formik.touched.examinedPatientId &&
-                    Boolean(formik.errors.examinedPatientId)
-                  }
-                  fullWidth
-                  sx={{ mb: 2 }}
-                >
-                  {patients.map((patient) => (
-                    <MenuItem key={patient.id} value={patient.id}>
-                      {patient.name} {patient.surname}
-                    </MenuItem>
-                  ))}
-                </Select>
-                {formik.touched.examinedPatientId &&
-                  formik.errors.examinedPatientId && (
-                    <Typography color="error" variant="body2" sx={{ mb: 2 }}>
-                      {formik.errors.examinedPatientId}
-                    </Typography>
-                  )}
-              </>
-            )}
-
-            <InputLabel htmlFor="examinationNotes">
-              Examination notes
-            </InputLabel>
-            <TextField
-              id="examinationNotes"
-              value={formik.values.examinationNotes}
-              placeholder="Enter some examination notes"
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              error={
-                formik.touched.examinationNotes &&
-                Boolean(formik.errors.examinationNotes)
-              }
-              helperText={
-                formik.touched.examinationNotes &&
-                typeof formik.errors.examinationNotes === "string" &&
-                formik.errors.examinationNotes
-              }
-              fullWidth
-              multiline
-              rows={3}
-              sx={{ mt: 0, mb: 1 }}
-            />
-            {formik.values.isDiagnosis && (
-              <>
-                <InputLabel htmlFor="diagnosedIllnessId">
-                  Diagnosed illness
-                </InputLabel>
-                <Select
-                  id="diagnosedIllnessId"
-                  name="diagnosedIllnessId"
-                  value={formik.values.diagnosedIllnessId}
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  error={
-                    formik.touched.diagnosedIllnessId &&
-                    Boolean(formik.errors.diagnosedIllnessId)
-                  }
-                  fullWidth
-                  sx={{ mb: 2 }}
-                >
-                  {illnesses.map((illness) => (
-                    <MenuItem key={illness.id} value={illness.id}>
-                      {illness.name}
-                    </MenuItem>
-                  ))}
-                </Select>
-                {formik.touched.diagnosedIllnessId &&
-                  formik.errors.diagnosedIllnessId && (
-                    <Typography color="error" variant="body2" sx={{ mb: 2 }}>
-                      {formik.errors.diagnosedIllnessId}
-                    </Typography>
-                  )}
-                <InputLabel htmlFor="prescribedMedicine">
-                  Prescribed medicine
-                </InputLabel>
-                <TextField
-                  id="prescribedMedicine"
-                  value={formik.values.prescribedMedicine}
-                  placeholder="Enter prescribed medicine"
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  error={
-                    formik.touched.prescribedMedicine &&
-                    Boolean(formik.errors.prescribedMedicine)
-                  }
-                  helperText={
-                    formik.touched.prescribedMedicine &&
-                    typeof formik.errors.prescribedMedicine === "string" &&
-                    formik.errors.prescribedMedicine
-                  }
-                  fullWidth
-                  sx={{ mt: 0, mb: 1 }}
-                />
-                <InputLabel htmlFor="treatmentDuration">
-                  Treatment duration
-                </InputLabel>
-                <TextField
-                  id="treatmentDuration"
-                  type="number"
-                  value={formik.values.treatmentDuration}
-                  placeholder="Enter treatment duration"
-                  onChange={formik.handleChange}
-                  onBlur={formik.handleBlur}
-                  error={
-                    formik.touched.treatmentDuration &&
-                    Boolean(formik.errors.treatmentDuration)
-                  }
-                  helperText={
-                    formik.touched.treatmentDuration &&
-                    typeof formik.errors.treatmentDuration === "string" &&
-                    formik.errors.treatmentDuration
-                  }
-                  fullWidth
-                  sx={{ mt: 0, mb: 1 }}
-                />
-              </>
-            )}
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              sx={{ mt: 2, mx: 20 }}
-            >
-              Submit form
-            </Button>
-            <Button onClick={onClose} color="primary" sx={{ mt: 1, mx: 20 }}>
-              Cancel
-            </Button>
-          </Box>
-        </DialogContent>
-      </Dialog>
-    </>
+            Submit form
+          </Button>
+          <Button onClick={onClose} color="primary" sx={{ mt: 1, mx: 20 }}>
+            Cancel
+          </Button>
+        </Box>
+      </DialogContent>
+    </Dialog>
   );
 }
 
